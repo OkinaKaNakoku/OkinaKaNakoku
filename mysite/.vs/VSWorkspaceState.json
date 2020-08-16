@@ -1,10 +1,17 @@
 {
   "ExpandedNodes": [
     "",
-    "\\mysite",
-    "\\templates",
-    "\\templates\\admin"
+    "\\mahjong\\static",
+    "\\mahjong\\static\\mahjong",
+    "\\mahjong\\static\\mahjong\\images",
+    "\\polls",
+    "\\polls\\static",
+    "\\polls\\static\\polls",
+    "\\polls\\static\\polls\\css",
+    "\\polls\\static\\polls\\images",
+    "\\polls\\templates",
+    "\\polls\\templates\\polls"
   ],
-  "SelectedNode": "\\templates",
+  "SelectedNode": "\\mahjong",
   "PreviewInSolutionExplorer": false
 }
