@@ -3,14 +3,13 @@
     "",
     "\\mahjong",
     "\\mahjong\\dto",
+    "\\mahjong\\static",
     "\\mahjong\\static\\mahjong",
     "\\mahjong\\static\\mahjong\\css",
     "\\mahjong\\static\\mahjong\\images",
     "\\mahjong\\templates",
-    "\\mahjong\\templates\\mahjong",
-    "\\polls",
-    "\\polls\\templates\\polls"
+    "\\mahjong\\templates\\mahjong"
   ],
-  "SelectedNode": "\\mahjong\\views.py",
+  "SelectedNode": "\\mahjong\\models.py",
   "PreviewInSolutionExplorer": false
 }

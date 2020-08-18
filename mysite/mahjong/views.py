@@ -1,6 +1,5 @@
 import sys
-sys.path.append('mahjong/dto')
-import indexScoreDto
+from mahjong.dto import indexScoreDto
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -13,6 +12,7 @@ from .models import UserInfo, HansoSum
 class IndexScore(generic.ListView):
     template_name = 'mahjong/score.html'
     context_object_name = 'users'
+    print(sys.path)
 
     def get_queryset(self, **kwargs):
         # UserInfoをスコアの降順で取得
@@ -36,8 +36,6 @@ class IndexScore(generic.ListView):
             """ 同率を見る
             同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
             isDoritsu = True
-            
-            print(str(scoreList[cnt]) + '-' + str(user.score_sum))
             if not scoreList[cnt] == user.score_sum:
                 isDoritsu = False
             cnt = cnt + 1
