@@ -1,17 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\mahjong\\static",
+    "\\mahjong",
+    "\\mahjong\\dto",
     "\\mahjong\\static\\mahjong",
+    "\\mahjong\\static\\mahjong\\css",
     "\\mahjong\\static\\mahjong\\images",
+    "\\mahjong\\templates",
+    "\\mahjong\\templates\\mahjong",
     "\\polls",
-    "\\polls\\static",
-    "\\polls\\static\\polls",
-    "\\polls\\static\\polls\\css",
-    "\\polls\\static\\polls\\images",
-    "\\polls\\templates",
     "\\polls\\templates\\polls"
   ],
-  "SelectedNode": "\\mahjong",
+  "SelectedNode": "\\mahjong\\views.py",
   "PreviewInSolutionExplorer": false
 }
