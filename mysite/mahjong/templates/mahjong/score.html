@@ -1,8 +1,6 @@
 ﻿{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/score.css' %}">
-<script src="../static/mahjong/jquery/jquery.min.js"></script>
-<script src="../static/mahjong/js/template.js"></script>
 
 <!DOCTYPE html>
 <html>
@@ -12,7 +10,42 @@
     <title>翁カ奴国</title>
 </head>
 <body>
-    <div id="header"></div>
+    <div id="header">
+        <div class="head">
+            <div class="disp-head">
+                <div class="header-left">
+                    <div id="header-txt" class="title">
+                        <p>okina-ka-nakoku</p>
+                    </div>
+                    <a href="/mahjong/showScore" class="title-img"></a>
+                </div>
+                <div class="admin">
+                    <a href="/admin"<b>> to admin</b></a>
+                </div>
+                <div class="header-right">
+                    <ul class="menulist">
+                        <li class="menu">
+                            <a href="/mahjong/showScore" class="title-link">
+                                <span class="menu-text">
+                                    スコア表示
+                                </span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScoreUpdate" class="title-link">
+                                <span class="menu-text">スコア更新</span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScore" class="title-link">
+                                <span class="menu-text">追加予定</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="score">
         <table class="score-table">
             <tr>
