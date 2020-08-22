@@ -6,10 +6,11 @@
     "\\mahjong\\static",
     "\\mahjong\\static\\mahjong",
     "\\mahjong\\static\\mahjong\\css",
-    "\\mahjong\\static\\mahjong\\images",
-    "\\mahjong\\templates",
-    "\\mahjong\\templates\\mahjong"
+    "\\mysite",
+    "\\polls",
+    "\\polls\\templates",
+    "\\polls\\templates\\polls"
   ],
-  "SelectedNode": "\\mahjong\\models.py",
+  "SelectedNode": "\\mahjong\\views.py",
   "PreviewInSolutionExplorer": false
 }

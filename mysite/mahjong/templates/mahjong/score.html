@@ -1,40 +1,27 @@
 ﻿{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/score.css' %}">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="../static/mahjong/js/template.js"></script>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
     <title>翁カ奴国</title>
 </head>
 <body>
-    <div id="header">
-        <div class="head">
-            <div class="header-left">
-                <div id="header-txt" class="title">
-                    <p>okina-ka-nakoku</p>
-                </div>
-                <div class="title-img" />
-            </div>
-        </div>
-        <div class="header-right">
-            <ul class="menulist">
-                <li class="menu">
-                    <span class="menu-text">スコア表示</span>
-                </li>
-                <li class="menu">
-                    <span class="menu-text">スコア更新</span>
-                </li>
-            </ul>
-        </div>
-        <table>
+    <div id="header"></div>
+    <div class="score">
+        <table class="score-table">
             <tr>
                 <th>Rank</th>
                 <td>Name</td>
                 <td>Score</td>
                 <td>Top_Diff</td>
             </tr>
-        {% if users %}
+            {% if users %}
             {% for user in users %}
             <tr>
                 <th>{{user.rank}}</th>
@@ -43,8 +30,9 @@
                 <td>{{user.topDiff}}</td>
             </tr>
             {% endfor %}
-        {% endif %}
+            {% endif %}
         </table>
     </div>
 </body>
 </html>
+

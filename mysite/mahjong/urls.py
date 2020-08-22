@@ -4,8 +4,9 @@ from . import views
 
 app_name = 'mahjong'
 urlpatterns = [
-    path('', views.IndexScore.as_view(), name='score'),
-    #path('<int:pk>/', views.DetailView.as_view(), name='detail'),
-    #path('<int:pk>/results/', views.resultsview.as_view(), name='results'),
+    path('', views.IndexScore.as_view(), name='showScore'),
+    path('showScore', views.IndexScore.as_view(), name='showScore'),
+    path('showScoreUpdate', views.ShowScoreUpdate.as_view(), name='showScoreUpdate'),
+    path('updateScore', views.updateScore, name='updateScore'),
     #path('<int:question_id>/vote/', views.vote, name='vote'),
 ]

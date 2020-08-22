@@ -15,10 +15,11 @@ class UserInfo(models.Model):
     def __str__(self):
         return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
 
-# 半荘合計。基本hanso_id：1・user_id：4
+# 半荘合計。基本hanso_id 1：user_id 4
 class HansoSum(models.Model):
     hanso_id = models.IntegerField()
     user_id = models.ForeignKey(UserInfo, db_column='user_id', on_delete=models.DO_NOTHING)
+    rank = models.CharField(max_length=1)
     score = models.IntegerField(default=0)
     score_result = models.IntegerField(default=0)
     insert_date = models.DateTimeField(default=timezone.now)
