@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.db.models import Max
 from django.utils import timezone
 from django.views import generic
+from decimal import Decimal
 
 from .models import UserInfo, HansoSum
 
@@ -133,9 +134,6 @@ def updateScore(request):
     
     # ■順位ソート
     rankSortDaos = sorted(insertDaos, key=attrgetter('score'), reverse=True)
-    for rank in rankSortDaos:
-        print(rank.userId)
-        print(rank.score)
 
     # ■半荘IDのMAXを取得。連番で登録するため、+1
     hanso_obj = HansoSum.objects.all().aggregate(Max('hanso_id'))
@@ -156,7 +154,6 @@ def updateScore(request):
         userIdParam = dao.userId
         scoreParam = dao.score
         userObj = UserInfo.objects.all().filter(user_id=userIdParam)
-        print(userObj)
 
         # ウマ・オカ計算 ★★TODO 関数化
         if rankParam == 1:
@@ -169,7 +166,7 @@ def updateScore(request):
                    , score=scoreParam
                    , score_result=scoreResultParam).save()
             dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += scoreResultParam
+            dao.score_sum += Decimal(str(scoreResultParam))
             dao.save()
             
         elif rankParam == 2:
@@ -182,7 +179,7 @@ def updateScore(request):
                    , score=scoreParam
                    , score_result=scoreResultParam).save()
             dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += scoreResultParam
+            dao.score_sum += Decimal(str(scoreResultParam))
             dao.save()
         elif rankParam == 3:
             scoreResultParam = int(scoreParam) - 5000
@@ -194,7 +191,7 @@ def updateScore(request):
                    , score=scoreParam
                    , score_result=scoreResultParam).save()
             dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += scoreResultParam
+            dao.score_sum += Decimal(str(scoreResultParam))
             dao.save()
         elif rankParam == 4:
             scoreResultParam = int(scoreParam) - 10000
@@ -206,14 +203,9 @@ def updateScore(request):
                    , score=scoreParam
                    , score_result=scoreResultParam).save()
             dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += scoreResultParam
+            dao.score_sum += Decimal(str(scoreResultParam))
             dao.save()
         rankParam = rankParam + 1
-
-
-
-
-
 
     # エラーメッセージを返して、レンダリングするが、正常終了のはず
                 # レンダリング
