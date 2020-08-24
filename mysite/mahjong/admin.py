@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import UserInfo
 from .models import HansoSum
 
@@ -14,6 +15,7 @@ class UserInfoAdmin(admin.ModelAdmin):
         ('ENG_LAST_NAME', {'fields':['eng_last_name']}),
         ('ENG_FIRST_NAME', {'fields':['eng_first_name']}),
     ]
+    ordering = ('user_id',)
     list_display = ('user_id', 'last_name', 'first_name', 'score_sum')
 
 class HansoSumAdmin(admin.ModelAdmin):
@@ -24,6 +26,7 @@ class HansoSumAdmin(admin.ModelAdmin):
         ('SCORE',    {'fields':['score']}),
         ('SCORE_RESULT', {'fields':['score_result']}),
     ]
+    ordering = ('-hanso_id', 'rank')
     list_display = ('hanso_id', 'user_id', 'rank', 'score', 'score_result')
 
 # Register your models here.
