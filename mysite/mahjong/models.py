@@ -10,7 +10,7 @@ class UserInfo(models.Model):
     first_name = models.CharField(max_length=100)
     eng_last_name = models.CharField(null=True, max_length=100)
     eng_first_name = models.CharField(null=True, max_length=100)
-    score_sum = models.IntegerField(default=0)
+    score_sum = models.DecimalField(max_digits=6,decimal_places=1,default=0.0)
     
     def __str__(self):
         return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
@@ -21,7 +21,7 @@ class HansoSum(models.Model):
     user_id = models.ForeignKey(UserInfo, db_column='user_id', on_delete=models.DO_NOTHING)
     rank = models.CharField(max_length=1)
     score = models.IntegerField(default=0)
-    score_result = models.IntegerField(default=0)
+    score_result = models.DecimalField(max_digits=6,decimal_places=1,default=0.0)
     insert_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
