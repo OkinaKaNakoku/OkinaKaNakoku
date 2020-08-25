@@ -25,6 +25,7 @@ class HansoSumAdmin(admin.ModelAdmin):
         ('RANK',     {'fields':['rank']}),
         ('SCORE',    {'fields':['score']}),
         ('SCORE_RESULT', {'fields':['score_result']}),
+        ('INSERT_DATE', {'fields':['insert_date']}),
     ]
     ordering = ('-hanso_id', 'rank')
     list_display = ('hanso_id', 'user_id', 'rank', 'score', 'score_result')
