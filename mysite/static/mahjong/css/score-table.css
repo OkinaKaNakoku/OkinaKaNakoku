@@ -1,0 +1,136 @@
+.childScore {
+    position: relative;
+    width: 1000px;
+    margin: 0 auto;
+    clear: both;
+}
+.parentScore {
+    position: relative;
+    width: 1000px;
+    margin: 0 auto;
+}
+
+table {
+    width:100%;
+    border-collapse: collapse;
+    padding: 0;
+    margin:0 auto;
+    table-layout: fixed;
+    text-align:center;
+}
+
+    table tr {
+        background-color: #e6f2f5;
+        padding: .1em;
+        border-bottom: 2px solid #fff;
+    }
+
+    table th,
+    table td {
+        padding: 1em 10px 1em 1em;
+        border-right: 2px solid #fff;
+        
+    }
+
+    table th {
+        font-size: .85em;
+    }
+
+    table thead tr {
+        background-color: #008a77;
+        color: #fff;
+    }
+
+    table tbody th {
+        background: #4d88a5;
+        color: #fff;
+    }
+
+.txt {
+    text-align: left;
+    font-size: .85em;
+}
+
+.scoreNum {
+    text-align: center;
+    color: #167F92;
+    font-weight: bold;
+}
+
+.non {
+    background: #fff
+}
+
+/***************/
+/*（スマホ用） */
+/***************/
+@media screen and (max-width: 730px) {
+    .childScore {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        clear:both;
+        margin-bottom:30px;
+    }
+    .parentScore {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        margin-bottom: 100px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        padding: 0px;
+        margin: 0 auto;
+        table-layout: fixed;
+        text-align: center;
+        font-size: 11px;
+    }
+
+        table tr {
+            background-color: #e6f2f5;
+            padding: .1em;
+            border-bottom: 2px solid #fff;
+        }
+
+        table th,
+        table td {
+            padding: 1em 0em 1em 0em;
+            border-right: 2px solid #fff;
+            text-align: center;
+            width:100%;
+        }
+
+        table th {
+            font-size: .8em;
+        }
+
+        table thead tr {
+            background-color: #008a77;
+            color: #fff;
+        }
+
+        table tbody th {
+            background: #4d88a5;
+            color: #fff;
+        }
+
+    .txt {
+        text-align: left;
+        font-size: .85em;
+    }
+
+    .scoreNum {
+        text-align: center;
+        color: #167F92;
+        font-weight: bold;
+    }
+
+    .non {
+        background: #fff
+    }
+}
+

@@ -1,0 +1,84 @@
+body > div.clearfix {
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 125px;
+}
+
+.user {
+    display: inline-block;
+    width: 30%;
+}
+
+.score {
+    display: inline-block;
+    width: 30%;
+}
+
+body > div.clearfix > form > div {
+    width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 6px;
+}
+
+select {
+    float: left;
+}
+
+body > div.clearfix > form > input {
+    display: block;
+    margin: 0 auto;
+}
+
+
+
+/***************/
+/*（スマホ用） */
+/***************/
+@media screen and (max-width: 730px) {
+    img {
+        width: 960px;
+        margin: 0%;
+    }
+    .clearfix {
+        width: 80%;
+        text-align: center;
+        margin:0 auto;
+        clear:both;
+    }
+    .user {
+        display: inline-block;
+        width: 20%;
+        margin:0px;
+    }
+    .score {
+        display: inline-block;
+        width: 20%;
+    }
+    .input {
+        width: 80%;
+        text-align: center;
+        margin:0 auto;
+        margin-bottom:6px;
+    }
+
+    body > div.clearfix > form > input {
+        display: block;
+        margin: 0 auto;
+        margin-left:10px;
+    }
+    select {
+        float: left;
+        width: 100px;
+        height: 21px;
+        margin-right:20px;
+    }
+    input {
+        width: 60px;
+        height: 21px;
+    }
+    
+
+}
+

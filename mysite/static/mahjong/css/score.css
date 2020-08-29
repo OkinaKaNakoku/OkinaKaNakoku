@@ -1,0 +1,73 @@
+div {
+    display:block;
+}
+.score {
+    display:block;
+    width:75%;
+    margin:0 auto;
+    clear:both;
+}
+
+.score-table {
+    width:100%;
+    padding:0px;
+}
+
+table {
+    width: 1000px;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    margin: 0 auto;
+    padding-top: 100px;
+    letter-spacing: 1px;
+}
+
+tbody {
+    position: relative;
+    top: 100px;
+}
+thead {
+    background-color: #4d88a5;
+    color: white;
+}
+    table th, table td {
+        padding: 10px 0;
+        text-align: center;
+        font-size: x-large;
+        width: 10%;
+    }
+    tbody tr:nth-child(odd) {
+        background-color: #eee
+}
+
+
+/***************/
+/*（スマホ用） */
+/***************/
+@media screen and (max-width: 730px) {
+    img {
+        width: 960px;
+        margin: 0%;
+    }
+    .score {
+        display: block;
+        margin: 0 auto;
+        clear: both;
+        width: 100%;
+    }
+
+    .score-table {
+        margin: 3px;
+    }
+    .th {
+        font-size: 100px;
+    }
+    table th, table td {
+        padding: 10px 0;
+        text-align: center;
+        font-size: 15px;
+        width: 10%;
+    }
+
+}
+
