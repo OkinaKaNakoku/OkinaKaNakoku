@@ -1,5 +1,9 @@
 body {
     width: 100%;
+    margin: 0 auto;
+}
+
+.wrapper {
 }
 
 h2 {
@@ -10,13 +14,15 @@ h2 {
 }
 
 #header {
-    position: fixed;
     left: 0px;
     top: 0px;
     background: linear-gradient(#009688, #74c57a);
     height: 100px;
     width: 100%;
-    z-index: 999;
+    float: left;
+    margin-bottom:20px;
+    display:block;
+    position:relative;
 }
 
 .head {

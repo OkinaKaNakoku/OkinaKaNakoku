@@ -1,36 +1,46 @@
+div {
+    display:block;
+}
+.score {
+    display:block;
+    width:75%;
+    margin:0 auto;
+    clear:both;
+}
+
 .score-table {
-    position: relative;
-    top: 100px;
-    width: 100%;
+    width:100%;
+    padding:0px;
 }
 
 table {
     width: 1000px;
     border-collapse: collapse;
-    border-spacing: 0;
+    border-spacing: 1px;
     margin: 0 auto;
     padding-top: 100px;
+    letter-spacing: 1px;
 }
 
+tbody {
+    position: relative;
+    top: 100px;
+}
+thead {
+    background-color: #4d88a5;
+    color: white;
+}
     table th, table td {
         padding: 10px 0;
         text-align: center;
         font-size: x-large;
         width: 10%;
     }
-
-    table tr:nth-child(odd) {
+    tbody tr:nth-child(odd) {
         background-color: #eee
-    }
-
-.clearfix {
-    display: block;
-    width: 1000px;
-    border-collapse: collapse;
-    border-spacing: 0;
-    margin: 0 auto;
-    padding-top: 100px;
 }
+
+
 /***************/
 /*（スマホ用） */
 /***************/
@@ -41,6 +51,9 @@ table {
     }
     .score {
         display: block;
+        position:relative;
+        top:100px;
+        width:100%;
     }
 
     .score-table {

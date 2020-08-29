@@ -1,0 +1,165 @@
+﻿{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/score-table.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/template.js"></script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    <title>翁カ奴国</title>
+</head>
+<body>
+    <div id="header">
+        <div class="head">
+            <div class="disp-head">
+                <div class="header-left">
+                    <div id="header-txt" class="title">
+                        <p>okina-ka-nakoku</p>
+                    </div>
+                    <a href="/mahjong/showScore" class="title-img"></a>
+                </div>
+                <div class="admin">
+                    <a href="/admin"<b>> to admin</b></a>
+                </div>
+                <div class="header-right">
+                    <ul class="menulist">
+                        <li class="menu">
+                            <a href="/mahjong/showScore" class="title-link">
+                                <span class="menu-text">
+                                    スコア表示
+                                </span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScoreUpdate" class="title-link">
+                                <span class="menu-text">スコア更新</span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScore" class="title-link">
+                                <span class="menu-text">追加予定</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="score">
+        <table>
+            <thead>
+                <tr>
+                    <td class="col">子</td>
+                    <th scope="col">1翻</th>
+                    <th scope="col">2翻</th>
+                    <th scope="col">3翻</th>
+                    <th scope="col">4翻</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>20符</th>
+                    <td data-label="1翻" class="scoreNum">-</td>
+                    <td data-label="2翻" class="scoreNum">400/700</td>
+                    <td data-label="3翻" class="scoreNum">700/1300</td>
+                    <td data-label="4翻" class="scoreNum">1300/2600</td>
+                </tr>
+                <tr>
+                    <th>25符</th>
+                    <td data-label="1翻" class="scoreNum">-</td>
+                    <td data-label="2翻" class="scoreNum">1600</td>
+                    <td data-label="3翻" class="scoreNum">3200<br />800/1600</td>
+                    <td data-label="4翻" class="scoreNum">6400<br />1600/3200</td>
+                </tr>
+                <tr>
+                    <th>30符</th>
+                    <td data-label="1翻" class="scoreNum">1000<br />300/500</td>
+                    <td data-label="2翻" class="scoreNum">2000<br />500/1000</td>
+                    <td data-label="3翻" class="scoreNum">3900<br />1000/2000</td>
+                    <td data-label="4翻" class="scoreNum">7700<br />2000/3900</td>
+                </tr>
+                <tr>
+                    <th>40符</th>
+                    <td data-label="1翻" class="scoreNum">1300<br />400/600</td>
+                    <td data-label="2翻" class="scoreNum">2600<br />700/1300</td>
+                    <td data-label="3翻" class="scoreNum">5200<br />1300/2600</td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>50符</th>
+                    <td data-label="1翻" class="scoreNum">1600<br />400/800</td>
+                    <td data-label="2翻" class="scoreNum">3200<br />800/1600</td>
+                    <td data-label="3翻" class="scoreNum">6400<br />1600/3200</td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>60符</th>
+                    <td data-label="1翻" class="scoreNum">2000<br />500/1000</td>
+                    <td data-label="2翻" class="scoreNum">3900<br />1000/2000</td>
+                    <td data-label="3翻" class="scoreNum">7700<br />2000/3900</td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>70符</th>
+                    <td data-label="1翻" class="scoreNum">2300<br />600/1200</td>
+                    <td data-label="2翻" class="scoreNum">4500<br />1200/2300</td>
+                    <td data-label="3翻" class="scoreNum">満貫<br /></td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>80符</th>
+                    <td data-label="1翻" class="scoreNum">2600<br />700/1300</td>
+                    <td data-label="2翻" class="scoreNum">5200<br />1300/2600</td>
+                    <td data-label="3翻" class="scoreNum">満貫<br /></td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>90符</th>
+                    <td data-label="1翻" class="scoreNum">2900<br />800/1500</td>
+                    <td data-label="2翻" class="scoreNum">5800<br />1500/2900</td>
+                    <td data-label="3翻" class="scoreNum">満貫<br /></td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>100符</th>
+                    <td data-label="1翻" class="scoreNum">3200<br />800/1600</td>
+                    <td data-label="2翻" class="scoreNum">6400<br />1600/3200</td>
+                    <td data-label="3翻" class="scoreNum">満貫<br /></td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+                <tr>
+                    <th>110符</th>
+                    <td data-label="1翻" class="scoreNum">3600<br />-</td>
+                    <td data-label="2翻" class="scoreNum">7100<br />1800/3600</td>
+                    <td data-label="3翻" class="scoreNum">満貫<br /></td>
+                    <td data-label="4翻" class="scoreNum">満貫</td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col">5翻<br />満貫</th>
+                    <th scope="col">6-7翻<br />跳満</th>
+                    <th scope="col">8-10翻<br />倍満</th>
+                    <th scope="col">11-12翻<br />三倍満</th>
+                    <th scope="col">13翻-<br />数え役満</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="満貫" class="scoreNum">8000<br />2000/4000</td>
+                    <td data-label="跳満" class="scoreNum">12000<br />3000/6000</td>
+                    <td data-label="倍満" class="scoreNum">16000<br />4000/8000</td>
+                    <td data-label="三倍満" class="scoreNum">24000<br />6000/12000</td>
+                    <td data-label="数え役満" class="scoreNum">36000<br />8000/16000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
