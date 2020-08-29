@@ -119,13 +119,12 @@ h2 {
     }
 
     #header {
-        position: fixed;
         left: 0px;
         top: 0px;
         background: linear-gradient(#009688, #74c57a);
         height: 100px;
         width: 100%;
-        z-index: 999;
+        margin-bottom:20px;
     }
 
     .head {

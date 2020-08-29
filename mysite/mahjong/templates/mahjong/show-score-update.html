@@ -1,6 +1,8 @@
 ﻿{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-score-update.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-score-update.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/template.js"></script>
 
 <!DOCTYPE html>
 <html>
@@ -10,86 +12,55 @@
     <title>翁カ奴国</title>
 </head>
 <body>
-    <div id="header"><div class="head">
-    <div class="disp-head">
-        <div class="header-left">
-            <div id="header-txt" class="title">
-                <p>okina-ka-nakoku</p>
-            </div>
-            <a href="/mahjong/showScore" class="title-img"></a>
+    <div id="wrapper">
+        <div id="header"></div>
+        <div class="clearfix">
+            <form action="{% url 'mahjong:updateScore' %}" method="post">
+                {% csrf_token %}
+                {% if users %}
+                <span class="user">Name</span>
+                <span class="score">Score</span>
+                <div class="input">
+                    <select name="user1">
+                        <option value="default"></option>
+                        {% for user in users %}
+                        <option value="{{user.userId}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="score1" />
+                </div>
+                <div class="input">
+                    <select name="user2">
+                        <option value="default"></option>
+                        {% for user in users %}
+                        <option value="{{user.userId}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="score2" />
+                </div>
+                <div class="input">
+                    <select name="user3">
+                        <option value="default"></option>
+                        {% for user in users %}
+                        <option value="{{user.userId}}">{{user.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="score3" />
+                </div>
+                <div class="input">
+                    <select name="user4">
+                        <option value="default"></option>
+                        {% for user in users %}
+                        <option value="{{user.userId}}">{{user.name}}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                    <input type="text" name="score4" />
+                </div>
+                <button class="update">登録する</button>
+            </form>
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
         </div>
-        <div class="admin">
-            <a href="/admin"<b>> to admin</b></a>
-        </div>
-        <div class="header-right">
-            <ul class="menulist">
-                <li class="menu">
-                    <a href="/mahjong/showScore" class="title-link">
-                        <span class="menu-text">
-                            スコア表示
-                        </span>
-                    </a>
-                </li>
-                <li class="menu">
-                    <a href="/mahjong/showScoreUpdate" class="title-link">
-                        <span class="menu-text">スコア更新</span>
-                    </a>
-                </li>
-                <li class="menu">
-                    <a href="/mahjong/showScore" class="title-link">
-                        <span class="menu-text">追加予定</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div></div>
-    <div class="clearfix">
-        <form action="{% url 'mahjong:updateScore' %}" method="post">
-            {% csrf_token %}
-            {% if users %}
-            <span class="user">Name</span>
-            <span class="score">Score</span>
-            <div class="input">
-                <select name="user1">
-                    <option value="default"></option>
-                    {% for user in users %}
-                    <option value="{{user.userId}}">{{user.name}}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="score1" />
-            </div>
-            <div class="input">
-                <select name="user2">
-                    <option value="default"></option>
-                    {% for user in users %}
-                    <option value="{{user.userId}}">{{user.name}}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="score2" />
-            </div>
-            <div class="input">
-                <select name="user3">
-                    <option value="default"></option>
-                    {% for user in users %}
-                    <option value="{{user.userId}}">{{user.name}}</option>
-                    {% endfor %}
-                </select>
-                <input type="text" name="score3" />
-            </div>
-            <div class="input">
-                <select name="user4">
-                    <option value="default"></option>
-                    {% for user in users %}
-                    <option value="{{user.userId}}">{{user.name}}</option>
-                    {% endfor %}
-                    {% endif %}
-                </select>
-                <input type="text" name="score4" />
-            </div>
-            <button class="update">登録する</button>
-        </form>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
     </div>
 </body>
 </html>

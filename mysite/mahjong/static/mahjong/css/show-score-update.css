@@ -41,22 +41,23 @@ body > div.clearfix > form > input {
         width: 960px;
         margin: 0%;
     }
-    body > div.clearfix {
+    .clearfix {
         width: 80%;
         text-align: center;
         margin:0 auto;
-        margin-top: 125px;
+        clear:both;
     }
     .user {
         display: inline-block;
         width: 20%;
+        margin:0px;
     }
     .score {
         display: inline-block;
         width: 20%;
     }
     .input {
-        width: 30%;
+        width: 80%;
         text-align: center;
         margin:0 auto;
         margin-bottom:6px;

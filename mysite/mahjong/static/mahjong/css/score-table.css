@@ -1,8 +1,12 @@
-.score {
+.childScore {
     position:relative;
-    top: 100px;
-    width:70%;
+    width:1000px;
     margin:0 auto;
+}
+.parentScore {
+    position: relative;
+    width: 1000px;
+    margin: 0 auto;
 }
 
 table {
@@ -11,11 +15,12 @@ table {
     padding: 0;
     margin:0 auto;
     table-layout: fixed;
+    text-align:center;
 }
 
     table tr {
         background-color: #e6f2f5;
-        padding: .35em;
+        padding: .1em;
         border-bottom: 2px solid #fff;
     }
 
@@ -23,6 +28,7 @@ table {
     table td {
         padding: 1em 10px 1em 1em;
         border-right: 2px solid #fff;
+        
     }
 
     table th {
@@ -54,86 +60,76 @@ table {
     background: #fff
 }
 
-@media screen and (max-width: 600px) {
-    table {
-        border: 0;
-        width: 100%
-    }
-
-        table th {
-            background-color: #167F92;
-            display: block;
-            border-right: none;
-        }
-
-        table thead {
-            border: none;
-            clip: rect(0 0 0 0);
-            height: 1px;
-            margin: -1px;
-            overflow: hidden;
-            padding: 0;
-            position: absolute;
-            width: 1px;
-        }
-
-        table tr {
-            display: block;
-            margin-bottom: .625em;
-        }
-
-        table td {
-            border-bottom: 1px solid #bbb;
-            display: block;
-            font-size: .8em;
-            text-align: right;
-            position: relative;
-            padding: .625em .625em .625em 4em;
-            border-right: none;
-        }
-
-            table td::before {
-                content: attr(data-label);
-                font-weight: bold;
-                position: absolute;
-                left: 10px;
-                color: #167F92;
-            }
-
-            table td:last-child {
-                border-bottom: 0;
-            }
-
-        table tbody th {
-            color: #fff;
-        }
-}
-
-
 /***************/
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
-    img {
-        width: 960px;
-        margin: 0%;
+    .childScore {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        clear:both;
+        margin-bottom:30px;
     }
-    .score {
-        display: block;
+    .parentScore {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        clear: both;
+        margin-bottom: 100px;
     }
 
-    .score-table {
-        margin: 3px;
-    }
-    .th {
-        font-size: 100px;
-    }
-    table th, table td {
-        padding: 10px 0;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        padding: 0px;
+        margin: 0 auto;
+        table-layout: fixed;
         text-align: center;
-        font-size: 15px;
-        width: 10%;
+        font-size: 11px;
     }
 
+        table tr {
+            background-color: #e6f2f5;
+            padding: .1em;
+            border-bottom: 2px solid #fff;
+        }
+
+        table th,
+        table td {
+            padding: 1em 0em 1em 0em;
+            border-right: 2px solid #fff;
+            text-align: center;
+            width:100%;
+        }
+
+        table th {
+            font-size: .8em;
+        }
+
+        table thead tr {
+            background-color: #008a77;
+            color: #fff;
+        }
+
+        table tbody th {
+            background: #4d88a5;
+            color: #fff;
+        }
+
+    .txt {
+        text-align: left;
+        font-size: .85em;
+    }
+
+    .scoreNum {
+        text-align: center;
+        color: #167F92;
+        font-weight: bold;
+    }
+
+    .non {
+        background: #fff
+    }
 }
 
