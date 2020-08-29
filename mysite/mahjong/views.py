@@ -68,7 +68,7 @@ class ShowScoreUpdate(generic.ListView):
 
 # スコア更新
 def updateScore(request):
-    # f■orm取得
+    # ■form取得。多分もっといい方法ある
     noUser = 'default'
     userIds = []
     userScores = []
@@ -155,60 +155,28 @@ def updateScore(request):
         scoreParam = dao.score
         userObj = UserInfo.objects.all().filter(user_id=userIdParam)
 
-        # ウマ・オカ計算 ★★TODO 関数化
+        # ウマ・オカ計算
         if rankParam == 1:
-            scoreResultParam = int(scoreParam) + 20000 + 10000
-            scoreResultParam = scoreResultParam / 1000
-            scoreResultParam = scoreResultParam - 30
-            HansoSum(hanso_id=hansoIdParam
-                   , user_id=userObj.first()
-                   , rank=rankParam
-                   , score=scoreParam
-                   , score_result=scoreResultParam).save()
-            dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += Decimal(str(scoreResultParam))
-            dao.save()
-            
+            scoreResultParam = int(scoreParam) + 20000 + 10000       
         elif rankParam == 2:
             scoreResultParam = int(scoreParam) + 5000
-            scoreResultParam = scoreResultParam / 1000
-            scoreResultParam = scoreResultParam - 30
-            HansoSum(hanso_id=hansoIdParam
-                   , user_id=userObj.first()
-                   , rank=rankParam
-                   , score=scoreParam
-                   , score_result=scoreResultParam).save()
-            dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += Decimal(str(scoreResultParam))
-            dao.save()
         elif rankParam == 3:
             scoreResultParam = int(scoreParam) - 5000
-            scoreResultParam = scoreResultParam / 1000
-            scoreResultParam = scoreResultParam - 30
-            HansoSum(hanso_id=hansoIdParam
-                   , user_id=userObj.first()
-                   , rank=rankParam
-                   , score=scoreParam
-                   , score_result=scoreResultParam).save()
-            dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += Decimal(str(scoreResultParam))
-            dao.save()
         elif rankParam == 4:
             scoreResultParam = int(scoreParam) - 10000
-            scoreResultParam = scoreResultParam / 1000
-            scoreResultParam = scoreResultParam - 30
-            HansoSum(hanso_id=hansoIdParam
-                   , user_id=userObj.first()
-                   , rank=rankParam
-                   , score=scoreParam
-                   , score_result=scoreResultParam).save()
-            dao = UserInfo.objects.filter(user_id=userIdParam).first()
-            dao.score_sum += Decimal(str(scoreResultParam))
-            dao.save()
+        scoreResultParam = scoreResultParam / 1000
+        scoreResultParam = scoreResultParam - 30
+        HansoSum(hanso_id=hansoIdParam
+                , user_id=userObj.first()
+                , rank=rankParam
+                , score=scoreParam
+                , score_result=scoreResultParam).save()
+        dao = UserInfo.objects.filter(user_id=userIdParam).first()
+        dao.score_sum += Decimal(str(scoreResultParam))
+        dao.save()
         rankParam = rankParam + 1
 
     # エラーメッセージを返して、レンダリングするが、正常終了のはず
-                # レンダリング
     users_obj = UserInfo.objects.select_related().all().order_by('user_id')
     usersRes = []
     for user in users_obj:
@@ -220,3 +188,7 @@ def updateScore(request):
 # user重複チェック
 def user_duplicate(user):
     return len(user) != len(setattr(user))
+
+# 点数表表示
+def scoreTable(request):
+    return render(request, 'mahjong/score-table.html')
