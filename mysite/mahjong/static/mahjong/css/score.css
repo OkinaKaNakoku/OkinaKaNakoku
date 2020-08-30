@@ -73,6 +73,7 @@ thead {
 
     .score-table {
         margin: 3px;
+        table-layout:fixed;
     }
     .th {
         font-size: 100px;
