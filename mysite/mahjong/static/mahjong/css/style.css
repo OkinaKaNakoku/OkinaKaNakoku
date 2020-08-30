@@ -72,9 +72,9 @@ h2 {
     padding: 0.5em 1em;
     margin: 2em 0;
     color: #26e260;
-    background: #4aad87; /*”wŒiF*/
+    background: #4aad87; /*èƒŒæ™¯è‰²*/
     border-top: solid 6px #2c8c49;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*‰e*/
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*å½±*/
 }
 
 .menulist {
@@ -103,16 +103,16 @@ h2 {
         padding: 0.5em 1em;
         margin: 2em 0;
         color: #26e260;
-        background: #3d8a6c; /*”wŒiF*/
+        background: #3d8a6c; /*èƒŒæ™¯è‰²*/
         border-top: solid 6px #2c8c49;
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*‰e*/
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*å½±*/
     }
 
 .menu-text {
     color: white;
 }
 
-/*iƒXƒ}ƒz—pj */
+/*ï¼ˆã‚¹ãƒãƒ›ç”¨ï¼‰ */
 @media screen and (max-width: 730px) {
     img {
         width: 960px;
@@ -177,9 +177,9 @@ h2 {
     .title-link {
         width: 100%;
         color: #26e260;
-        background: #4aad87; /*”wŒiF*/
+        background: #4aad87; /*èƒŒæ™¯è‰²*/
         border-top: solid 6px #2c8c49;
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*‰e*/
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*å½±*/
         
     }
 
@@ -189,9 +189,9 @@ h2 {
     .menu {
         width: 100%;
         color: #26e260;
-        background: #4aad87; /*”wŒiF*/
+        background: #4aad87; /*èƒŒæ™¯è‰²*/
         border-top: solid 6px #2c8c49;
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*‰e*/
+        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*å½±*/
         padding: 0px;
     }
 

@@ -10,4 +10,5 @@ urlpatterns = [
     path('updateScore', views.updateScore, name='updateScore'),
     path('scoreTable', views.scoreTable, name='scoreTable'),
     #path('<int:question_id>/vote/', views.vote, name='vote'),
+
 ]

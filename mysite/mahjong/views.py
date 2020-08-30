@@ -185,10 +185,6 @@ def updateScore(request):
     'users': usersRes,
     'error_message': "登録が完了しました"})
 
-# user重複チェック
-def user_duplicate(user):
-    return len(user) != len(setattr(user))
-
 # 点数表表示
 def scoreTable(request):
     return render(request, 'mahjong/score-table.html')

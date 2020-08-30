@@ -1,7 +1,8 @@
 .childScore {
-    position:relative;
-    width:1000px;
-    margin:0 auto;
+    position: relative;
+    width: 1000px;
+    margin: 0 auto;
+    clear: both;
 }
 .parentScore {
     position: relative;
@@ -61,7 +62,7 @@ table {
 }
 
 /***************/
-/*ÅiÉXÉ}ÉzópÅj */
+/*Ôºà„Çπ„Éû„ÉõÁî®Ôºâ */
 /***************/
 @media screen and (max-width: 730px) {
     .childScore {
