@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import UserInfo
 from .models import HansoSum
+from .models import GameUser
 
 class HansoSumInline(admin.TabularInline):
     model = HansoSum
@@ -33,3 +34,4 @@ class HansoSumAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(HansoSum, HansoSumAdmin)
+admin.site.register(GameUser);

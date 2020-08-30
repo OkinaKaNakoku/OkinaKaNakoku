@@ -1,9 +1,18 @@
 div {
     display:block;
 }
+
+.rankTitle {
+    clear: both;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+}
+
 .score {
     display:block;
-    width:75%;
+    width:1000px;
     margin:0 auto;
     clear:both;
 }
@@ -49,10 +58,16 @@ thead {
         width: 960px;
         margin: 0%;
     }
+    .rankTitle{
+        clear: both;
+        margin:0 auto;
+        width:100%;
+        text-align:center;
+    }
+
     .score {
         display: block;
         margin: 0 auto;
-        clear: both;
         width: 100%;
     }
 
@@ -62,11 +77,19 @@ thead {
     .th {
         font-size: 100px;
     }
+    tr {
+        border-top: 1px solid #000000;
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
+        border-left: 1px solid #000000;
+    }
     table th, table td {
         padding: 10px 0;
         text-align: center;
         font-size: 15px;
         width: 10%;
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
     }
 
 }

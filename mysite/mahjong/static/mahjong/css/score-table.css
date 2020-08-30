@@ -1,3 +1,6 @@
+b{
+    font-size:25px;
+}
 .childScore {
     position: relative;
     width: 1000px;
@@ -48,7 +51,6 @@ table {
 
 .txt {
     text-align: left;
-    font-size: .85em;
 }
 
 .scoreNum {
@@ -65,6 +67,10 @@ table {
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
+    b {
+        font-size: 20px;
+    }
+
     .childScore {
         position: relative;
         width: 100%;
@@ -87,7 +93,6 @@ table {
         margin: 0 auto;
         table-layout: fixed;
         text-align: center;
-        font-size: 11px;
     }
 
         table tr {
@@ -105,7 +110,11 @@ table {
         }
 
         table th {
-            font-size: .8em;
+            font-size: .9em;
+        }
+
+        table td {
+            font-size: .7em;
         }
 
         table thead tr {

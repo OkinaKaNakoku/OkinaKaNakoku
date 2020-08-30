@@ -3,7 +3,7 @@ from django.utils import timezone
 
 # Create your models here.
 
-# ユーザ情報
+## ユーザ情報
 class UserInfo(models.Model):
     user_id = models.CharField(max_length=4)
     last_name = models.CharField(max_length=100)
@@ -23,6 +23,7 @@ class HansoSum(models.Model):
     score = models.IntegerField(default=0)
     score_result = models.DecimalField(max_digits=6,decimal_places=1,default=0.0)
     insert_date = models.DateTimeField(default=timezone.now)
+    update_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         userId = self.user_id.user_id
@@ -35,4 +36,13 @@ class HansoSum(models.Model):
             models.UniqueConstraint(fields=['hanso_id', 'user_id'], name='unique_booking')
         ]
 
+# 対局中のユーザ。tempの役割。点数早見表と同期遷移するし非同期むつかしい…
+# 実質tempTableだし外部keyは設けない。登録のたびにdelete-insert
+class GameUser(models.Model):
+    user_id = models.CharField(max_length=4)
+    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
 

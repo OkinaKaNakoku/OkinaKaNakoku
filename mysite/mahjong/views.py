@@ -29,6 +29,9 @@ class IndexScore(generic.ListView):
         cnt = 0        # 同率で使う
         isFirst = True # 同率で使う
         rank = 1
+        if users_obj is None:
+            return usersRes
+
         topScore = users_obj.first().score_sum # トップ差で使う
 
         for user in users_obj:
