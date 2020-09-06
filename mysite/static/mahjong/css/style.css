@@ -1,6 +1,7 @@
 body {
     width: 100%;
     margin: 0 auto;
+    font-family: "'Hiragino Kaku Gothic Pro','ヒラギノ角ゴ Pro W3','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif"
 }
 
 .wrapper {
@@ -26,13 +27,13 @@ h2 {
 }
 
 .head {
-    width: 90%;
+    width: 1000px;
     margin: 0 auto;
 }
 
 .header-left {
     float: left;
-    width: 20%;
+    width: 200px;
     height: 100px
 }
 
@@ -53,7 +54,8 @@ h2 {
 .admin {
     float: right;
     padding-top: 0.8%;
-    padding-right: 1%;
+    padding-right: 0;
+    text-align:right;
     color: white;
 
 }
@@ -63,26 +65,19 @@ h2 {
 
 .header-right {
     float: left;
-    padding-left:50px;
-    width: 55%;
+    width: 60%;
     height: 100%
 }
 
-.title-link {
-    padding: 0.5em 1em;
-    margin: 2em 0;
-    color: #26e260;
-    background: #4aad87; /*背景色*/
-    border-top: solid 6px #2c8c49;
-    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
-}
 
 .menulist {
     height: 40px;
-    width: 100%;
+    display:block;
+    width: 480px;
     padding-top: 60px;
     padding-left: 0px;
-    margin: 0px
+    margin: 0px auto;
+    overflow:hidden;
 }
 
 .menu {
@@ -92,12 +87,19 @@ h2 {
     height: 100px;
     width: 100px;
     display: inline;
-    top:20px
+    top:20px;
+    
 }
-
 .title-link {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    color: #26e260;
+    background: #4aad87; /*背景色*/
+    border-top: solid 6px #2c8c49;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32);
     text-decoration: none;
 }
+
 
     .title-link:hover {
         padding: 0.5em 1em;
@@ -122,48 +124,56 @@ h2 {
         left: 0px;
         top: 0px;
         background: linear-gradient(#009688, #74c57a);
-        height: 100px;
+        height: 90px;
         width: 100%;
         margin-bottom:20px;
     }
 
     .head {
         width: 100%;
-        height: 100px;
+        height: 100%;
         margin: 0px;
         
     }
 
     .header-left {
         width: 40%;
-        height: 80%;
+        height: 55px;
         margin: 0 auto;
     }
 
-    #header-txt > p {
-        margin-top: 10px;
+    #header-txt {
         font-size: 15px;
+        margin:0px;
+    }
+
+    #header-txt > p {
+        font-size: 12px;
+        margin:0px;
     }
 
     .title-img {
         display: block;
         width: 200px;
-        height: 50px;
+        height: 40px;
         background: url("../images/header-title-background.png") no-repeat;
         background-size: 150px auto;
     }
 
     .admin {
-        float: right;
+        display:block;
         padding-top: 0.8%;
         padding-right: 3%;
         color: white;
+        font-size: 13px;
     }
 
     .header-right {
+        clear:both;
+        box-sizing:border-box;
         width: 100%;
-        height: 60%;
-        padding: 0px;
+        height:40%;
+        padding: .1px;
     }
 
     .menulist {
@@ -171,35 +181,46 @@ h2 {
         height: 100%;
         padding: 0px;
         text-align: center;
+        overflow:hidden;
+
         
     }
 
     .title-link {
-        width: 100%;
         color: #26e260;
+        display:block;
+        width:100%;
+        height:100%;
+        margin:0;
+        padding:0;
         background: #4aad87; /*背景色*/
         border-top: solid 6px #2c8c49;
         box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
         
     }
 
-    .title-link:hover {
-    }
+        .title-link:hover {
+            padding:0;
+            margin:0;
+            background: #3d8a6c; /*背景色*/
+            border-top: solid 6px #2c8c49;
+            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
+        }
 
     .menu {
-        width: 100%;
-        color: #26e260;
-        background: #4aad87; /*背景色*/
-        border-top: solid 6px #2c8c49;
-        box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
+        float:left;
+        width:33.3%;
+        height:100%;
         padding: 0px;
+        margin:0px;
     }
 
     .menu-text {
+        display:block;
+        clear:both;
         color: white;
-        width: 100%;
+        padding:3px;
+        font-size: 13px;
     }
-
-
 }
 
