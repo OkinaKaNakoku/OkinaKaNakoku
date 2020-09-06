@@ -101,7 +101,6 @@ def updateScore(request):
         'error_message': "更新不可です。更新管理をUPDATEしてください",
         'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
 
-
     # ■form取得。多分もっといい方法ある
     noUser = 'default'
     userIds = []
