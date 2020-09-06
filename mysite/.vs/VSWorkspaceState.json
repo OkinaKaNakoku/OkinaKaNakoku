@@ -2,7 +2,6 @@
   "ExpandedNodes": [
     "",
     "\\mahjong",
-    "\\mahjong\\migrations\\__pycache__",
     "\\mahjong\\static",
     "\\mahjong\\static\\mahjong",
     "\\mahjong\\static\\mahjong\\css",
@@ -11,6 +10,6 @@
     "\\mahjong\\templates",
     "\\mahjong\\templates\\mahjong"
   ],
-  "SelectedNode": "\\mahjong\\static\\mahjong\\css\\score-table.css",
+  "SelectedNode": "\\mahjong\\views.py",
   "PreviewInSolutionExplorer": false
 }
