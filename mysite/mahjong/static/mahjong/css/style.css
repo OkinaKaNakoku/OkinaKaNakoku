@@ -1,6 +1,7 @@
 body {
     width: 100%;
     margin: 0 auto;
+    font-family: "'Hiragino Kaku Gothic Pro','ヒラギノ角ゴ Pro W3','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif"
 }
 
 .wrapper {
@@ -221,7 +222,5 @@ h2 {
         padding:3px;
         font-size: 13px;
     }
-
-
 }
 

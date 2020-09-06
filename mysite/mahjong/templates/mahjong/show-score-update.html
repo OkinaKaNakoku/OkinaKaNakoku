@@ -15,53 +15,166 @@
     <div id="wrapper">
         <div id="header"></div>
         <div class="clearfix">
-                {% csrf_token %}
-                <span class="user">Name</span>
-            <form action="{% url 'mahjong:updateScore' %}" method="post">
-                {% csrf_token %}
-                {% if users %}
-                <span class="user">Name</span>
-                <span class="score">Score</span>
-                <div class="input">
-                    <select name="user1">
-                        <option value="default"></option>
-                        {% for user in users %}
-                        <option value="{{user.userId}}">{{user.name}}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="text" name="score1" />
-                </div>
-                <div class="input">
-                    <select name="user2">
-                        <option value="default"></option>
-                        {% for user in users %}
-                        <option value="{{user.userId}}">{{user.name}}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="text" name="score2" />
-                </div>
-                <div class="input">
-                    <select name="user3">
-                        <option value="default"></option>
-                        {% for user in users %}
-                        <option value="{{user.userId}}">{{user.name}}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="text" name="score3" />
-                </div>
-                <div class="input">
-                    <select name="user4">
-                        <option value="default"></option>
-                        {% for user in users %}
-                        <option value="{{user.userId}}">{{user.name}}</option>
-                        {% endfor %}
-                        {% endif %}
-                    </select>
-                    <input type="text" name="score4" />
-                </div>
-                <button class="update">登録する</button>
-            </form>
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            <form action="{% url 'mahjong:settingUser' %}" method="post">
+                <div class="setting">
+                    {% csrf_token %}
+                    <span class="settingUser"><b>ユーザ設定</b></span>
+                    <div class="user">
+                        <select name="user1">
+                            <option value="default"></option>
+                            {% for user in settingUsers %}
+                            <option value="{{user.userId}}">{{user.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="user">
+                        <select name="user2">
+                            <option value="default"></option>
+                            {% for user in settingUsers %}
+                            <option value="{{user.userId}}">{{user.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="user">
+                        <select name="user3">
+                            <option value="default"></option>
+                            {% for user in settingUsers %}
+                            <option value="{{user.userId}}">{{user.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="user">
+                        <select name="user4">
+                            <option value="default"></option>
+                            {% for user in settingUsers %}
+                            <option value="{{user.userId}}">{{user.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="settingBtn">
+                        <button class="btn">ユーザ設定</button>
+                    </div>
+                </div>
+            </form>
+            {% if user1 %}
+            <form action="{% url 'mahjong:updateGame' %}" method="post">
+                <div class="gameUpdate">
+                    <span class="settingUser"><b>対局登録</b></span>
+                    {% csrf_token %}
+                    <div class="gameUpdate">
+                        <table class="gameUserTable">
+                            <thead>
+                                <tr>
+                                    <th>{{user1.name}}</th>
+                                    <td>
+                                        <input type="hidden" name="user1" value="{{user1.userId}}"/>
+                                        <input type="hidden" name="gameResult1" value=0 />
+                                        <label>
+                                            <input type="radio" name="gameResult1" value=1 />和了
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="gameResult1" value=2 />放銃
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{{user2.name}}</th>
+                                    <td>
+                                        <input type="hidden" name="user2" value="{{user2.userId}}" />
+                                        <input type="hidden" name="gameResult2" value=0 />
+                                        <label>
+                                            <input type="radio" name="gameResult2" value=1 />和了
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="gameResult2" value=2 />放銃
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{{user3.name}}</th>
+                                    <td>
+                                        <input type="hidden" name="user3" value="{{user3.userId}}" />
+                                        <input type="hidden" name="gameResult3" value=0 />
+                                        <label>
+                                            <input type="radio" name="gameResult3" value=1 />和了
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="gameResult3" value=2 />放銃
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{{user4.name}}</th>
+                                    <td>
+                                        <input type="hidden" name="user4" value="{{user4.userId}}" />
+                                        <input type="hidden" name="gameResult4" value=0 />
+                                        <label>
+                                            <input type="radio" name="gameResult4" value=1 />和了
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="gameResult4" value=2 />放銃
+                                        </label>
+                                    </td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div class="settingBtn">
+                            <button class="btn">対局登録</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form action="{% url 'mahjong:updateScore' %}" method="post">
+                <div class="sucoreUpdate">
+                    <span class="settingUser"><b>スコア登録</b></span>
+                    {% csrf_token %}
+                    <table class="gameUserTable">
+                        <thead>
+                            <tr>
+                                <th>{{user1.name}}</th>
+                                <td>
+                                    <label>
+                                        <input class="userId" type="hidden" name="user1" value="{{user1.userId}}" />
+                                        <input class="scoreText" type="text" name="score1" />
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{user2.name}}</th>
+                                <td>
+                                    <label>
+                                        <input class="userId" type="hidden" name="user2" value="{{user2.userId}}" />
+                                        <input class="scoreText" type="text" name="score2" />
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{user3.name}}</th>
+                                <td>
+                                    <label>
+                                        <input class="userId" type="hidden" name="user3" value="{{user3.userId}}" />
+                                        <input class="scoreText" type="text" name="score3" />
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{user4.name}}</th>
+                                <td>
+                                    <label>
+                                        <input class="userId" type="hidden" name="user4" value="{{user4.userId}}"/>
+                                        <input class="scoreText" type="text" name="score4" />
+                                    </label>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="settingBtn">
+                        <button class="btn">スコア登録</button>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
         </div>
     </div>
 </body>
