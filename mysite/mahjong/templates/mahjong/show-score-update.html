@@ -68,13 +68,15 @@
                                 <tr>
                                     <th>{{user1.name}}</th>
                                     <td>
-                                        <input type="hidden" name="user1" value="{{user1.userId}}"/>
+                                        <input type="hidden" name="user1" value="{{user1.userId}}" />
                                         <input type="hidden" name="gameResult1" value=0 />
                                         <label>
-                                            <input type="radio" name="gameResult1" value=1 />和了
+                                            <input class="radio" type="radio" name="gameResult1" value=1 />
+                                            <span class="result">和了</span>
                                         </label>
                                         <label>
-                                            <input type="radio" name="gameResult1" value=2 />放銃
+                                            <input class="radio" type="radio" name="gameResult1" value=2 />
+                                            <span class="result">放銃</span>
                                         </label>
                                     </td>
                                 </tr>
@@ -84,10 +86,12 @@
                                         <input type="hidden" name="user2" value="{{user2.userId}}" />
                                         <input type="hidden" name="gameResult2" value=0 />
                                         <label>
-                                            <input type="radio" name="gameResult2" value=1 />和了
+                                            <input class="radio" type="radio" name="gameResult2" value=1 />
+                                            <span class="result">和了</span>
                                         </label>
                                         <label>
-                                            <input type="radio" name="gameResult2" value=2 />放銃
+                                            <input class="radio" type="radio" name="gameResult2" value=2 />
+                                            <span class="result">放銃</span>
                                         </label>
                                     </td>
                                 </tr>
@@ -97,10 +101,12 @@
                                         <input type="hidden" name="user3" value="{{user3.userId}}" />
                                         <input type="hidden" name="gameResult3" value=0 />
                                         <label>
-                                            <input type="radio" name="gameResult3" value=1 />和了
+                                            <input class="radio" type="radio" name="gameResult3" value=1 />
+                                            <span class="result">和了</span>
                                         </label>
                                         <label>
-                                            <input type="radio" name="gameResult3" value=2 />放銃
+                                            <input class="radio" type="radio" name="gameResult3" value=2 />
+                                            <span class="result">放銃</span>
                                         </label>
                                     </td>
                                 </tr>
@@ -110,10 +116,12 @@
                                         <input type="hidden" name="user4" value="{{user4.userId}}" />
                                         <input type="hidden" name="gameResult4" value=0 />
                                         <label>
-                                            <input type="radio" name="gameResult4" value=1 />和了
+                                            <input class="radio" type="radio" name="gameResult4" value=1 />
+                                            <span class="result">和了</span>
                                         </label>
                                         <label>
-                                            <input type="radio" name="gameResult4" value=2 />放銃
+                                            <input class="radio" type="radio" name="gameResult4" value=2 />
+                                            <span class="result">放銃</span>
                                         </label>
                                     </td>
                                 </tr>
@@ -162,7 +170,7 @@
                                 <th>{{user4.name}}</th>
                                 <td>
                                     <label>
-                                        <input class="userId" type="hidden" name="user4" value="{{user4.userId}}"/>
+                                        <input class="userId" type="hidden" name="user4" value="{{user4.userId}}" />
                                         <input class="scoreText" type="text" name="score4" />
                                     </label>
                                 </td>
@@ -176,6 +184,7 @@
             </form>
             {% endif %}
         </div>
+        <div id="footer"></div>
     </div>
 </body>
 </html>

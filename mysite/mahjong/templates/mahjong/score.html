@@ -39,6 +39,60 @@
                 </tbody>
             </table>
         </div>
+        <div class="score">
+            <div class="rankTitle"><b>半荘回数_ランキング</b></div>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <td>名前</td>
+                        <td>半荘回数</td>
+                        <td>割合</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if usersHanso %}
+                    {% for user in usersHanso %}
+                    <tr>
+                        <th>{{user.rank}}</th>
+                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td>{{user.hansoSum}}</td>
+                        <td>{{user.percentage}}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="score">
+            <div class="rankTitle"><b>和了率_ランキング</b></div>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <td>名前</td>
+                        <td>和了数</td>
+                        <td>総局数</td>
+                        <td>割合</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if usersHora %}
+                    {% for user in usersHora %}
+                    <tr>
+                        <th>{{user.rank}}</th>
+                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td>{{user.horaCnt}}</td>
+                        <td>{{user.cnt}}</td>
+                        <td>{{user.percentage}}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="footer"></div>
     </div>
 </body>
 </html>

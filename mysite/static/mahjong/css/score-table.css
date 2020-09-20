@@ -1,5 +1,8 @@
 b{
-    font-size:25px;
+    font-size:20px;
+}
+.title {
+    text-align: center;
 }
 .childScore {
     position: relative;
@@ -69,6 +72,9 @@ table {
 @media screen and (max-width: 730px) {
     b {
         font-size: 20px;
+    }
+    .title {
+        text-align:center;
     }
 
     .childScore {

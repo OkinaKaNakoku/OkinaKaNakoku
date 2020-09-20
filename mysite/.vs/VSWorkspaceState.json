@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\mahjong",
+    "\\mahjong\\dto",
+    "\\mahjong\\migrations",
     "\\mahjong\\static",
     "\\mahjong\\static\\mahjong",
     "\\mahjong\\static\\mahjong\\css",
     "\\mahjong\\static\\mahjong\\jquery",
     "\\mahjong\\static\\mahjong\\js",
-    "\\mahjong\\templates",
-    "\\mahjong\\templates\\mahjong"
+    "\\mahjong\\static\\mahjong\\templates"
   ],
-  "SelectedNode": "\\mahjong\\views.py",
+  "SelectedNode": "\\mahjong\\static\\mahjong\\css\\score.css",
   "PreviewInSolutionExplorer": false
 }
