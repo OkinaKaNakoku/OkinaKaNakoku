@@ -91,6 +91,34 @@
                 </tbody>
             </table>
         </div>
+        <div class="score">
+            <div class="rankTitle"><b>放銃率_ランキング</b></div>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>順位</th>
+                        <td>名前</td>
+                        <td>放銃数</td>
+                        <td>総局数</td>
+                        <td>割合</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if userHoju %}
+                    {% for user in userHoju %}
+                    <tr>
+                        <th>{{user.rank}}</th>
+                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td>{{user.horaCnt}}</td>
+                        <td>{{user.cnt}}</td>
+                        <td>{{user.percentage}}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
 
         <div id="footer"></div>
     </div>

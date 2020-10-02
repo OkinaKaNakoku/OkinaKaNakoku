@@ -106,14 +106,15 @@ def showRanking(request):
         user.rank = rank
         usersResHansoCnt.append(user)
 
-    # ■■■和了数ランキング■■■■■■■■■■■■■■■■■■■■■
+    # ■■■和了率・放銃率ランキング■■■■■■■■■■■■■■■■■■■■■
     # GAME_RESULT取得
     gameResult = GameResult.objects.select_related().all().order_by('user_id')
 
-    # 和了率計算
+    # 和了率・放銃率計算
     # ユーザの和了数をユーザの全局数で割る
     # ランキング紐付け。一旦ランクは固定で入れる（後で並び替え時に入れる）
     horaPercentageRankList =[]
+    hojuPercentageRankList =[]
     for user in users_obj:
         userList = []
         userHoraList = []
@@ -127,13 +128,17 @@ def showRanking(request):
                     userHojuList.append(userGameResult)
         if (len(userList) != 0 ): # 対局ありのみ計算（0割考慮）
             horaCnt = len(userHoraList)
+            hojuCnt = len(userHojuList)
             cnt = len(userList)
             print(cnt)
             percentage = format(horaCnt / cnt * 100, '.2f') # 小数点以下2桁まで
+            percentageHoju = format(hojuCnt / cnt * 100, '.2f') # 小数点以下2桁まで
             horaPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, cnt, horaCnt, float(percentage), 1))
+            hojuPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, cnt, hojuCnt, float(percentageHoju), 1))
         else:
             horaPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, 0, 0,  float(0.0), 1))
-    # 並び替え
+            hojuPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, 0, 0,  float(0.0), 1))
+    # 和了率・並び替え
     horaPercentageRankList = sorted(horaPercentageRankList, key=attrgetter('percentage'), reverse=True)
     percentageList = []  # 同率で使う
     cnt = 0        # 同率で使う
@@ -160,8 +165,36 @@ def showRanking(request):
         user.rank = rank
         usersResHoraPercentage.append(user)
 
+    # 放銃率・並び替え
+    hojuPercentageRankList = sorted(hojuPercentageRankList, key=attrgetter('percentage'), reverse=False)
+    percentageList = []  # 同率で使う
+    cnt = 0        # 同率で使う
+    isFirst = True # 同率で使う
+    rank = 1
+    usersResHojuPercentage = []
+    for user in hojuPercentageRankList:
+        if isFirst: # 先頭は同率の考慮なし。ロジック効率より可読性を優先
+            isFirst = False
+            percentageList.append(user.percentage)
+            user.rank = rank
+            usersResHojuPercentage.append(user)
+            continue
+
+        """ 同率を見る
+        同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
+        isDoritsu = True
+        if not percentageList[cnt] == user.percentage:
+            isDoritsu = False
+        cnt = cnt + 1
+        if not isDoritsu:
+            rank = len(percentageList) + 1
+        percentageList.append(user.percentage)
+        user.rank = rank
+        usersResHojuPercentage.append(user)
+
     return render(request, 'mahjong/score.html',
-        {'users':usersResScore, 'usersHanso':usersResHansoCnt, 'usersHora':usersResHoraPercentage})
+        {'users':usersResScore, 'usersHanso':usersResHansoCnt, 'usersHora':usersResHoraPercentage,
+         'userHoju':usersResHojuPercentage})
 
 # スコア更新表示
 def showScoreUpdate(request):
