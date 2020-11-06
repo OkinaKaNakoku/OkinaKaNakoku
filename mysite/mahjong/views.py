@@ -566,6 +566,10 @@ def showDetail(request, userId):
     for hanso in hansos:
         if hanso.get('user_id_id') == userId:
             hansoIdList.append(hanso)
+    # 半荘データなしは以降処理なし
+    if len(hansoIdList) == 0:
+         return render(request, 'mahjong/show-detail.html', {'details':None})
+    
     # 同半荘IDの情報取得
     scoreDetails = []
     for hansoId in hansoIdList:
@@ -586,34 +590,53 @@ def showDetail(request, userId):
     for scoreDetail in scoreDetails:
         date = scoreDetail.get('insert_date')
         date = str(date.year) + '/' + str(date.month) + '/' + str(date.day)
+        user = getUser(users, scoreDetail.get('user_id_id'))
+        # 同じ半荘ID
+        if hansoIdWk == scoreDetail.get('hanso_id'):
+            hansoIdWk = scoreDetail.get('hanso_id')
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
+                                                                            , user.get('last_name')
+                                                                            , user.get('first_name')
+                                                                            , scoreDetail.get('rank')
+                                                                            , scoreDetail.get('score')
+                                                                            , scoreDetail.get('score_result')))
+            continue
+        else:
+            hansoIdWk = scoreDetail.get('hanso_id')
+            battleNo = battleNo + 1
+            showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
+            detailBattles.append(showDetailBattleDto)
+            detailUsers = []
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
+                                                                            , user.get('last_name')
+                                                                            , user.get('first_name')
+                                                                            , scoreDetail.get('rank')
+                                                                            , scoreDetail.get('score')
+                                                                            , scoreDetail.get('score_result')))
         # 同じ日付内
         if dateWk == date:
             dateWk = date
-            user = getUser(users, scoreDetail.get('user_id_id'))
-
-            # 同じ半荘ID
-            if hansoIdWk == scoreDetail.get('hanso_id'):
-                hansoIdWk = scoreDetail.get('hanso_id')
-                detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
-            else:
-                hansoIdWk = scoreDetail.get('hanso_id')
-                battleNo = battleNo + 1
-                showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
-                detailBattles.append(showDetailBattleDto)
-                detailUsers = []
-                detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
             continue
+
         else:
+            battleNo = 0
             dayScore = 0
             for battle in detailBattles:
-                for user in battle.detailUsers:
-                    if userId == user.userId:
-                        dayScore = dayScore + user.scoreResult
+                for us in battle.detailUsers:
+                    if userId == us.userId:
+                        dayScore = dayScore + us.scoreResult
             showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
+            print(len(detailBattles))
             details.append(showDetail)
             detailBattles = []
             detailUsers = []
-            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
+                                                                            , user.get('last_name')
+                                                                            , user.get('first_name')
+                                                                            , scoreDetail.get('rank')
+                                                                            , scoreDetail.get('score')
+                                                                            , scoreDetail.get('score_result')))
+            dateWk = date
 
     battleNo = battleNo + 1
     showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
@@ -625,8 +648,6 @@ def showDetail(request, userId):
                 dayScore = dayScore + user.scoreResult
     showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
     details.append(showDetail)
-    print(details[0].detailBattles[0].battleNo)
-    
     return render(request, 'mahjong/show-detail.html', {'details':details})
 
 def getUser(users, userId):
