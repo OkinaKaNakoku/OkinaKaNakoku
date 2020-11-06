@@ -1,6 +1,7 @@
 class HansoCntRank:
     # コンストラクタ：スコア表示
     def __init__(self, user, hansoSum, percentage, rank):
+        self.userId = user.user_id
         self.lastName = user.last_name
         self.firstName = user.first_name
         self.hansoSum = hansoSum

@@ -30,7 +30,7 @@
                     {% for user in users %}
                     <tr>
                         <th>{{user.rank}}</th>
-                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
                         <td>{{user.scoreSum}}</td>
                         <td>{{user.topDiff}}</td>
                     </tr>
@@ -55,7 +55,7 @@
                     {% for user in usersHanso %}
                     <tr>
                         <th>{{user.rank}}</th>
-                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
                         <td>{{user.hansoSum}}</td>
                         <td>{{user.percentage}}%</td>
                     </tr>
@@ -81,7 +81,7 @@
                     {% for user in usersHora %}
                     <tr>
                         <th>{{user.rank}}</th>
-                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
                         <td>{{user.horaCnt}}</td>
                         <td>{{user.cnt}}</td>
                         <td>{{user.percentage}}%</td>
@@ -108,7 +108,7 @@
                     {% for user in userHoju %}
                     <tr>
                         <th>{{user.rank}}</th>
-                        <td>{{user.lastName}} {{user.firstName}}</td>
+                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
                         <td>{{user.horaCnt}}</td>
                         <td>{{user.cnt}}</td>
                         <td>{{user.percentage}}%</td>
@@ -118,8 +118,6 @@
                 </tbody>
             </table>
         </div>
-
-
         <div id="footer"></div>
     </div>
 </body>

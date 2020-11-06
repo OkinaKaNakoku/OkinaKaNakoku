@@ -1,0 +1,62 @@
+﻿{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-detail.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/test.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/template.js"></script>
+<script type="text/javascript" src="/static/mahjong/jquery/templates/jquery.acordion.js"></script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+    <title>翁カ奴国-個人詳細</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header"></div>
+        {% if details %}
+        {% for detail in details %}
+        <ul class="menu">
+            <li class="menu__item">
+                <a class="menu__item__link js-menu__item__link" href="">{{detail.date}}</a>
+                <ul class="submenu">
+                    <li class="submenu__item">
+                        <p>当日スコア合計：{{detail.dayScore}}</p>
+                        {% for battle in detail.detailBattles %}
+                        <div>第{{battle.battleNo}}回戦</div>
+                        <table class="score-table">
+                            <thead>
+                                <tr>
+                                    <th>順位</th>
+                                    <td>名前</td>
+                                    <td>スコア</td>
+                                </tr>
+                            </thead>
+                            {% for user in battle.detailUsers %}
+                            <tbody>
+                                <tr>
+                                    <th>{{user.rank}}</th>
+                                    <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                                    <td>{{user.score}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        {% endfor %}
+        {% endif %}
+        <div class="score">
+            <div class="rankTitle">
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>
+

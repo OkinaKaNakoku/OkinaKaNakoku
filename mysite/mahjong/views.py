@@ -1,9 +1,13 @@
 import sys
+import datetime
 from mahjong.dto import indexScoreDto
 from mahjong.dto import showScoreUpdateDto
 from mahjong.dto import updateScoreDAO
 from mahjong.dto import hansoCntRankDto
 from mahjong.dto import horaPercentageRankDto
+from mahjong.dto import showDetailDto
+from mahjong.dto import showDetailUserListDto
+from mahjong.dto import showDetailBattleListDto
 
 from operator import itemgetter
 from operator import attrgetter
@@ -74,7 +78,7 @@ def showRanking(request):
             if user.user_id == userCnt.get('user_id'):
                 registed = True
                 userSum = userCnt.get('count')
-                percentage = userSum / hansoSumCnt * 100
+                percentage = format(userSum / hansoSumCnt * 100, '.2f') # 小数点以下2桁まで
                 usersHansoCnt.append(hansoCntRankDto.HansoCntRank(user, userSum, percentage, 1))
                 break
         if not registed: # 半荘回数0がいるので分ける
@@ -130,7 +134,6 @@ def showRanking(request):
             horaCnt = len(userHoraList)
             hojuCnt = len(userHojuList)
             cnt = len(userList)
-            print(cnt)
             percentage = format(horaCnt / cnt * 100, '.2f') # 小数点以下2桁まで
             percentageHoju = format(hojuCnt / cnt * 100, '.2f') # 小数点以下2桁まで
             horaPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, cnt, horaCnt, float(percentage), 1))
@@ -552,4 +555,83 @@ def isUpdatePossible():
     if isUpdatePossibleQuery.first() is None:
         return False
     return True
+
+# 個人詳細表示
+def showDetail(request, userId):
+    users = UserInfo.objects.values()
+    hansos = HansoSum.objects.values()
+
+    # 対象のユーザの半荘IDのみ取得
+    hansoIdList = []
+    for hanso in hansos:
+        if hanso.get('user_id_id') == userId:
+            hansoIdList.append(hanso)
+    # 同半荘IDの情報取得
+    scoreDetails = []
+    for hansoId in hansoIdList:
+        for hanso in hansos:
+            if hansoId.get('hanso_id') == hanso.get('hanso_id'):
+                scoreDetails.append(hanso)
+
+    # 先頭だけ普通に日付いれる
+    dateWk = scoreDetails[0].get('insert_date')
+    dateWk = str(dateWk.year) + '/' + str(dateWk.month) + '/' + str(dateWk.day)
+    hansoIdWk = scoreDetails[0].get('hanso_id')
+    
+    detailUsers = []
+    detailBattles = []
+    details = []
+    battleNo = 0
+    isFirst = True
+    for scoreDetail in scoreDetails:
+        date = scoreDetail.get('insert_date')
+        date = str(date.year) + '/' + str(date.month) + '/' + str(date.day)
+        # 同じ日付内
+        if dateWk == date:
+            dateWk = date
+            user = getUser(users, scoreDetail.get('user_id_id'))
+
+            # 同じ半荘ID
+            if hansoIdWk == scoreDetail.get('hanso_id'):
+                hansoIdWk = scoreDetail.get('hanso_id')
+                detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
+            else:
+                hansoIdWk = scoreDetail.get('hanso_id')
+                battleNo = battleNo + 1
+                showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
+                detailBattles.append(showDetailBattleDto)
+                detailUsers = []
+                detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
+            continue
+        else:
+            dayScore = 0
+            for battle in detailBattles:
+                for user in battle.detailUsers:
+                    if userId == user.userId:
+                        dayScore = dayScore + user.scoreResult
+            showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
+            details.append(showDetail)
+            detailBattles = []
+            detailUsers = []
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user, scoreDetail))
+
+    battleNo = battleNo + 1
+    showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
+    detailBattles.append(showDetailBattleDto)
+    dayScore = 0
+    for battle in detailBattles:
+        for user in battle.detailUsers:
+            if userId == user.userId:
+                dayScore = dayScore + user.scoreResult
+    showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
+    details.append(showDetail)
+    print(details[0].detailBattles[0].battleNo)
+    
+    return render(request, 'mahjong/show-detail.html', {'details':details})
+
+def getUser(users, userId):
+    for user in users:
+        if user.get('user_id') == userId:
+            return user
+
 

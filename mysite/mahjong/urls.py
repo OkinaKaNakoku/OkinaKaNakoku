@@ -11,6 +11,7 @@ urlpatterns = [
     path('updateScore', views.updateScore, name='updateScore'),
     path('updateGame', views.updateGame, name='updateGame'),
     path('scoreTable', views.scoreTable, name='scoreTable'),
+    path('showDetail/<str:userId>/', views.showDetail, name='showDetail')
     #path('<int:question_id>/vote/', views.vote, name='vote'),
 
 ]
