@@ -12,7 +12,13 @@ b {
     text-align: center;
     font-size: 25px;
 }
+.day {
+    margin: 2px;
+}
 
+.submenu {
+    display: none;
+}
 .score {
     display:block;
     width:1000px;
@@ -66,28 +72,61 @@ tr {
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
-    img {
-        width: 960px;
-        margin: 0%;
-    }
-    .rankTitle{
+    .menu-title {
+        text-align: center;
         clear: both;
-        margin:0 auto;
-        width:100%;
-        text-align:center;
     }
-
-    .score {
+    .menu-label {
+        margin: 0 auto 10px;
+        width: 90%;
+    }
+    .-name {
+        font-size: 28px;
+        font-weight:bold;
+    }
+    .title-group {
+        margin: auto;
+        color: aliceblue;
+        font-size: 20px;
+        background: linear-gradient(#6b90a2, #316e8c);
+        clear: both;
+    }
+    .-label {
+        margin: 0px 0px 0px 20px;
+        display:inline-block;
+    }
+    .title-name-sub {
+        display:inline-block;
+        font-size: 15px;
+    }
+    .rank-group {
+        width: 90%;
+        margin: auto;
+        font-size: 18px;
         display: block;
-        margin: 0 auto;
-        width: 100%;
+        border-bottom: solid 0.1px #98bda7;
+        padding: 2px;
     }
-
+    .rank-key {
+        display:inline-block;
+        width:50%;
+        margin:0;
+        text-align: center;
+    }
+    .rank-val {
+        width: auto;
+        display:inline-block
+    }
+    .rank-val-sub {
+        display:inline-block;
+        width: auto;
+        font-size: 13px;
+    }
     .score-table {
         table-layout:fixed;
     }
     table > thead > tr > th {
-        width:30%px;
+        width:30px;
         font-weight:100;
     }
     tr {

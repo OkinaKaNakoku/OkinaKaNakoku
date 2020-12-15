@@ -5,9 +5,8 @@ from mahjong.dto import showScoreUpdateDto
 from mahjong.dto import updateScoreDAO
 from mahjong.dto import hansoCntRankDto
 from mahjong.dto import horaPercentageRankDto
-from mahjong.dto import showDetailDto
-from mahjong.dto import showDetailUserListDto
-from mahjong.dto import showDetailBattleListDto
+from .dto.showDetail import *
+from mahjong.command import showDetailCommand
 
 from operator import itemgetter
 from operator import attrgetter
@@ -20,6 +19,7 @@ from django.utils import timezone
 from django.views import generic
 from decimal import Decimal
 from django.db.models import Q
+from django.utils.timezone import localtime
 
 from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng
 
@@ -34,7 +34,7 @@ def showRanking(request):
     # ■■■スコアランキング■■■■■■■■■■■■■■■■■■
     # UserInfoをスコアの降順で取得
     users_obj = UserInfo.objects.select_related().all().order_by('-score_sum')
-        
+
     usersResScore = []
     scoreList = []  # 同率で使う
     cnt = 0        # 同率で使う
@@ -69,7 +69,7 @@ def showRanking(request):
     users_obj = UserInfo.objects.select_related().all().order_by('user_id')
     hansoSumCnt = len(HansoSum.objects.values('hanso_id').annotate(Count=Count('hanso_id')))
     hansoSumQueryUserCnt = HansoSum.objects.values('user_id').annotate(count=Count('user_id')).order_by('-count')
-    
+
     # ランキング紐付け。一旦ランクは固定で入れる
     usersHansoCnt = []
     for user in users_obj:
@@ -249,7 +249,7 @@ def updateScore(request):
     userScores.append(request.POST['score3'])
     userIds.append(request.POST['user4'])
     userScores.append(request.POST['score4'])
-    
+
     # ■スコアのバリデーションチェック
     for userScore in userScores:
         if userScore == '': # スコア未登録
@@ -267,7 +267,7 @@ def updateScore(request):
             'users': usersRes,
             'error_message': "スコアを全て登録してください",
             'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
-    
+
     # ■userとscoreの紐付け
     cnt = 0
     insertDaos = []
@@ -277,7 +277,7 @@ def updateScore(request):
                 cnt = cnt + 1
                 insertDaos.append(updateScoreDAO.UpdateScoreDAO(userId, mappingScore))
                 break
-    
+
     # ■順位ソート
     rankSortDaos = sorted(insertDaos, key=attrgetter('score'), reverse=True)
 
@@ -303,7 +303,7 @@ def updateScore(request):
 
         # ウマ・オカ計算
         if rankParam == 1:
-            scoreResultParam = int(scoreParam) + 20000 + 30000       
+            scoreResultParam = int(scoreParam) + 20000 + 30000
         elif rankParam == 2:
             scoreResultParam = int(scoreParam) + 10000
         elif rankParam == 3:
@@ -415,7 +415,7 @@ def updateGame(request, **kwargs):
     # ■form取得
     userId = request.POST['user1']
     gameResult = request.POST['gameResult1']
-    
+
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
     userQuery = UserInfo.objects.all().filter(conditionUserId)
@@ -445,7 +445,7 @@ def updateGame(request, **kwargs):
     conditionUserId = Q(user_id = userId)
     userQuery = UserInfo.objects.all().filter(conditionUserId)
     GameResult(hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
-    
+
     userId = request.POST['user4']
     gameResult = request.POST['gameResult4']
     # ■userInfo取得
@@ -488,7 +488,7 @@ def settingUser(request, **kwargs):
         return render(request, 'mahjong/show-score-update.html', {
         'settingUsers': usersRes,
         'error_message': "プレイヤーが重複しています"})
-    
+
     # GameUserをdelete-insert。同期遷移しても保持させる
     GameUser.objects.all().delete()
     # ■form取得。たぶんもっといい方法ある
@@ -533,7 +533,7 @@ def userValidation(request):
     userIds.append(request.POST['user2'])
     userIds.append(request.POST['user3'])
     userIds.append(request.POST['user4'])
-    
+
     # ■IDのバリデーションチェック：ユーザ未選択
     for userId in userIds:
         if userId == noUser:
@@ -558,6 +558,9 @@ def isUpdatePossible():
 
 # 個人詳細表示
 def showDetail(request, userId):
+    command = showDetailCommand.ShowDetailCommand(userId)
+    showDetailInfo = command.getShowDetailInfo()
+
     users = UserInfo.objects.values()
     hansos = HansoSum.objects.values()
 
@@ -568,8 +571,8 @@ def showDetail(request, userId):
             hansoIdList.append(hanso)
     # 半荘データなしは以降処理なし
     if len(hansoIdList) == 0:
-         return render(request, 'mahjong/show-detail.html', {'details':None})
-    
+         return render(request, 'mahjong/show-detail.html', {'details':None, 'info':showDetailInfo})
+
     # 同半荘IDの情報取得
     scoreDetails = []
     for hansoId in hansoIdList:
@@ -578,17 +581,17 @@ def showDetail(request, userId):
                 scoreDetails.append(hanso)
 
     # 先頭だけ普通に日付いれる
-    dateWk = scoreDetails[0].get('insert_date')
+    dateWk = localtime(scoreDetails[0].get('insert_date'))
     dateWk = str(dateWk.year) + '/' + str(dateWk.month) + '/' + str(dateWk.day)
     hansoIdWk = scoreDetails[0].get('hanso_id')
-    
+
     detailUsers = []
     detailBattles = []
     details = []
     battleNo = 0
     isFirst = True
     for scoreDetail in scoreDetails:
-        date = scoreDetail.get('insert_date')
+        date = localtime(scoreDetail.get('insert_date'))
         date = str(date.year) + '/' + str(date.month) + '/' + str(date.day)
         user = getUser(users, scoreDetail.get('user_id_id'))
         # 同じ半荘ID
@@ -626,7 +629,6 @@ def showDetail(request, userId):
                     if userId == us.userId:
                         dayScore = dayScore + us.scoreResult
             showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
-            print(len(detailBattles))
             details.append(showDetail)
             detailBattles = []
             detailUsers = []
@@ -648,11 +650,9 @@ def showDetail(request, userId):
                 dayScore = dayScore + user.scoreResult
     showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
     details.append(showDetail)
-    return render(request, 'mahjong/show-detail.html', {'details':details})
+    return render(request, 'mahjong/show-detail.html', {'details':details, 'info':showDetailInfo})
 
 def getUser(users, userId):
     for user in users:
         if user.get('user_id') == userId:
             return user
-
-

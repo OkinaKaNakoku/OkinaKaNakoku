@@ -1,7 +1,6 @@
 ﻿{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-detail.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/test.css' %}">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/static/mahjong/js/template.js"></script>
 <script type="text/javascript" src="/static/mahjong/jquery/templates/jquery.acordion.js"></script>
@@ -16,47 +15,125 @@
 <body>
     <div id="wrapper">
         <div id="header"></div>
-        {% if details %}
-        {% for detail in details %}
-        <ul class="day">
-            <li class="menu__item">
-                <a class="menu__item__link js-menu__item__link" href="">{{detail.date}}</a>
-                <ul class="submenu">
-                    <li class="submenu__item">
-                        <p>当日スコア合計：{{detail.dayScore}}</p>
-                        {% for battle in detail.detailBattles %}
-                        <div>第{{battle.battleNo}}回戦</div>
-                        <table class="score-table">
-                            <thead>
-                                <tr>
-                                    <th>順位</th>
-                                    <td>名前</td>
-                                    <td>スコア</td>
-                                </tr>
-                            </thead>
-                            {% for user in battle.detailUsers %}
-                            <tbody>
-                                <tr>
-                                    <th>{{user.rank}}</th>
-                                    <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
-                                    <td>{{user.score}}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        {% endfor %}
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        {% endfor %}
-        {% endif %}
-        <div class="score">
-            <div class="rankTitle">
+        <div class="menu-title">
+            <div class="title-name -name">{{info.userRecordDto.user}}</div>
+        </div>
+        <div class="menu-label">
+            <div class="title-group">
+                <div class="title-name -label">戦績</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">総合順位</div>
+                <div class="rank-val">{{info.userRecordDto.rank}}位</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">総合スコア</div>
+                <div class="rank-val">{{info.userRecordDto.score}}</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">半荘回数</div>
+                <div class="rank-val">{{info.userRecordDto.hansoCnt}}回</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">最高スコア</div>
+                <div class="rank-val">{{info.userRecordDto.maxScore}}</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">最低スコア</div>
+                <div class="rank-val">{{info.userRecordDto.minScore}}</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">対局数</div>
+                <div class="rank-val">{{info.userRecordDto.gameCnt}}回</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">和了数(%)</div>
+                <div class="rank-val">{{info.userRecordDto.horaCnt}}回({{info.userRecordDto.horaPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">放銃数(%)</div>
+                <div class="rank-val">{{info.userRecordDto.hojuCnt}}回({{info.userRecordDto.hojuPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">参加日数</div>
+                <div class="rank-val">{{info.userRecordDto.days}}日</div>
             </div>
         </div>
+        <div class="menu-label">
+            <div class="title-group">
+                <div class="title-name -label">獲得順位数</div>
+                <div class="title-name-sub">(%)</div>
+                <div class="title-name -label">※飛び含む</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">1位</div>
+                <div class="rank-val">{{info.userGetRankDto.first}}回</div>
+                <div class="rank-val-sub">({{info.userGetRankDto.firstPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">2位</div>
+                <div class="rank-val">{{info.userGetRankDto.second}}回</div>
+                <div class="rank-val-sub">({{info.userGetRankDto.secondPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">3位</div>
+                <div class="rank-val">{{info.userGetRankDto.third}}回</div>
+                <div class="rank-val-sub">({{info.userGetRankDto.thirdPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">4位</div>
+                <div class="rank-val">{{info.userGetRankDto.fourth}}回</div>
+                <div class="rank-val-sub">({{info.userGetRankDto.fourthPercent}}%)</div>
+            </div>
+            <div class="rank-group">
+                <div class="rank-key">飛び</div>
+                <div class="rank-val">{{info.userGetRankDto.tobi}}回</div>
+                <div class="rank-val-sub">({{info.userGetRankDto.tobiPercent}}%)</div>
+            </div>
+        </div>
+        <div class="menu-label">
+            {% if details %}
+            {% for detail in details %}
+            <ul class="day">
+                <li class="menu__item">
+                    <a class="menu__item__link js-menu__item__link" href="">{{detail.date}}</a>
+                    <ul class="submenu">
+                        <li class="submenu__item">
+                            <p>当日スコア合計：{{detail.dayScore}}</p>
+                            {% for battle in detail.detailBattles %}
+                            <div>第{{battle.battleNo}}回戦</div>
+                            <table class="score-table">
+                                <thead>
+                                    <tr>
+                                        <th>順位</th>
+                                        <td>名前</td>
+                                        <td>スコア</td>
+                                    </tr>
+                                </thead>
+                                {% for user in battle.detailUsers %}
+                                <tbody>
+                                    <tr>
+                                        <th>{{user.rank}}</th>
+                                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                                        <td>{{user.score}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            {% endfor %}
+            {% endif %}
+            <div class="score">
+                <div class="rankTitle">
+                </div>
+            </div>
+        </div>
+        <div id="footer"></div>
     </div>
-    <div id="footer"></div>
 </body>
 </html>
 
