@@ -83,11 +83,12 @@ class ShowDetailCommand:
         hojuPercentage = format(hojuCnt / gameCnt * 100, '.2f')
 
         #参加日数
-        dayCnt = 0
-        dayWk = localtime(hansoSumQuerys[0].insert_date)
+        dayCnt = 1
+        print(userHansoSums)
+        dayWk = localtime(userHansoSums[0].insert_date)
         dayWk = str(dayWk.year) + '/' + str(dayWk.month) + '/' + str(dayWk.day)
-        for hansoSumQuery in hansoSumQuerys:
-            day = localtime(hansoSumQuery.insert_date)
+        for userHansoSum in userHansoSums:
+            day = localtime(userHansoSum.insert_date)
             day = str(day.year) + '/' + str(day.month) + '/' + str(day.day)
             if (day != dayWk):
                 dayCnt += 1
