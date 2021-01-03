@@ -72,7 +72,8 @@ h2 {
     padding-right: 0;
     text-align: right;
     color: white;
-    margin: 2px
+    margin: 2px;
+    height: 40%;
 }
 
     .topic > a {
