@@ -6,7 +6,6 @@ from mahjong.query import query
 
 from operator import itemgetter
 from operator import attrgetter
-from selenium import webdriver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse

@@ -525,7 +525,6 @@ def changeYear(request, **kwargs):
         if str(year.get('year')) not in years:
             years.append(str(year.get('year')))
             continue
-    print(years)
     # いつが選択済みなのかを決める
     selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
     yearsInfo = []
