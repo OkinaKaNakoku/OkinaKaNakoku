@@ -7,4 +7,4 @@ class Const:
         SELECT_YEAR = 'selectYear'
 
     class ScreenConst:
-        ALL_YEAR = '通算'
+        ALL_YEAR = 'allYear'

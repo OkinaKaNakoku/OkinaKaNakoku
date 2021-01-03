@@ -23,8 +23,11 @@ window.onload = function setSelectYear() {
     checkOption.forEach(function (e) {
         e.addEventListener("click", function () {
             val = document.querySelector("input:checked[name=selectYear]").value;
-            document.getElementById("select-show").innerHTML = val;
             document.cookie = "selectYear=" + val;
+            if (val == 'allYear') {
+              val = '通算'
+            }
+            document.getElementById("select-show").innerHTML = val;
         });
     });
 }

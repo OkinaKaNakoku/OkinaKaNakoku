@@ -16,7 +16,7 @@
     margin: 1em 0;
     margin-left: 0.25em;
     background: #FFF;
-    border: solid 3px #6091d3; /*ü*/
+    border: solid 2px #6091d3; /*ü*/
     border-radius: 10px; /*Šp‚ÌŠÛ‚İ*/
     text-align: left
 }
@@ -27,14 +27,16 @@
 }
 
 .-all-year {
-    width: 10em;
+    width: 92%;
     text-align: center;
-    margin-right:100%;
+    
 }
 
 .-year {
-    width: 10em;
+    width: 85%;
     text-align: center;
+    box-sizing:content-box;
+    margin:0%;
 }
 
 .radio-inline__input {
@@ -47,7 +49,7 @@
     border-radius: 3px;
     transition: all .2s;
     border: dashed 2px #c3dbfb;
-    margin: 2px;
+    margin: 5px;
 }
 
 .radio-inline__input:checked + .radio-inline__label {
@@ -61,4 +63,10 @@
     outline-offset: -2px;
     outline-style: auto;
     outline-width: 5px;
+}
+
+.year {
+    display: inline-block;
+    width: 49%;
+    margin: 0px;
 }
