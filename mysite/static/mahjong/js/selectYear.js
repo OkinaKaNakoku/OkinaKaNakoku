@@ -16,6 +16,9 @@ window.onload = function setSelectYear() {
         cookieValue = unescape(cookieValue);
 
     }
+    if (cookieValue == 'allYear') {
+      cookieValue = '通算'
+    }
     document.getElementById("select-show").innerHTML = cookieValue;
 
     var checkOption = document.getElementsByName('selectYear');
@@ -23,8 +26,11 @@ window.onload = function setSelectYear() {
     checkOption.forEach(function (e) {
         e.addEventListener("click", function () {
             val = document.querySelector("input:checked[name=selectYear]").value;
-            document.getElementById("select-show").innerHTML = val;
             document.cookie = "selectYear=" + val;
+            if (val == 'allYear') {
+              val = '通算'
+            }
+            document.getElementById("select-show").innerHTML = val;
         });
     });
 }
