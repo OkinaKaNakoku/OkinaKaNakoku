@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-score-update.css' %}">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="/static/mahjong/js/template.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
 
 <!DOCTYPE html>
 <html>
@@ -13,7 +13,48 @@
 </head>
 <body>
     <div id="wrapper">
-        <div id="header"></div>
+        <div id="header">
+            <div class="head">
+                <div class="header-left">
+                    <div id="header-txt" class="title">
+                        <p>okina-ka-nakoku</p>
+                    </div>
+                    <a href="/mahjong/showRanking" class="title-img"></a>
+                </div>
+                <div class="header-select-show">
+                    <div id="select-show"></div>
+                </div>
+                <div class="header-topic">
+                    <div class="topic">
+                        <a href="/admin">>to admin</a>
+                    </div>
+                    <div class="topic">
+                        <a href="/mahjong/changeYear">>change year</a>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <ul class="menulist">
+                        <li class="menu">
+                            <a href="/mahjong/showRanking" class="title-link">
+                                <span class="menu-text">
+                                    ランキング
+                                </span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScoreUpdate" class="title-link">
+                                <span class="menu-text">スコア更新</span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/scoreTable" class="title-link">
+                                <span class="menu-text">点数早見表</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="clearfix">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             <form action="{% url 'mahjong:settingUser' %}" method="post">
@@ -70,13 +111,13 @@
                                     <td>
                                         <input type="hidden" name="user1" value="{{user1.userId}}" />
                                         <input type="hidden" name="gameResult1" value=0 />
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult1" value=1 />
-                                            <span class="result">和了</span>
+                                        <input id="item-1" class="radio-inline__input" type="radio" name="gameResult1" value=1 />
+                                        <label class="radio-inline__label" for="item-1">
+                                            和了
                                         </label>
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult1" value=2 />
-                                            <span class="result">放銃</span>
+                                        <input id="item-2" class="radio-inline__input -hoju" type="radio" name="gameResult1" value=2 />
+                                        <label class="radio-inline__label -hoju" for="item-2">
+                                            放銃
                                         </label>
                                     </td>
                                 </tr>
@@ -84,14 +125,14 @@
                                     <th>{{user2.name}}</th>
                                     <td>
                                         <input type="hidden" name="user2" value="{{user2.userId}}" />
-                                        <input type="hidden" name="gameResult2" value=0 />
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult2" value=1 />
-                                            <span class="result">和了</span>
+                                        <input type="hidden" name="gameResult1" value=0 />
+                                        <input id="item-3" class="radio-inline__input" type="radio" name="gameResult2" value=1 />
+                                        <label class="radio-inline__label" for="item-3">
+                                            和了
                                         </label>
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult2" value=2 />
-                                            <span class="result">放銃</span>
+                                        <input id="item-4" class="radio-inline__input -hoju" type="radio" name="gameResult2" value=2 />
+                                        <label class="radio-inline__label -hoju" for="item-4">
+                                            放銃
                                         </label>
                                     </td>
                                 </tr>
@@ -100,13 +141,13 @@
                                     <td>
                                         <input type="hidden" name="user3" value="{{user3.userId}}" />
                                         <input type="hidden" name="gameResult3" value=0 />
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult3" value=1 />
-                                            <span class="result">和了</span>
+                                        <input id="item-5" class="radio-inline__input" type="radio" name="gameResult3" value=1 />
+                                        <label class="radio-inline__label" for="item-5">
+                                            和了
                                         </label>
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult3" value=2 />
-                                            <span class="result">放銃</span>
+                                        <input id="item-6" class="radio-inline__input -hoju" type="radio" name="gameResult3" value=2 />
+                                        <label class="radio-inline__label -hoju" for="item-6">
+                                            放銃
                                         </label>
                                     </td>
                                 </tr>
@@ -115,13 +156,13 @@
                                     <td>
                                         <input type="hidden" name="user4" value="{{user4.userId}}" />
                                         <input type="hidden" name="gameResult4" value=0 />
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult4" value=1 />
-                                            <span class="result">和了</span>
+                                        <input id="item-7" class="radio-inline__input" type="radio" name="gameResult4" value=1 />
+                                        <label class="radio-inline__label" for="item-7">
+                                            和了
                                         </label>
-                                        <label>
-                                            <input class="radio" type="radio" name="gameResult4" value=2 />
-                                            <span class="result">放銃</span>
+                                        <input id="item-8" class="radio-inline__input -hoju" type="radio" name="gameResult4" value=2 />
+                                        <label class="radio-inline__label -hoju" for="item-8">
+                                            放銃
                                         </label>
                                     </td>
                                 </tr>
@@ -184,7 +225,9 @@
             </form>
             {% endif %}
         </div>
-        <div id="footer"></div>
+        <div id="footer">
+            <div class="footer">準備中<br />希望あれば何か</div>
+        </div>
     </div>
 </body>
 </html>

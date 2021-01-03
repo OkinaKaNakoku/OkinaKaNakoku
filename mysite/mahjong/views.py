@@ -1,12 +1,11 @@
 import sys
 import datetime
-from mahjong.dto import indexScoreDto
 from mahjong.dto import showScoreUpdateDto
+from .dto.changeYear import *
 from mahjong.dto import updateScoreDAO
-from mahjong.dto import hansoCntRankDto
-from mahjong.dto import horaPercentageRankDto
 from .dto.showDetail import *
-from mahjong.command import showDetailCommand
+from mahjong.command import *
+from .const import const
 
 from operator import itemgetter
 from operator import attrgetter
@@ -21,7 +20,7 @@ from decimal import Decimal
 from django.db.models import Q
 from django.utils.timezone import localtime
 
-from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng
+from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst
 
 # 定数
 USER_UNREG = 'userUnreg'
@@ -31,173 +30,11 @@ USER_DUP = 'userDup'
 
 # ランキング
 def showRanking(request):
-    # ■■■スコアランキング■■■■■■■■■■■■■■■■■■
-    # UserInfoをスコアの降順で取得
-    users_obj = UserInfo.objects.select_related().all().order_by('-score_sum')
-
-    usersResScore = []
-    scoreList = []  # 同率で使う
-    cnt = 0        # 同率で使う
-    isFirst = True # 同率で使う
-    rank = 1
-    if users_obj is None:
-        return render(request, 'mahjong/score.html',{'users':usersResScore})
-
-    topScore = users_obj.first().score_sum # トップ差で使う
-
-    for user in users_obj:
-        topDiff = '-' + str(topScore - user.score_sum)
-        if isFirst: # 先頭は同率の考慮なし。ロジック効率より可読性を優先
-            isFirst = False
-            scoreList.append(user.score_sum)
-            usersResScore.append(indexScoreDto.UserScore(user, rank, topDiff))
-            continue
-
-        """ 同率を見る
-        同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
-        isDoritsu = True
-        if not scoreList[cnt] == user.score_sum:
-            isDoritsu = False
-        cnt = cnt + 1
-        if not isDoritsu:
-            rank = len(scoreList) + 1
-        scoreList.append(user.score_sum)
-        usersResScore.append(indexScoreDto.UserScore(user, rank, topDiff))
-
-    # ■■■半荘回数ランキング■■■■■■■■■■■■■■■■■■
-    # 半荘回数のレコード数の降順
-    users_obj = UserInfo.objects.select_related().all().order_by('user_id')
-    hansoSumCnt = len(HansoSum.objects.values('hanso_id').annotate(Count=Count('hanso_id')))
-    hansoSumQueryUserCnt = HansoSum.objects.values('user_id').annotate(count=Count('user_id')).order_by('-count')
-
-    # ランキング紐付け。一旦ランクは固定で入れる
-    usersHansoCnt = []
-    for user in users_obj:
-        registed = False
-        for userCnt in hansoSumQueryUserCnt:
-            if user.user_id == userCnt.get('user_id'):
-                registed = True
-                userSum = userCnt.get('count')
-                percentage = format(userSum / hansoSumCnt * 100, '.2f') # 小数点以下2桁まで
-                usersHansoCnt.append(hansoCntRankDto.HansoCntRank(user, userSum, percentage, 1))
-                break
-        if not registed: # 半荘回数0がいるので分ける
-            usersHansoCnt.append(hansoCntRankDto.HansoCntRank(user, 0, float(0.0), 1))
-    # 並び替え
-    usersHansoCnt = sorted(usersHansoCnt, key=attrgetter('hansoSum'), reverse=True)
-    hansoSumList = []  # 同率で使う
-    cnt = 0        # 同率で使う
-    isFirst = True # 同率で使う
-    rank = 1
-    usersResHansoCnt = []
-    for user in usersHansoCnt:
-        if isFirst: # 先頭は同率の考慮なし。ロジック効率より可読性を優先
-            isFirst = False
-            hansoSumList.append(user.hansoSum)
-            user.rank = rank
-            usersResHansoCnt.append(user)
-            continue
-
-        """ 同率を見る
-        同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
-        isDoritsu = True
-        if not hansoSumList[cnt] == user.hansoSum:
-            isDoritsu = False
-        cnt = cnt + 1
-        if not isDoritsu:
-            rank = len(hansoSumList) + 1
-        hansoSumList.append(user.hansoSum)
-        user.rank = rank
-        usersResHansoCnt.append(user)
-
-    # ■■■和了率・放銃率ランキング■■■■■■■■■■■■■■■■■■■■■
-    # GAME_RESULT取得
-    gameResult = GameResult.objects.select_related().all().order_by('user_id')
-
-    # 和了率・放銃率計算
-    # ユーザの和了数をユーザの全局数で割る
-    # ランキング紐付け。一旦ランクは固定で入れる（後で並び替え時に入れる）
-    horaPercentageRankList =[]
-    hojuPercentageRankList =[]
-    for user in users_obj:
-        userList = []
-        userHoraList = []
-        userHojuList = []
-        for userGameResult in gameResult:
-            if user.user_id == userGameResult.user_id.user_id:
-                userList.append(userGameResult)
-                if (userGameResult.result_div == int(和了)):
-                    userHoraList.append(userGameResult)
-                elif (userGameResult.result_div == int(放銃)):
-                    userHojuList.append(userGameResult)
-        if (len(userList) != 0 ): # 対局ありのみ計算（0割考慮）
-            horaCnt = len(userHoraList)
-            hojuCnt = len(userHojuList)
-            cnt = len(userList)
-            percentage = format(horaCnt / cnt * 100, '.2f') # 小数点以下2桁まで
-            percentageHoju = format(hojuCnt / cnt * 100, '.2f') # 小数点以下2桁まで
-            horaPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, cnt, horaCnt, float(percentage), 1))
-            hojuPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, cnt, hojuCnt, float(percentageHoju), 1))
-        else:
-            horaPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, 0, 0,  float(0.0), 1))
-            hojuPercentageRankList.append(horaPercentageRankDto.HoraPercentageRankDto(user, 0, 0,  float(0.0), 1))
-    # 和了率・並び替え
-    horaPercentageRankList = sorted(horaPercentageRankList, key=attrgetter('percentage'), reverse=True)
-    percentageList = []  # 同率で使う
-    cnt = 0        # 同率で使う
-    isFirst = True # 同率で使う
-    rank = 1
-    usersResHoraPercentage = []
-    for user in horaPercentageRankList:
-        if isFirst: # 先頭は同率の考慮なし。ロジック効率より可読性を優先
-            isFirst = False
-            percentageList.append(user.percentage)
-            user.rank = rank
-            usersResHoraPercentage.append(user)
-            continue
-
-        """ 同率を見る
-        同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
-        isDoritsu = True
-        if not percentageList[cnt] == user.percentage:
-            isDoritsu = False
-        cnt = cnt + 1
-        if not isDoritsu:
-            rank = len(percentageList) + 1
-        percentageList.append(user.percentage)
-        user.rank = rank
-        usersResHoraPercentage.append(user)
-
-    # 放銃率・並び替え
-    hojuPercentageRankList = sorted(hojuPercentageRankList, key=attrgetter('percentage'), reverse=False)
-    percentageList = []  # 同率で使う
-    cnt = 0        # 同率で使う
-    isFirst = True # 同率で使う
-    rank = 1
-    usersResHojuPercentage = []
-    for user in hojuPercentageRankList:
-        if isFirst: # 先頭は同率の考慮なし。ロジック効率より可読性を優先
-            isFirst = False
-            percentageList.append(user.percentage)
-            user.rank = rank
-            usersResHojuPercentage.append(user)
-            continue
-
-        """ 同率を見る
-        同率ならrankをupしない。次のrankはscoreListの要素+1とする"""
-        isDoritsu = True
-        if not percentageList[cnt] == user.percentage:
-            isDoritsu = False
-        cnt = cnt + 1
-        if not isDoritsu:
-            rank = len(percentageList) + 1
-        percentageList.append(user.percentage)
-        user.rank = rank
-        usersResHojuPercentage.append(user)
-
+    command = showRankingCommand.ShowRankingCommand()
+    showRankingInfo = command.getShowRankingInfo(request)
     return render(request, 'mahjong/score.html',
-        {'users':usersResScore, 'usersHanso':usersResHansoCnt, 'usersHora':usersResHoraPercentage,
-         'userHoju':usersResHojuPercentage})
+        {'users':showRankingInfo.users, 'usersHanso':showRankingInfo.usersHanso, 'usersHora':showRankingInfo.usersHora,
+         'userHoju':showRankingInfo.userHoju})
 
 # スコア更新表示
 def showScoreUpdate(request):
@@ -259,7 +96,7 @@ def updateScore(request):
             user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
             user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
             user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-            users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+            users_obj = UserMst.objects.select_related().all().order_by('user_id')
             usersRes = []
             for user in users_obj:
                 usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -268,6 +105,7 @@ def updateScore(request):
             'error_message': "スコアを全て登録してください",
             'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
 
+    year = str(datetime.datetime.now().year)
     # ■userとscoreの紐付け
     cnt = 0
     insertDaos = []
@@ -299,7 +137,7 @@ def updateScore(request):
         # 計算処理
         userIdParam = dao.userId
         scoreParam = dao.score
-        userObj = UserInfo.objects.all().filter(user_id=userIdParam)
+        userObj = UserMst.objects.all().filter(user_id=userIdParam)
 
         # ウマ・オカ計算
         if rankParam == 1:
@@ -312,12 +150,20 @@ def updateScore(request):
             scoreResultParam = int(scoreParam) - 30000
         scoreResultParam = scoreResultParam / 1000
         scoreResultParam = scoreResultParam - 30
-        HansoSum(hanso_id=hansoIdParam
+        HansoSum(year=year
+                ,hanso_id=hansoIdParam
                 , user_id=userObj.first()
                 , rank=rankParam
                 , score=scoreParam
                 , score_result=scoreResultParam).save()
-        dao = UserInfo.objects.filter(user_id=userIdParam).first()
+        dao = UserInfo.objects.filter(user_id=userIdParam, year=year).first()
+        # 初回登録は対象の年で登録後、再取得
+        # 全員登録がないはずなので、全登録
+        if dao == None:
+            userMstQuery = UserMst.objects.all()
+            for userMst in userMstQuery:
+                UserInfo(year=year, user_id=userMst, score_sum=0.0).save()
+            dao = UserInfo.objects.filter(user_id=userIdParam, year=year).first()
         dao.score_sum += Decimal(str(scoreResultParam))
         dao.save()
         rankParam = rankParam + 1
@@ -328,7 +174,7 @@ def updateScore(request):
     user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
     user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
     user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-    users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+    users_obj = UserMst.objects.select_related().all().order_by('user_id')
     usersRes = []
     for user in users_obj:
         usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -351,7 +197,7 @@ def updateGame(request, **kwargs):
         user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
         user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
         user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-        users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+        users_obj = UserMst.objects.select_related().all().order_by('user_id')
         settingUsers = []
         for user in users_obj:
             settingUsers.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -377,7 +223,7 @@ def updateGame(request, **kwargs):
         user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
         user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
         user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-        users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+        users_obj = UserMst.objects.select_related().all().order_by('user_id')
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -403,7 +249,7 @@ def updateGame(request, **kwargs):
         user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
         user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
         user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-        users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+        users_obj = UserMst.objects.select_related().all().order_by('user_id')
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -412,13 +258,14 @@ def updateGame(request, **kwargs):
         'error_message': "放銃者は複数登録できません",
         'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
 
+    year = str(datetime.datetime.now().year)
     # ■form取得
     userId = request.POST['user1']
     gameResult = request.POST['gameResult1']
 
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
-    userQuery = UserInfo.objects.all().filter(conditionUserId)
+    userQuery = UserMst.objects.all().filter(conditionUserId)
     # 登録されている半荘IDのmaxを取得。初回のみ取得できないので実質デッドコード
     maxHansoId = 1
     maxHansoIdQuery = HansoSum.objects.all().aggregate(Max('hanso_id'))
@@ -430,28 +277,28 @@ def updateGame(request, **kwargs):
     maxGameSeqQuery = GameResult.objects.all().filter(conditionHansoId).aggregate(Max('game_seq'))
     if maxGameSeqQuery.get('game_seq__max') is not None:
         maxGameSeq = int(maxGameSeqQuery.get('game_seq__max')) + 1
-    GameResult(hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
 
     userId = request.POST['user2']
     gameResult = request.POST['gameResult2']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
-    userQuery = UserInfo.objects.all().filter(conditionUserId)
-    GameResult(hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+    userQuery = UserMst.objects.all().filter(conditionUserId)
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
 
     userId = request.POST['user3']
     gameResult = request.POST['gameResult3']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
-    userQuery = UserInfo.objects.all().filter(conditionUserId)
-    GameResult(hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+    userQuery = UserMst.objects.all().filter(conditionUserId)
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
 
     userId = request.POST['user4']
     gameResult = request.POST['gameResult4']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
-    userQuery = UserInfo.objects.all().filter(conditionUserId)
-    GameResult(hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+    userQuery = UserMst.objects.all().filter(conditionUserId)
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
 
 
     # ■レンダリング用オブジェクト取得。TODO そのうち共通化
@@ -472,7 +319,7 @@ def settingUser(request, **kwargs):
     check = userValidation(request)
     if check == USER_UNREG:
         # レンダリング
-        users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+        users_obj = UserMst.objects.select_related().all().order_by('user_id')
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -481,7 +328,7 @@ def settingUser(request, **kwargs):
         'error_message': "プレイヤーを4人登録してください"})
     if check == USER_DUP:
         # レンダリング
-        users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+        users_obj = UserMst.objects.select_related().all().order_by('user_id')
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -508,7 +355,7 @@ def settingUser(request, **kwargs):
 # fromでそれぞれで取得するため、別出
 def getSettingUser(userId):
     conditionUserId = Q(user_id = userId)
-    userQuery = UserInfo.objects.all().filter(conditionUserId)
+    userQuery = UserMst.objects.all().filter(conditionUserId)
     user = None
     for user in userQuery:
         # GameUserについでに登録する
@@ -518,7 +365,7 @@ def getSettingUser(userId):
 
 def getShowScoreUpdateDto():
     # ■UserInfoをuser_idの昇順で取得
-    users_obj = UserInfo.objects.select_related().all().order_by('user_id')
+    users_obj = UserMst.objects.select_related().all().order_by('user_id')
     usersRes = []
     for user in users_obj:
         usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
@@ -559,10 +406,27 @@ def isUpdatePossible():
 # 個人詳細表示
 def showDetail(request, userId):
     command = showDetailCommand.ShowDetailCommand(userId)
-    showDetailInfo = command.getShowDetailInfo()
+    showDetailInfo = command.getShowDetailInfo(request)
+
+    # 表示する年を確定させる
+    # cookieに保存されていない場合はシステム日付の年をデフォルトにする
+    selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if selectYear is None:
+        selectYear = datetime.datetime.now()
+        selectYear = str(selectYear.year)
 
     users = UserInfo.objects.values()
-    hansos = HansoSum.objects.values()
+    userMstQuery = UserMst.objects.values()
+    if const.Const.ScreenConst.ALL_YEAR != selectYear:
+        hansos = HansoSum.objects.values().filter(year=selectYear)
+    else:
+        hansos = HansoSum.objects.values()
+
+
+    userMstDictionary = {}
+    for userMst in userMstQuery:
+        userMstDictionary[userMst.get('user_id')] = userMst
 
     # 対象のユーザの半荘IDのみ取得
     hansoIdList = []
@@ -597,9 +461,9 @@ def showDetail(request, userId):
         # 同じ半荘ID
         if hansoIdWk == scoreDetail.get('hanso_id'):
             hansoIdWk = scoreDetail.get('hanso_id')
-            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
-                                                                            , user.get('last_name')
-                                                                            , user.get('first_name')
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('last_name')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , scoreDetail.get('score_result')))
@@ -610,9 +474,9 @@ def showDetail(request, userId):
             showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
             detailBattles.append(showDetailBattleDto)
             detailUsers = []
-            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
-                                                                            , user.get('last_name')
-                                                                            , user.get('first_name')
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('last_name')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , scoreDetail.get('score_result')))
@@ -632,9 +496,9 @@ def showDetail(request, userId):
             details.append(showDetail)
             detailBattles = []
             detailUsers = []
-            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id')
-                                                                            , user.get('last_name')
-                                                                            , user.get('first_name')
+            detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('last_name')
+                                                                            , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , scoreDetail.get('score_result')))
@@ -652,7 +516,32 @@ def showDetail(request, userId):
     details.append(showDetail)
     return render(request, 'mahjong/show-detail.html', {'details':details, 'info':showDetailInfo})
 
+# 年変更
+def changeYear(request, **kwargs):
+    # 登録済みの年の取得
+    yearQuery = UserInfo.objects.all().values('year').annotate().order_by('-year')
+    years = []
+    for year in yearQuery:
+        if str(year.get('year')) not in years:
+            years.append(str(year.get('year')))
+            continue
+    print(years)
+    # いつが選択済みなのかを決める
+    selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    yearsInfo = []
+    for year in years:
+        isSelected = False
+        if selectYear == year:
+            isSelected = True
+        yearsInfo.append(yearInfoDto.YearInfoDto(year, isSelected))
+
+    isAllYear = False
+    if const.Const.ScreenConst.ALL_YEAR == selectYear:
+        isAllYear = True
+    yearsInfo = changeYearDto.ChangeYearDto(yearsInfo, isAllYear)
+    return render(request, 'mahjong/change-year.html', {'yearsInfo':yearsInfo})
+
 def getUser(users, userId):
     for user in users:
-        if user.get('user_id') == userId:
+        if user.get('user_id_id') == userId:
             return user

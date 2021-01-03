@@ -1,4 +1,4 @@
-window.onload = function getHeader(){
+window.onload = function getHeader() {
     $.ajax({
         url : '/static/mahjong/templates/templateHeader.html',
         dataType: 'html',

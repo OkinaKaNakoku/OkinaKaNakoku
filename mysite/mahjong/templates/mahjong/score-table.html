@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/score-table.css' %}">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="/static/mahjong/js/template.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
 
 <!DOCTYPE html>
 <html>
@@ -13,7 +13,48 @@
 </head>
 <body>
     <div id="wrapper">
-        <div id="header"></div>
+        <div id="header">
+            <div class="head">
+                <div class="header-left">
+                    <div id="header-txt" class="title">
+                        <p>okina-ka-nakoku</p>
+                    </div>
+                    <a href="/mahjong/showRanking" class="title-img"></a>
+                </div>
+                <div class="header-select-show">
+                    <div id="select-show"></div>
+                </div>
+                <div class="header-topic">
+                    <div class="topic">
+                        <a href="/admin">>to admin</a>
+                    </div>
+                    <div class="topic">
+                        <a href="/mahjong/changeYear">>change year</a>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <ul class="menulist">
+                        <li class="menu">
+                            <a href="/mahjong/showRanking" class="title-link">
+                                <span class="menu-text">
+                                    ランキング
+                                </span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/showScoreUpdate" class="title-link">
+                                <span class="menu-text">スコア更新</span>
+                            </a>
+                        </li>
+                        <li class="menu">
+                            <a href="/mahjong/scoreTable" class="title-link">
+                                <span class="menu-text">点数早見表</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="childScore">
             <div class="title">
                 <b>子の点数早見表</b>
@@ -244,7 +285,9 @@
                 </tbody>
             </table>
         </div>
-        <div id="footer"></div>
+        <div id="footer">
+            <div class="footer">準備中<br />希望あれば何か</div>
+        </div>
     </div>
 </body>
 </html>

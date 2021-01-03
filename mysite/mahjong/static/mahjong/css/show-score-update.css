@@ -264,5 +264,78 @@ table td {
         width: 95%;
         height: 100%;
     }
+
+    .radio-inline__input {
+        display: inline-block;
+    }
+
+    .radio-inline__label {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        border-radius: 3px;
+        transition: all .2s;
+        width: 20%;
+        font-size: 15px;
+        font-weight: 100;
+    }
+
+    .radio-inline__input:checked + .radio-inline__label {
+        background: #2e74ca;
+        color: #fff;
+        text-shadow: 0 0 1px rgba(0,0,0,.7);
+    }
+
+    .radio-inline__input:focus + .radio-inline__label {
+        outline-color: #4D90FE;
+        outline-offset: -2px;
+        outline-style: auto;
+        outline-width: 5px;
+    }
+
+    .radio-inline__input {
+        clip: rect(1px, 1px, 1px, 1px);
+        position: absolute !important;
+    }
+
+    .-hoju:checked + .radio-inline__label {
+        background: #dc2c2c;
+        color: #fff;
+        text-shadow: 0 0 1px rgba(0,0,0,.7);
+    }
+
+    .-hoju:focus + .radio-inline__label {
+        outline-color: #ccbb37;
+        outline-offset: -2px;
+        outline-style: auto;
+        outline-width: 5px;
+    }
+
+    .btn {
+        position: relative;
+        display: inline-block;
+        padding: 0.25rem 0.25rem;
+        text-decoration: none;
+        letter-spacing: 0.1em;
+    }
+
+    .btn {
+        max-width: 160px;
+        margin: 0 auto ;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        text-align: center;
+    }
+
+    .btn {
+        width: 49.5%;
+        border-radius: 100vh;
+    }
+
+    .btn {
+        color: #fff;
+        background: #326b88;
+    }
+
+
 }
 

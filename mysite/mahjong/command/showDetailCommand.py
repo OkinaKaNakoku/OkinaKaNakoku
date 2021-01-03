@@ -1,10 +1,5 @@
 import sys
 import datetime
-from mahjong.dto import indexScoreDto
-from mahjong.dto import showScoreUpdateDto
-from mahjong.dto import updateScoreDAO
-from mahjong.dto import hansoCntRankDto
-from mahjong.dto import horaPercentageRankDto
 from ..dto.showDetail import *
 from ..const import const
 from mahjong.command import showDetailCommand
@@ -30,24 +25,61 @@ class ShowDetailCommand:
         self.userId = userId
 
     "個人詳細を取得"
-    def getShowDetailInfo(cmd):
+    def getShowDetailInfo(cmd, request):
+        # 表示する年を確定させる
+        # cookieに保存されていない場合はシステム日付の年をデフォルトにする
+        selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+        # ここのifホンマに謎。NoneなのにTrueにならない
+        if selectYear is None:
+            selectYear = datetime.datetime.now()
+            selectYear = str(selectYear.year)
+
         userId = cmd.userId
         q = query.Query
+        userMstQuery = q.getUserMst()
+
         # UserInfo取得
-        userInfoQuerys = q.getUserInfoOrderByScoreDesc()
+        # 年単位は対象の年のみで取得する
+        # 年跨ぐ際にデータがない場合を考慮。insertしてから取得し直す
+        users_obj = []
+        userInfoDictionary = {}
+        if const.Const.ScreenConst.ALL_YEAR != selectYear:
+            userInfoQuerys = q.getUserInfoWhereYearOrderByScoreDesc(selectYear)
+            if len(userInfoQuerys) == 0:
+                year = str(datetime.datetime.now().year)
+                for userMst in userMstQuery:
+                    UserInfo(year=year, user_id=userMst, score_sum=0.0).save()
+                users_obj = q.getUserInfoWhereYearOrderByScoreDesc(selectYear)
+        else:
+            # 通算は全件取得
+            # スコアをまとめてから管理
+            userInfoQuerys = q.getUserInfo()
+            for user in userInfoQuerys:
+                if user.user_id.user_id in userInfoDictionary:
+                    userInfoDictionary[user.user_id.user_id].score_sum += user.score_sum
+                else:
+                    userInfoDictionary[user.user_id.user_id] = user
+            userInfoQuerys = userInfoDictionary.values()
+            # スコアの降順でソート
+            userInfoQuerys = sorted(userInfoQuerys, key=attrgetter('score_sum'), reverse=True)
 
         # 総合順位の確定。対象のuserIdのクエリ取得
         rank = 0
         userInfo = None
         for userInfoQuery in userInfoQuerys:
             rank += 1
-            if userId == userInfoQuery.user_id:
+            if userId == userInfoQuery.user_id.user_id:
                 userInfo = userInfoQuery
                 break
+        userMst = q.getUserMstFilterUserId(userId)
 
         # 半荘回数の取得
         # 参加日数も取得するため、全取得
-        hansoSumQuerys = q.getHansoSum()
+        if const.Const.ScreenConst.ALL_YEAR != selectYear:
+            hansoSumQuerys = q.getHansoSumWhereYearOrderByYearDescHansoIdDesc(selectYear)
+        else:
+            hansoSumQuerys = q.getHansoSum()
+
         # 半荘回数・参加日数
         userHansoSums = []
         # 最高スコア・最低スコア
@@ -62,7 +94,7 @@ class ShowDetailCommand:
             # 半荘回数0は固定で返す
             # 最高に頭悪い。他にいい方法あるはず
             rankDto = userGetRankDto.UserGetRankDto(0, 0.0, 0, 0.0, 0, 0.0, 0, 0.0, 0, 0.0)
-            name = userInfo.last_name + ' ' + userInfo.first_name
+            name = userMst.last_name + ' ' + userMst.first_name
             score = userInfo.score_sum
             hansoCnt = len(userHansoScores)
             recordDto = userRecordDto.UserRecordDto(name, rank, score, 0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -70,7 +102,10 @@ class ShowDetailCommand:
             return detailResDto
 
         # 対局数・和了放銃数、率
-        gameResultQuerys = q.getGameResult(userId)
+        if const.Const.ScreenConst.ALL_YEAR != selectYear:
+            gameResultQuerys = q.getGameResultWhereUserIdAndYear(userId, selectYear)
+        else:
+            gameResultQuerys = q.getGameResultWhereUserId(userId)
         gameCnt = len(gameResultQuerys)
         horaCnt = 0
         hojuCnt = 0
@@ -84,7 +119,6 @@ class ShowDetailCommand:
 
         #参加日数
         dayCnt = 1
-        print(userHansoSums)
         dayWk = localtime(userHansoSums[0].insert_date)
         dayWk = str(dayWk.year) + '/' + str(dayWk.month) + '/' + str(dayWk.day)
         for userHansoSum in userHansoSums:
@@ -121,7 +155,7 @@ class ShowDetailCommand:
         # Response作成
         # pythonなんで適当な箇所で改行できないのか
         rankDto = userGetRankDto.UserGetRankDto(rankFirstCnt, rankFirstPercentage, rankSecondCnt, ranksecondPercentage, rankThirdCnt, rankThirdPercentage, rankFourthCnt, rankFourthPercentage, tobiCnt, tobiPercentage)
-        name = userInfo.last_name + ' ' + userInfo.first_name
+        name = userMst.last_name + ' ' + userMst.first_name
         score = userInfo.score_sum
         maxScore = max(userHansoScores)
         minScore = min(userHansoScores)
