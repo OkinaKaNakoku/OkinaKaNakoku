@@ -1,6 +1,7 @@
 html {
-    height:100%;
+    height: 100%;
 }
+
 body {
     width: 100%;
     height: 100%;
@@ -28,9 +29,9 @@ h2 {
     height: 100px;
     width: 100%;
     float: left;
-    margin-bottom:20px;
-    display:block;
-    position:relative;
+    margin-bottom: 20px;
+    display: block;
+    position: relative;
 }
 
 .head {
@@ -40,13 +41,13 @@ h2 {
 
 .header-left {
     float: left;
-    width: 200px;
+    width: 33.3%;
     height: 100px
 }
 
 .title-img {
     display: block;
-    width: 200px;
+    width: 100%;
     height: 50px;
     background: url("../images/header-title-background.png") no-repeat;
     background-size: 202px auto;
@@ -58,16 +59,25 @@ h2 {
     margin-bottom: 0px;
 }
 
-.admin {
+.header-topic {
+    width: 30%;
+    float: right;
+    padding-right: 10px;
+    height: 55px;
+}
+
+.topic {
     float: right;
     padding-top: 0.8%;
     padding-right: 0;
-    text-align:right;
+    text-align: right;
     color: white;
-
+    margin: 2px
 }
-    .admin > a {
+
+    .topic > a {
         color: white;
+        text-decoration: none;
     }
 
 .header-right {
@@ -79,12 +89,12 @@ h2 {
 
 .menulist {
     height: 40px;
-    display:block;
+    display: block;
     width: 480px;
     padding-top: 60px;
     padding-left: 0px;
     margin: 0px auto;
-    overflow:hidden;
+    overflow: hidden;
 }
 
 .menu {
@@ -94,9 +104,9 @@ h2 {
     height: 100px;
     width: 100px;
     display: inline;
-    top:20px;
-    
+    top: 20px;
 }
+
 .title-link {
     padding: 0.5em 1em;
     margin: 2em 0;
@@ -120,6 +130,7 @@ h2 {
 .menu-text {
     color: white;
 }
+
 #footer {
     left: 0px;
     top: 0px;
@@ -131,8 +142,8 @@ h2 {
     text-align: center;
     font-size: 30px;
     color: white;
-    margin-top:auto;
-    bottom:0;
+    margin-top: auto;
+    bottom: 0;
 }
 
 
@@ -148,55 +159,71 @@ h2 {
         background: linear-gradient(#009688, #74c57a);
         height: 90px;
         width: 100%;
-        margin-bottom:20px;
+        margin-bottom: 20px;
     }
 
     .head {
         width: 100%;
         height: 100%;
         margin: 0px;
-        
     }
 
     .header-left {
-        width: 40%;
+        width: 33.3%;
         height: 55px;
         margin: 0 auto;
+        float: left;
     }
 
     #header-txt {
         font-size: 15px;
-        margin:0px;
+        margin: 0px;
     }
 
-    #header-txt > p {
-        font-size: 12px;
-        margin-left:4px;
-        margin-top:0px;
-        text-align:left;
-    }
+        #header-txt > p {
+            font-size: 12px;
+            margin-left: 4px;
+            margin-top: 0px;
+            text-align: left;
+        }
 
     .title-img {
         display: block;
-        width: 200px;
-        height: 40px;
-        background: url("../images/header-title-background.png") no-repeat;
-        background-size: 150px auto;
+        width: 100%;
+        height: 70%;
+        background: url(../images/header-title-background.png) no-repeat;
+        background-size: 129px auto;
     }
 
-    .admin {
-        display:block;
+    .header-select-show {
+        box-sizing:border-box;
+        width: 33.3%;
+        height: 55px;
+        float: left;
+    }
+
+    #select-show {
+        box-sizing: border-box;
+        font-size: 25px;
+        text-align: center;
+        color: #efefef;
+        padding-top: 15px;
+    }
+
+    .topic {
+        display: block;
         padding-top: 0.8%;
         padding-right: 3%;
         color: white;
         font-size: 13px;
+        text-decoration: none;
     }
 
     .header-right {
-        clear:both;
-        box-sizing:border-box;
+        clear: both;
+        box-sizing: border-box;
         width: 100%;
-        height:40%;
+        height: 40%;
         padding: .1px;
     }
 
@@ -205,46 +232,42 @@ h2 {
         height: 100%;
         padding: 0px;
         text-align: center;
-        overflow:hidden;
-
-        
+        overflow: hidden;
     }
 
     .title-link {
         color: #26e260;
-        display:block;
-        width:100%;
-        height:100%;
-        margin:0;
-        padding:0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
         background: #4aad87; /*背景色*/
         border-top: solid 6px #2c8c49;
         box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
-        
     }
 
         .title-link:hover {
-            padding:0;
-            margin:0;
+            padding: 0;
+            margin: 0;
             background: #3d8a6c; /*背景色*/
             border-top: solid 6px #2c8c49;
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.32); /*影*/
         }
 
     .menu {
-        float:left;
-        width:33.3%;
-        height:100%;
+        float: left;
+        width: 33.3%;
+        height: 100%;
         padding: 0px;
-        margin:0px;
+        margin: 0px;
     }
 
     .menu-text {
-        display:block;
-        clear:both;
+        display: block;
+        clear: both;
         color: white;
-        padding:3px;
+        padding: 3px;
         font-size: 15px;
     }
 }
-
