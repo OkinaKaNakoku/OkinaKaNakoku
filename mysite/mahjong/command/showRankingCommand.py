@@ -28,7 +28,7 @@ class ShowRankingCommand:
         # cookieに保存されていない場合はシステム日付の年をデフォルトにする
         selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
         # ここのifホンマに謎。NoneなのにTrueにならない
-        if selectYear is None:
+        if selectYear is None or len(selectYear) == 0:
             selectYear = datetime.datetime.now()
             selectYear = str(selectYear.year)
 

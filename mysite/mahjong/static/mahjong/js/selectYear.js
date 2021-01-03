@@ -16,6 +16,9 @@ window.onload = function setSelectYear() {
         cookieValue = unescape(cookieValue);
 
     }
+    if (cookieValue == 'allYear') {
+      cookieValue = '通算'
+    }
     document.getElementById("select-show").innerHTML = cookieValue;
 
     var checkOption = document.getElementsByName('selectYear');
