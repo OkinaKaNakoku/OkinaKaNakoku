@@ -1,6 +1,7 @@
 ﻿{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-detail.css' %}">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
 <script type="text/javascript" src="/static/mahjong/jquery/templates/jquery.acordion.js"></script>
@@ -140,7 +141,7 @@
                     <a class="menu__item__link js-menu__item__link" href="">{{detail.date}}</a>
                     <ul class="submenu">
                         <li class="submenu__item">
-                            <p>当日スコア合計：{{detail.dayScore}}</p>
+                            <p class="sub-title">当日スコア合計：{{detail.dayScore}}</p>
                             {% for battle in detail.detailBattles %}
                             <div>第{{battle.battleNo}}回戦</div>
                             <table class="score-table">

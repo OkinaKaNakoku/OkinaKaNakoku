@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'mahjong'
 urlpatterns = [
-    path('', views.showRanking, name='showRanking'),
+    path('', views.showRanking, name='showRanking'), # pythonanywhereでのホスト用
     path('showRanking', views.showRanking, name='showRanking'),
     path('showScoreUpdate', views.showScoreUpdate, name='showScoreUpdate'),
     path('settingUser', views.settingUser, name='settingUser'),

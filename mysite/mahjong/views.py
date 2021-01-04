@@ -32,9 +32,16 @@ USER_DUP = 'userDup'
 def showRanking(request):
     command = showRankingCommand.ShowRankingCommand()
     showRankingInfo = command.getShowRankingInfo(request)
-    return render(request, 'mahjong/score.html',
+    response = render(request, 'mahjong/score.html',
         {'users':showRankingInfo.users, 'usersHanso':showRankingInfo.usersHanso, 'usersHora':showRankingInfo.usersHora,
          'userHoju':showRankingInfo.userHoju})
+    # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+    cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if cookie is None or len(cookie) == 0:
+        cookie = datetime.datetime.now()
+        response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+    return response
 
 # スコア更新表示
 def showScoreUpdate(request):
@@ -52,9 +59,18 @@ def showScoreUpdate(request):
         user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
         user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
         user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
-    return render(request, 'mahjong/show-score-update.html',
-                 {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
-                  'settingUsers':settingUsers})
+
+    response = render(request, 'mahjong/show-score-update.html',
+    {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
+    'settingUsers':settingUsers})
+
+    # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+    cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if cookie is None or len(cookie) == 0:
+         cookie = datetime.datetime.now()
+         response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+    return response
 
 # スコア登録
 def updateScore(request):
@@ -185,7 +201,15 @@ def updateScore(request):
 
 # 点数表表示
 def scoreTable(request):
-    return render(request, 'mahjong/score-table.html')
+    response = render(request, 'mahjong/score-table.html')
+    # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+    cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if cookie is None or len(cookie) == 0:
+         cookie = datetime.datetime.now()
+         response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+    return response
+
 
 # 対局登録
 def updateGame(request, **kwargs):
@@ -423,7 +447,6 @@ def showDetail(request, userId):
     else:
         hansos = HansoSum.objects.values()
 
-
     userMstDictionary = {}
     for userMst in userMstQuery:
         userMstDictionary[userMst.get('user_id')] = userMst
@@ -435,7 +458,14 @@ def showDetail(request, userId):
             hansoIdList.append(hanso)
     # 半荘データなしは以降処理なし
     if len(hansoIdList) == 0:
-         return render(request, 'mahjong/show-detail.html', {'details':None, 'info':showDetailInfo})
+         response = render(request, 'mahjong/show-detail.html', {'details':None, 'info':showDetailInfo})
+         # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+         cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+         # ここのifホンマに謎。NoneなのにTrueにならない
+         if cookie is None or len(cookie) == 0:
+              cookie = datetime.datetime.now()
+              response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+         return response
 
     # 同半荘IDの情報取得
     scoreDetails = []
@@ -514,7 +544,15 @@ def showDetail(request, userId):
                 dayScore = dayScore + user.scoreResult
     showDetail = showDetailDto.ShowDetailDto(dateWk, dayScore, detailBattles)
     details.append(showDetail)
-    return render(request, 'mahjong/show-detail.html', {'details':details, 'info':showDetailInfo})
+    response = render(request, 'mahjong/show-detail.html', {'details':details, 'info':showDetailInfo})
+
+    # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+    cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if cookie is None or len(cookie) == 0:
+         cookie = datetime.datetime.now()
+         response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+    return response
 
 # 年変更
 def changeYear(request, **kwargs):

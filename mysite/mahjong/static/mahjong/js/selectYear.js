@@ -26,7 +26,7 @@ window.onload = function setSelectYear() {
     checkOption.forEach(function (e) {
         e.addEventListener("click", function () {
             val = document.querySelector("input:checked[name=selectYear]").value;
-            document.cookie = "selectYear=" + val;
+            document.cookie = "selectYear=" + val + "; path=/;"
             if (val == 'allYear') {
               val = '通算'
             }
