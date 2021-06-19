@@ -1,6 +1,6 @@
-﻿{% load static %}
+{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/change-year.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-yakuman.css' %}">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
 <!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
-    <title>翁カ奴国-年変更</title>
+    <title>翁カ奴国-役満一覧</title>
 </head>
 <body>
     <div id="wrapper">
@@ -58,42 +58,61 @@
         </div>
         <div class="clearfix">
             <div class="title">
-                <b>表示する記録の変更</b>
+                <b>役満一覧</b>
+            <div class="yakuman-all">
+              <table>
+                <tr>
+                  <td>天和</td>
+                  <td>地和</td>
+                  <td class="already">大三元</td>
+                </tr>
+                <tr>
+                  <td>大四喜</td>
+                  <td>小四喜</td>
+                  <td class="already">四暗刻</td>
+                </tr>
+                <tr>
+                  <td>清老頭</td>
+                  <td>四槓子</td>
+                  <td>字一色</td>
+                </tr>
+                <tr>
+                  <td>緑一色</td>
+                  <td>国士無双</td>
+                  <td>九蓮宝燈</td>
+                </tr>
+              </table>
             </div>
-            <p>
-                表示方法を選択してください<br />
-                現在の表示方法はヘッダーに表示されます
-            </p>
-            <div class="year-button">
-                {% if yearsInfo.isAllYear == True %}
-                <input id="item-1" class="radio-inline__input" type="radio" name="selectYear" value="allYear" checked="checked" />
-                {% endif %}
-                {% if yearsInfo.isAllYear == False %}
-                <input id="item-1" class="radio-inline__input" type="radio" name="selectYear" value="allYear" />
-                {% endif %}
-                <label class="radio-inline__label -all-year" for="item-1">
-                    通算
-                </label>
-                {% for year in yearsInfo.years %}
-                <div class="year">
-                    {% if year.isSelected == True %}
-                    <input id={{year.year}} class="radio-inline__input" type="radio" name="selectYear" value={{year.year}} checked="checked" />
-                    {% endif %}
-                    {% if year.isSelected == False %}
-                    <input id={{year.year}} class="radio-inline__input" type="radio" name="selectYear" value={{year.year}} />
-                    {% endif %}
-                    <label class="radio-inline__label -year" for="{{year.year}}">
-                        {{year.year}}年
-                    </label>
-                </div>
-                {% endfor %}
+            <div class="yakuman-list">
+              <table class="yakuman-table">
+                <tbody class="yakuman-table-body">
+                  <tr>
+                  <th>日付</th><th>和了者</th><th>放銃者</th>
+                  </tr>
+                  <tr>
+                    <td class="list">2021/05/04</td><td class="list">中村 侑一郎</td><td class="list">小倉 魁斗</td>
+                  </tr>
+                </tbody>
+              </table>
+              <img src="/static/mahjong/img/nakamura_daisangen.jpg" class="yakuman">
+              <table class="yakuman-table">
+                <tbody class="yakuman-table-body">
+                  <tr>
+                  <th>日付</th><th>和了者</th><th>放銃者</th>
+                  </tr>
+                  <tr>
+                    <td class="list">2021/06/13</td><td class="list">中垣 政哉</td><td class="list">-</td>
+                  </tr>
+                </tbody>
+              </table>
+              <img src="/static/mahjong/img/nakagaki_suanko.jpg" class="yakuman">
             </div>
         </div>
-        <div id="footer">
-          <li class="navi">
-              <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
-          </li>
-        </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+          <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
+      </li>
     </div>
 </body>
 </html>

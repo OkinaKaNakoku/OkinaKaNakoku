@@ -11,14 +11,13 @@
 }
 
 .year-button {
-    width: 90%;
+    width: 80%;
     padding: 0.5em 1em;
-    margin: 1em 0;
-    margin-left: 0.25em;
+    margin: 1em;
     background: #FFF;
     border: solid 2px #6091d3; /*ü*/
     border-radius: 10px; /*Šp‚ÌŠÛ‚İ*/
-    text-align: left
+    text-align: left;
 }
 
 .radio-inline__input {
@@ -29,7 +28,7 @@
 .-all-year {
     width: 92%;
     text-align: center;
-    
+
 }
 
 .-year {

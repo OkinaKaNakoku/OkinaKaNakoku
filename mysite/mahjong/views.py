@@ -582,3 +582,27 @@ def getUser(users, userId):
     for user in users:
         if user.get('user_id_id') == userId:
             return user
+
+# 役満一覧
+def showYakuman(request, **kwargs):
+    # 登録済みの年の取得
+    yearQuery = UserInfo.objects.all().values('year').annotate().order_by('-year')
+    years = []
+    for year in yearQuery:
+        if str(year.get('year')) not in years:
+            years.append(str(year.get('year')))
+            continue
+    # いつが選択済みなのかを決める
+    selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    yearsInfo = []
+    for year in years:
+        isSelected = False
+        if selectYear == year:
+            isSelected = True
+        yearsInfo.append(yearInfoDto.YearInfoDto(year, isSelected))
+
+    isAllYear = False
+    if const.Const.ScreenConst.ALL_YEAR == selectYear:
+        isAllYear = True
+    yearsInfo = changeYearDto.ChangeYearDto(yearsInfo, isAllYear)
+    return render(request, 'mahjong/show-yakuman.html', {'yearsInfo':yearsInfo})
