@@ -1,4 +1,4 @@
-﻿{% load static %}
+{% load static %}
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/score.css' %}">
 <script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
@@ -8,163 +8,173 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
-    <title>翁カ奴国-ランキング</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-ランキング</title>
 </head>
 <body>
-    <div id="wrapper">
-        <div id="header">
-            <div class="head">
-                <div class="header-left">
-                    <div id="header-txt" class="title">
-                        <p>okina-ka-nakoku</p>
-                    </div>
-                    <a href="/mahjong/showRanking" class="title-img"></a>
-                </div>
-                <div class="header-select-show">
-                    <div id="select-show"></div>
-                </div>
-                <div class="header-topic">
-                    <div class="topic">
-                        <a href="/admin">>to admin</a>
-                    </div>
-                    <div class="topic">
-                        <a href="/mahjong/changeYear">>change year</a>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <ul class="menulist">
-                        <li class="menu">
-                            <a href="/mahjong/showRanking" class="title-link">
-                                <span class="menu-text">
-                                    ランキング
-                                </span>
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <a href="/mahjong/showScoreUpdate" class="title-link">
-                                <span class="menu-text">スコア更新</span>
-                            </a>
-                        </li>
-                        <li class="menu">
-                            <a href="/mahjong/scoreTable" class="title-link">
-                                <span class="menu-text">点数早見表</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
         </div>
-        <div class="score">
-            <div class="rankTitle"><b>スコア_ランキング</b></div>
-            <table class="score-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <td>名前</td>
-                        <td>スコア</td>
-                        <td>トップ差</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if users %}
-                    {% for user in users %}
-                    <tr>
-                        <th>{{user.rank}}</th>
-                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
-                        <td>{{user.scoreSum}}</td>
-                        <td>{{user.topDiff}}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+        <div class="header-select-show">
+          <div id="select-show"></div>
         </div>
-        <div class="score">
-            <div class="rankTitle"><b>半荘回数_ランキング</b></div>
-            <table class="score-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <td>名前</td>
-                        <td>半荘回数</td>
-                        <td>割合</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if usersHanso %}
-                    {% for user in usersHanso %}
-                    <tr>
-                        <th>{{user.rank}}</th>
-                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
-                        <td>{{user.hansoSum}}</td>
-                        <td>{{user.percentage}}%</td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
         </div>
-        <div class="score">
-            <div class="rankTitle"><b>和了率_ランキング</b></div>
-            <table class="score-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <td>名前</td>
-                        <td>和了数</td>
-                        <td>総局数</td>
-                        <td>割合</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if usersHora %}
-                    {% for user in usersHora %}
-                    <tr>
-                        <th>{{user.rank}}</th>
-                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
-                        <td>{{user.horaCnt}}</td>
-                        <td>{{user.cnt}}</td>
-                        <td>{{user.percentage}}%</td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="score">
-            <div class="rankTitle"><b>放銃率_ランキング</b></div>
-            <table class="score-table">
-                <thead>
-                    <tr>
-                        <th>順位</th>
-                        <td>名前</td>
-                        <td>放銃数</td>
-                        <td>総局数</td>
-                        <td>割合</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if userHoju %}
-                    {% for user in userHoju %}
-                    <tr>
-                        <th>{{user.rank}}</th>
-                        <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
-                        <td>{{user.horaCnt}}</td>
-                        <td>{{user.cnt}}</td>
-                        <td>{{user.percentage}}%</td>
-                    </tr>
-                    {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-        <div id="footer">
-          <li class="navi">
-              <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
-          </li>
-        </div>
+      </div>
     </div>
+    <div class="main">
+      <div class="score">
+        <div class="rankTitle"><b>スコア_ランキング</b></div>
+        <div class="table-area">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>順位</th>
+                <td>名前</td>
+                <td>スコア</td>
+                <td>トップ差</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if users %}
+              {% for user in users %}
+              <tr>
+                <th>{{user.rank}}</th>
+                <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                <td>{{user.scoreSum}}</td>
+                <td>{{user.topDiff}}</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="score">
+        <div class="rankTitle"><b>半荘回数_ランキング</b></div>
+        <div class="table-area">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>順位</th>
+                <td>名前</td>
+                <td>半荘回数</td>
+                <td>割合</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if usersHanso %}
+              {% for user in usersHanso %}
+              <tr>
+                <th>{{user.rank}}</th>
+                <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                <td>{{user.hansoSum}}</td>
+                <td>{{user.percentage}}%</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="score">
+        <div class="rankTitle"><b>和了率_ランキング</b></div>
+        <div class="table-area">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th class="rank">順位</th>
+                <td class="name">名前</td>
+                <td>和了数</td>
+                <td>総局数</td>
+                <td>割合</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if usersHora %}
+              {% for user in usersHora %}
+              <tr>
+                <th>{{user.rank}}</th>
+                <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                <td>{{user.horaCnt}}</td>
+                <td>{{user.cnt}}</td>
+                <td>{{user.percentage}}%</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="score">
+        <div class="rankTitle"><b>放銃率_ランキング</b></div>
+        <div class="table-area">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th class="rank">順位</th>
+                <td class="name">名前</td>
+                <td>放銃数</td>
+                <td>総局数</td>
+                <td>割合</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% if userHoju %}
+              {% for user in userHoju %}
+              <tr>
+                <th>{{user.rank}}</th>
+                <td><a href="{% url 'mahjong:showDetail' user.userId %}">{{user.lastName}} {{user.firstName}}</a></td>
+                <td>{{user.horaCnt}}</td>
+                <td>{{user.cnt}}</td>
+                <td>{{user.percentage}}%</td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
+      </li>
+    </div>
+  </div>
 </body>
 </html>

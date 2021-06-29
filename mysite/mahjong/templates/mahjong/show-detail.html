@@ -58,6 +58,8 @@
                 </div>
             </div>
         </div>
+        <div class="main">
+
         <div class="menu-title">
             <div class="title-name -name">{{info.userRecordDto.user}}</div>
         </div>
@@ -134,7 +136,7 @@
                 <div class="rank-val-sub">({{info.userGetRankDto.tobiPercent}}%)</div>
             </div>
         </div>
-        <div class="menu-label">
+        <div class="day-label">
             {% if details %}
             {% for detail in details %}
             <ul class="day">
@@ -144,7 +146,7 @@
                         <li class="submenu__item">
                             <p class="sub-title">当日スコア合計：{{detail.dayScore}}</p>
                             {% for battle in detail.detailBattles %}
-                            <div>第{{battle.battleNo}}回戦</div>
+                            <div class="battle_num">第{{battle.battleNo}}回戦</div>
                             <table class="score-table">
                                 <thead>
                                     <tr>
@@ -175,6 +177,8 @@
                 </div>
             </div>
         </div>
+      </div>
+
         <div id="footer">
           <li class="navi">
               <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>

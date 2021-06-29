@@ -57,6 +57,7 @@
             </div>
         </div>
         <div class="clearfix">
+          <div class="main">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             <form action="{% url 'mahjong:settingUser' %}" method="post">
                 <div class="setting">
@@ -225,6 +226,7 @@
                 </div>
             </form>
             {% endif %}
+        </div>
         </div>
         <div id="footer">
           <li class="navi">
