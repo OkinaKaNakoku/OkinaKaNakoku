@@ -1,4 +1,3 @@
-import requests
 from linebot import LineBotApi
 from linebot.models import TextSendMessage
 from linebot.exceptions import LineBotApiError
