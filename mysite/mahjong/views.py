@@ -4,7 +4,9 @@ from mahjong.dto import showScoreUpdateDto
 from .dto.changeYear import *
 from mahjong.dto import updateScoreDAO
 from .dto.showDetail import *
+from .dto.lineBot import lineBotDto
 from mahjong.command import *
+from mahjong.command import lineBotCommand
 from .const import const
 
 from operator import itemgetter
@@ -144,12 +146,14 @@ def updateScore(request):
     else:
         maxHansoId = hanso_obj.get('hanso_id__max') + 1
 
+    lineBotMsgs = []
+
     # ■HansoSum to Insert
     # ■UserInfo to Update
     hansoIdParam = maxHansoId
     rankParam = 1
     for dao in rankSortDaos:
-        # ★★TODO 同率順位などのレアケースは見ない。javaなら書いてやるよ
+        # TODO 同率順位などのレアケースは見ない。javaなら書いてやるよ
         # 計算処理
         userIdParam = dao.userId
         scoreParam = dao.score
@@ -166,6 +170,11 @@ def updateScore(request):
             scoreResultParam = int(scoreParam) - 30000
         scoreResultParam = scoreResultParam / 1000
         scoreResultParam = scoreResultParam - 30
+
+        # botメッセージ
+        lineMsg = lineBotDto.LineBotMsg(userObj.first().last_name, scoreParam, scoreResultParam)
+        lineBotMsgs.append(lineMsg)
+
         HansoSum(year=year
                 ,hanso_id=hansoIdParam
                 , user_id=userObj.first()
@@ -183,6 +192,17 @@ def updateScore(request):
         dao.score_sum += Decimal(str(scoreResultParam))
         dao.save()
         rankParam = rankParam + 1
+
+    # botメッセージ作成
+    rank = 1
+    lineMsg = "【 -対局が終了しました- 】\r\n"
+    for msg in lineBotMsgs:
+        lineMsg = lineMsg + str(rank) + "位 | " + str(msg.name) + " ["
+        if 0 < msg.scoreResult:
+            lineMsg = lineMsg + "+"
+        lineMsg = lineMsg + str(int(msg.scoreResult)) + "]\r\n"
+        rank += 1
+    lineBotCommand.LineBotCommand.pushMessage(lineMsg)
 
     # エラーメッセージを返して、レンダリングするが、正常終了のはず
     gameUserQuery = GameUser.objects.select_related().all()
@@ -606,3 +626,7 @@ def showYakuman(request, **kwargs):
         isAllYear = True
     yearsInfo = changeYearDto.ChangeYearDto(yearsInfo, isAllYear)
     return render(request, 'mahjong/show-yakuman.html', {'yearsInfo':yearsInfo})
+
+def test(request, **kwargs):
+    lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")
+    return render(request, 'mahjong/test.html')
