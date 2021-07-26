@@ -47,6 +47,7 @@ body > div.clearfix > form > input {
     width: 70%;
     border-top: 1px solid #908f8f;
     font-size: 20px;
+    color: white;
 }
 
 .user {
@@ -147,6 +148,7 @@ table td {
     border-bottom: .1px solid #000000;
     border-right: .1px solid #000000;
     border-left: .1px solid #000000;
+    background-color: white;
 }
 
 .scoreText {
@@ -338,4 +340,3 @@ table td {
 
 
 }
-
