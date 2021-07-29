@@ -97,7 +97,7 @@ class ShowDetailCommand:
             name = userMst.last_name + ' ' + userMst.first_name
             score = userInfo.score_sum
             hansoCnt = len(userHansoScores)
-            recordDto = userRecordDto.UserRecordDto(name, rank, score, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
             return detailResDto
 
@@ -152,6 +152,13 @@ class ShowDetailCommand:
         rankThirdPercentage = format(rankThirdCnt / hansoCnt * 100, '.2f')
         rankFourthPercentage = format(rankFourthCnt / hansoCnt * 100, '.2f')
         tobiPercentage = format(tobiCnt / hansoCnt * 100, '.2f')
+        # 順位率
+        perRank = 1 * rankFirstCnt
+        perRank = perRank + 2 * rankSecondCnt
+        perRank = perRank + 3 * rankThirdCnt
+        perRank = perRank + 4 * rankFourthCnt
+        perRank = format(perRank / hansoCnt, '.2f')
+
         # Response作成
         # pythonなんで適当な箇所で改行できないのか
         rankDto = userGetRankDto.UserGetRankDto(rankFirstCnt, rankFirstPercentage, rankSecondCnt, ranksecondPercentage, rankThirdCnt, rankThirdPercentage, rankFourthCnt, rankFourthPercentage, tobiCnt, tobiPercentage)
@@ -159,6 +166,6 @@ class ShowDetailCommand:
         score = userInfo.score_sum
         maxScore = max(userHansoScores)
         minScore = min(userHansoScores)
-        recordDto = userRecordDto.UserRecordDto(name, rank, score, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, dayCnt)
+        recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, dayCnt)
         detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
         return detailResDto

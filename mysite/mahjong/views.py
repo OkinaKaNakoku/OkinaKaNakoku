@@ -21,6 +21,10 @@ from django.views import generic
 from decimal import Decimal
 from django.db.models import Q
 from django.utils.timezone import localtime
+import json
+from django.http.response import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+import urllib.parse
 
 from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst
 
@@ -464,12 +468,22 @@ def showDetail(request, userId):
     userMstQuery = UserMst.objects.values()
     if const.Const.ScreenConst.ALL_YEAR != selectYear:
         hansos = HansoSum.objects.values().filter(year=selectYear)
+        results = GameResult.objects.values().filter(year=selectYear)
     else:
         hansos = HansoSum.objects.values()
+        results = GameResult.objects.values()
 
     userMstDictionary = {}
     for userMst in userMstQuery:
         userMstDictionary[userMst.get('user_id')] = userMst
+
+    resultDictionary = {}
+    for result in results:
+        resultList = []
+        if result.get('hanso_id') in resultDictionary:
+            resultList[len(resultList):len(resultList)] = resultDictionary[result.get('hanso_id')]
+        resultList.append(result)
+        resultDictionary[result.get('hanso_id')] = resultList
 
     # 対象のユーザの半荘IDのみ取得
     hansoIdList = []
@@ -508,6 +522,24 @@ def showDetail(request, userId):
         date = localtime(scoreDetail.get('insert_date'))
         date = str(date.year) + '/' + str(date.month) + '/' + str(date.day)
         user = getUser(users, scoreDetail.get('user_id_id'))
+
+        # 半荘毎の和了率・放銃率
+        # データ取得ミスの関係で取得できない場合あり。0固定
+        hansoResultList = resultDictionary.get(scoreDetail.get('hanso_id'))
+        horaCnt = 0
+        hojuCnt = 0
+        totalCnt = 0
+        if hansoResultList is not None:
+            for hansoResult in hansoResultList:
+                if hansoResult.get('user_id_id') == scoreDetail.get('user_id_id'):
+                    totalCnt = totalCnt + 1
+                    if hansoResult.get('result_div') == const.Const.GameConst.和了:
+                        horaCnt = horaCnt + 1
+                    elif hansoResult.get('result_div') == const.Const.GameConst.放銃:
+                        hojuCnt = hojuCnt + 1
+
+        isMine = 1 if user.get('user_id_id') == userId else 0
+
         # 同じ半荘ID
         if hansoIdWk == scoreDetail.get('hanso_id'):
             hansoIdWk = scoreDetail.get('hanso_id')
@@ -516,12 +548,17 @@ def showDetail(request, userId):
                                                                             , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
-                                                                            , scoreDetail.get('score_result')))
+                                                                            , horaCnt
+                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , hojuCnt
+                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , scoreDetail.get('score_result')
+                                                                            , isMine))
             continue
         else:
             hansoIdWk = scoreDetail.get('hanso_id')
             battleNo = battleNo + 1
-            showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
+            showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers, totalCnt)
             detailBattles.append(showDetailBattleDto)
             detailUsers = []
             detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
@@ -529,12 +566,16 @@ def showDetail(request, userId):
                                                                             , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
-                                                                            , scoreDetail.get('score_result')))
+                                                                            , horaCnt
+                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , hojuCnt
+                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , scoreDetail.get('score_result')
+                                                                            , isMine))
         # 同じ日付内
         if dateWk == date:
             dateWk = date
             continue
-
         else:
             battleNo = 0
             dayScore = 0
@@ -551,11 +592,16 @@ def showDetail(request, userId):
                                                                             , userMstDictionary[user.get('user_id_id')].get('first_name')
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
-                                                                            , scoreDetail.get('score_result')))
+                                                                            , horaCnt
+                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , hojuCnt
+                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , scoreDetail.get('score_result')
+                                                                            , isMine))
             dateWk = date
 
     battleNo = battleNo + 1
-    showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers)
+    showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers, totalCnt)
     detailBattles.append(showDetailBattleDto)
     dayScore = 0
     for battle in detailBattles:
@@ -626,6 +672,31 @@ def showYakuman(request, **kwargs):
         isAllYear = True
     yearsInfo = changeYearDto.ChangeYearDto(yearsInfo, isAllYear)
     return render(request, 'mahjong/show-yakuman.html', {'yearsInfo':yearsInfo})
+
+def getGraph(request, userId):
+
+    # 表示する年を確定させる
+    # cookieに保存されていない場合はシステム日付の年をデフォルトにする
+    selectYear = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+    # ここのifホンマに謎。NoneなのにTrueにならない
+    if selectYear is None:
+        selectYear = datetime.datetime.now()
+        selectYear = str(selectYear.year)
+
+    if const.Const.ScreenConst.ALL_YEAR != selectYear:
+        hansos = HansoSum.objects.values().filter(year=selectYear, user_id=userId)
+    else:
+        hansos = HansoSum.objects.values().filter(user_id=userId)
+    cnt = 1
+    list = []
+    scoreWk = 0
+    for hanso in hansos:
+        scoreWk = scoreWk + hanso.get('score_result')
+        obj = {"year":cnt, "value":scoreWk}
+        list.append(obj)
+        cnt = cnt + 1
+    dict = {"data":list}
+    return JsonResponse(dict)
 
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")

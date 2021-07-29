@@ -155,13 +155,18 @@ tr {
       padding-left: 5%;
       padding-right: 5%;
     }
+    .isMine {
+       background:#0000004f;
+      }
+
+
     .menu__item__link {
       width: 30%;
       display:inline-block;
 
       text-decoration: none;
       color: #000000;
-      background-color: #e7eaea;
+      background-color: #fff;
       margin-left: 5%;
     }
     .day {
@@ -195,4 +200,15 @@ tr {
     tbody tr:nth-child(odd) {
         background-color: white;
     }
+    .val-sub {
+        display:inline-block;
+        width: auto;
+        font-size: 10px;
+        text-align: center;
+        margin: auto;
+    }
+    #chartdiv {
+  width : 100%;
+  height  : 500px;
+}
 }
