@@ -5,6 +5,7 @@ from ..const import const
 from mahjong.command import showDetailCommand
 from mahjong.query import query
 
+import math
 from operator import itemgetter
 from operator import attrgetter
 from django.http import HttpResponse, HttpResponseRedirect
@@ -97,7 +98,7 @@ class ShowDetailCommand:
             name = userMst.last_name + ' ' + userMst.first_name
             score = userInfo.score_sum
             hansoCnt = len(userHansoScores)
-            recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
             return detailResDto
 
@@ -109,13 +110,27 @@ class ShowDetailCommand:
         gameCnt = len(gameResultQuerys)
         horaCnt = 0
         hojuCnt = 0
+        horaScore = 0
+        horaScoreCnt = 0
+        hojuScore = 0
+        hojuScoreCnt = 0
         for gameResultQuery in gameResultQuerys:
-            if (const.Const.GameConst.和了 == gameResultQuery.result_div):
+            if int(const.Const.GameConst.和了) == gameResultQuery.result_div:
                 horaCnt += 1
-            elif (const.Const.GameConst.放銃 == gameResultQuery.result_div):
+                if gameResultQuery.score != 0:
+                    horaScore = horaScore + gameResultQuery.score
+                    horaScoreCnt = horaScoreCnt + 1
+            elif int(const.Const.GameConst.放銃) == gameResultQuery.result_div:
                 hojuCnt += 1
-        horaPercentage = format(horaCnt / gameCnt * 100, '.2f') # 小数点以下2桁まで
-        hojuPercentage = format(hojuCnt / gameCnt * 100, '.2f')
+                if gameResultQuery.score != 0:
+                    hojuScore = hojuScore + gameResultQuery.score
+                    hojuScoreCnt = hojuScoreCnt + 1
+        horaPercentage = format(horaCnt / gameCnt, '.3f') # 小数点以下2桁まで
+        hojuPercentage = format(hojuCnt / gameCnt, '.3f')
+        if horaScore != 0:
+            horaScore = "{:,}".format(math.floor(horaScore / horaScoreCnt))
+        if hojuScore != 0:
+            hojuScore = "{:,}".format(math.floor(hojuScore / hojuScoreCnt))
 
         #参加日数
         dayCnt = 1
@@ -147,11 +162,11 @@ class ShowDetailCommand:
             if (userHansoSum.score < 0):
                 tobiCnt += 1
         hansoCnt = len(userHansoSums)
-        rankFirstPercentage = format(rankFirstCnt / hansoCnt * 100, '.2f')
-        ranksecondPercentage = format(rankSecondCnt / hansoCnt * 100, '.2f')
-        rankThirdPercentage = format(rankThirdCnt / hansoCnt * 100, '.2f')
-        rankFourthPercentage = format(rankFourthCnt / hansoCnt * 100, '.2f')
-        tobiPercentage = format(tobiCnt / hansoCnt * 100, '.2f')
+        rankFirstPercentage = format(rankFirstCnt / hansoCnt, '.2f')
+        ranksecondPercentage = format(rankSecondCnt / hansoCnt, '.2f')
+        rankThirdPercentage = format(rankThirdCnt / hansoCnt, '.2f')
+        rankFourthPercentage = format(rankFourthCnt / hansoCnt, '.2f')
+        tobiPercentage = format(tobiCnt / hansoCnt, '.2f')
         # 順位率
         perRank = 1 * rankFirstCnt
         perRank = perRank + 2 * rankSecondCnt
@@ -166,6 +181,6 @@ class ShowDetailCommand:
         score = userInfo.score_sum
         maxScore = max(userHansoScores)
         minScore = min(userHansoScores)
-        recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, dayCnt)
+        recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, horaScore, hojuScore, dayCnt)
         detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
         return detailResDto

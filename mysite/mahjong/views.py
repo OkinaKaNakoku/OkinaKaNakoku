@@ -8,6 +8,7 @@ from .dto.lineBot import lineBotDto
 from mahjong.command import *
 from mahjong.command import lineBotCommand
 from .const import const
+from mahjong.query import query
 
 from operator import itemgetter
 from operator import attrgetter
@@ -25,8 +26,9 @@ import json
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 import urllib.parse
+from django.shortcuts import redirect
 
-from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst
+from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst, GameStatus
 
 # 定数
 USER_UNREG = 'userUnreg'
@@ -58,17 +60,30 @@ def showScoreUpdate(request):
     user2 = None
     user3 = None
     user4 = None
-    gameUserQuery = GameUser.objects.select_related().all()
-    if gameUserQuery.first() is not None:
-        # context別だからそれぞれで取る
-        user1 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[0])
-        user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
-        user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
-        user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
+    gameUserQuery = GameUser.objects.select_related().all().order_by('seq')
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+    gameUserScoreSortedQuery = sorted(gameUserQuery, key=attrgetter('score'), reverse=True)
 
+    # rankとUserIdで紐付け
+    rankDic = {}
+    for gameUser in gameUserQuery:
+        rank = 1
+        for gameUserScoreSorted in gameUserScoreSortedQuery:
+            if  gameUser.user_id == gameUserScoreSorted.user_id:
+                rankDic[gameUser.user_id] = rank
+                break
+            rank = rank + 1
+
+    if 4 <= len(gameUserQuery):
+        # context別だからそれぞれで取る
+        user1 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[0], rankDic[gameUserQuery[0].user_id], gameStatusQuery.kyoku == 1)
+        user2 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[1], rankDic[gameUserQuery[1].user_id], gameStatusQuery.kyoku == 2)
+        user3 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[2], rankDic[gameUserQuery[2].user_id], gameStatusQuery.kyoku == 3)
+        user4 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[3], rankDic[gameUserQuery[3].user_id], gameStatusQuery.kyoku == 4)
+    gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
     response = render(request, 'mahjong/show-score-update.html',
     {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
-    'settingUsers':settingUsers})
+    'settingUsers':settingUsers, 'gameStatus':gameStatus, 'isReload':0})
 
     # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
     cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
@@ -91,10 +106,11 @@ def updateScore(request):
         settingUsers = []
         for user in users_obj:
             settingUsers.append(showScoreUpdateDto.ShowScoreUpdate(user))
-        return render(request, 'mahjong/show-score-update.html', {
-        'settingUsers': settingUsers,
-        'error_message': "更新不可です。更新管理をUPDATEしてください",
-        'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+        # return render(request, 'mahjong/show-score-update.html', {
+        # 'settingUsers': settingUsers,
+        # 'error_message': "更新不可です。更新管理をUPDATEしてください",
+        # 'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+        return redirect('/mahjong/showScoreUpdate?messageDiv=3')
 
     # ■form取得。多分もっといい方法ある
     noUser = 'default'
@@ -122,10 +138,11 @@ def updateScore(request):
             usersRes = []
             for user in users_obj:
                 usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
-            return render(request, 'mahjong/show-score-update.html', {
-            'users': usersRes,
-            'error_message': "スコアを全て登録してください",
-            'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+            # return render(request, 'mahjong/show-score-update.html', {
+            # 'users': usersRes,
+            # 'error_message': "スコアを全て登録してください",
+            # 'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+            return redirect('/mahjong/showScoreUpdate?messageDiv=6')
 
     year = str(datetime.datetime.now().year)
     # ■userとscoreの紐付け
@@ -209,6 +226,7 @@ def updateScore(request):
     lineBotCommand.LineBotCommand.pushMessage(lineMsg)
 
     # エラーメッセージを返して、レンダリングするが、正常終了のはず
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
     gameUserQuery = GameUser.objects.select_related().all()
     user1 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[0])
     user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
@@ -218,10 +236,12 @@ def updateScore(request):
     usersRes = []
     for user in users_obj:
         usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
-    return render(request, 'mahjong/show-score-update.html', {
-    'settingUsers': usersRes,
-    'error_message': "スコア登録が完了しました",
-    'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+    gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
+    # return render(request, 'mahjong/show-score-update.html', {
+    # 'settingUsers': usersRes,
+    # 'error_message': "スコア登録が完了しました",
+    # 'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4, 'gameStatus':gameStatus})
+    return redirect('/mahjong/showScoreUpdate?messageDiv=2')
 
 # 点数表表示
 def scoreTable(request):
@@ -234,10 +254,11 @@ def scoreTable(request):
          response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
     return response
 
-
 # 対局登録
 def updateGame(request, **kwargs):
     settingUsers = getShowScoreUpdateDto()
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+    gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
     if isUpdatePossible() == False:
         # レンダリング
         gameUserQuery = GameUser.objects.select_related().all()
@@ -249,20 +270,21 @@ def updateGame(request, **kwargs):
         settingUsers = []
         for user in users_obj:
             settingUsers.append(showScoreUpdateDto.ShowScoreUpdate(user))
-        return render(request, 'mahjong/show-score-update.html', {
-        'settingUsers': settingUsers,
-        'error_message': "更新不可です。更新管理をUPDATEしてください",
-        'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+        # return render(request, 'mahjong/show-score-update.html', {
+        # 'settingUsers': settingUsers,
+        # 'error_message': "更新不可です。更新管理をUPDATEしてください",
+        # 'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4, 'gameStatus':gameStatus})
+        return redirect('/mahjong/showScoreUpdate?messageDiv=3')
 
     # バリデーションチェック
     validResult = []
-    if request.POST['gameResult1'] == 和了:
+    if request.POST.get('gameResult1') == 和了:
         validResult.append(request.POST['gameResult1'])
-    if request.POST['gameResult2'] == 和了:
+    if request.POST.get('gameResult2') == 和了:
         validResult.append(request.POST['gameResult2'])
-    if request.POST['gameResult3'] == 和了:
+    if request.POST.get('gameResult3') == 和了:
         validResult.append(request.POST['gameResult3'])
-    if request.POST['gameResult4'] == 和了:
+    if request.POST.get('gameResult4') == 和了:
         validResult.append(request.POST['gameResult4'])
     if 1 < len(validResult):
         # 和了者が複数
@@ -275,23 +297,24 @@ def updateGame(request, **kwargs):
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
-        return render(request, 'mahjong/show-score-update.html', {
-        'settingUsers': usersRes,
-        'error_message': "和了者は複数登録できません",
-        'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
-        'settingUsers':settingUsers})
+        # return render(request, 'mahjong/show-score-update.html', {
+        # 'settingUsers': usersRes,
+        # 'error_message': "和了者は複数登録できません",
+        # 'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
+        # 'settingUsers':settingUsers, 'gameStatus':gameStatus})
+        return redirect('/mahjong/showScoreUpdate?messageDiv=7')
 
     validResult = []
-    if request.POST['gameResult1'] == 放銃:
+    if request.POST.get('gameResult1') == 放銃:
         validResult.append(request.POST['gameResult1'])
-    if request.POST['gameResult2'] == 放銃:
+    if request.POST.get('gameResult2') == 放銃:
         validResult.append(request.POST['gameResult2'])
-    if request.POST['gameResult3'] == 放銃:
+    if request.POST.get('gameResult3') == 放銃:
         validResult.append(request.POST['gameResult3'])
-    if request.POST['gameResult4'] == 放銃:
+    if request.POST.get('gameResult4') == 放銃:
         validResult.append(request.POST['gameResult4'])
     if 1 < len(validResult):
-        # 和了者が複数
+        # 放銃者が複数
         gameUserQuery = GameUser.objects.select_related().all()
         user1 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[0])
         user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
@@ -304,13 +327,85 @@ def updateGame(request, **kwargs):
         return render(request, 'mahjong/show-score-update.html', {
         'settingUsers': usersRes,
         'error_message': "放銃者は複数登録できません",
-        'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4})
+        'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4, 'gameStatus':gameStatus})
 
     year = str(datetime.datetime.now().year)
     # ■form取得
-    userId = request.POST['user1']
-    gameResult = request.POST['gameResult1']
+    scoreValue = int(request.POST.get('score'))
 
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+    # 供託計算
+    kyotakuCnt = gameStatusQuery.kyotaku
+    huroResults = []
+    huroResults.append(request.POST['huroResult1'])
+    huroResults.append(request.POST['huroResult2'])
+    huroResults.append(request.POST['huroResult3'])
+    huroResults.append(request.POST['huroResult4'])
+    addKyotaku = 0
+    for huroResult in huroResults:
+        if str(const.Const.HuroConst.供託) == huroResult:
+            kyotakuCnt = kyotakuCnt + 1
+            addKyotaku = addKyotaku + 1
+    kyotakuScore = kyotakuCnt * 1000
+    # 本場計算
+    honbaScore = gameStatusQuery.honba * 300
+
+    horaScore = scoreValue + kyotakuScore + honbaScore
+    hojuScore = scoreValue + honbaScore
+
+    #　和了者・放銃者・親の確定
+    gameResults = []
+    gameResults.append(request.POST['gameResult1'])
+    gameResults.append(request.POST['gameResult2'])
+    gameResults.append(request.POST['gameResult3'])
+    gameResults.append(request.POST['gameResult4'])
+    cnt = 0
+    horaUserId = None
+    hojuUserId = None
+    oyaUserId = None
+    for gameResult in gameResults:
+        cnt = cnt + 1
+        if str(const.Const.GameConst.和了) == gameResult:
+            horaUserId = request.POST['user' + str(cnt)]
+        elif str(const.Const.GameConst.放銃) == gameResult:
+            hojuUserId = request.POST['user' + str(cnt)]
+
+    # 何局目かで親を確定
+    oyaUserId = request.POST['user' + str(gameStatusQuery.kyoku)]
+    # ツモ時の点数を取得
+    # 親のツモロン、子のツモロンそれぞれ取得
+    tsumoScoreDic = {}
+    tsumoScoreDic = showScoreUpdateCommand.getTsumoScore(scoreValue)
+    isTsumo = False
+    isOyaTsumo = False
+    if hojuUserId is None and horaUserId is not None:
+        isTsumo = True
+        if horaUserId == oyaUserId:
+            isOyaTsumo = True
+
+    # 聴牌人数確定
+    tenpais = []
+    tenpais.append(request.POST['tenpaiResult1'])
+    tenpais.append(request.POST['tenpaiResult2'])
+    tenpais.append(request.POST['tenpaiResult3'])
+    tenpais.append(request.POST['tenpaiResult4'])
+    notenCnt = 0
+    bappu = 0
+    tenpairyo = 0
+    wk = 0
+    for tenpai in tenpais:
+        wk = wk + 1
+        if tenpai != "1":
+            if request.POST['huroResult' + str(wk)] != str(const.Const.HuroConst.供託):
+                notenCnt = notenCnt + 1
+    if notenCnt != 0 and notenCnt != 4:
+        bappu = 3000 / notenCnt
+        tenpairyo = 3000 / (4-notenCnt)
+
+    userId = request.POST.get('user1')
+    gameResult = request.POST.get('gameResult1')
+    huroResult = request.POST.get('huroResult1')
+    tenpaiResult = request.POST.get('tenpaiResult1')
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
     userQuery = UserMst.objects.all().filter(conditionUserId)
@@ -325,43 +420,291 @@ def updateGame(request, **kwargs):
     maxGameSeqQuery = GameResult.objects.all().filter(conditionHansoId).aggregate(Max('game_seq'))
     if maxGameSeqQuery.get('game_seq__max') is not None:
         maxGameSeq = int(maxGameSeqQuery.get('game_seq__max')) + 1
-    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+    userOpeDic = {}
+    userOpeDic[userId] = {'userId':userId, 'gameResult':gameResult, 'huroResult':huroResult, 'tenpaiResult':tenpaiResult}
+
+    # 点数パターン網羅
+    score = 0
+    if isTsumo == True and gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            kyotakuScore = kyotakuScore - 1000
+        if oyaUserId == userQuery[0].user_id:
+            score = tsumoScoreDic.get('oya') * 3
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+        else:
+            score = tsumoScoreDic.get('ko').get('oya')
+            score = score + tsumoScoreDic.get('ko').get('ko') * 2
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+    elif isTsumo == True:
+        if oyaUserId == userQuery[0].user_id:
+            score = score - tsumoScoreDic.get('ko').get('oya')
+            score = score - gameStatusQuery.honba * 100
+        else:
+            if isOyaTsumo == True:
+                score = score - tsumoScoreDic.get('oya')
+                score = score - gameStatusQuery.honba * 100
+            else:
+                score = score - tsumoScoreDic.get('ko').get('ko')
+                score = score - gameStatusQuery.honba * 100
+    elif gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            score = score - 1000
+        score = score + horaScore
+    elif gameResult == str(const.Const.GameConst.放銃):
+        score = score - hojuScore
+    elif (horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "1") or (horaUserId is None and userOpeDic[userQuery[0].user_id].get('huroResult') == const.Const.HuroConst.供託):
+        score = score + tenpairyo
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "0":
+        score = score - bappu
+    else:
+        score = 0
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult, huro_div=huroResult, score=score).save()
 
     userId = request.POST['user2']
     gameResult = request.POST['gameResult2']
+    huroResult = request.POST['huroResult2']
+    tenpaiResult = request.POST['tenpaiResult2']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
     userQuery = UserMst.objects.all().filter(conditionUserId)
-    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+
+    userOpeDic[userId] = {'userId':userId, 'gameResult':gameResult, 'huroResult':huroResult, 'tenpaiResult':tenpaiResult}
+    # 点数パターン網羅
+    score = 0
+    if isTsumo == True and gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            kyotakuScore = kyotakuScore - 1000
+        if oyaUserId == userQuery[0].user_id:
+            score = tsumoScoreDic.get('oya') * 3
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+        else:
+            score = tsumoScoreDic.get('ko').get('oya')
+            score = score + tsumoScoreDic.get('ko').get('ko') * 2
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+    elif isTsumo == True:
+        if oyaUserId == userQuery[0].user_id:
+            score = score - tsumoScoreDic.get('ko').get('oya')
+            score = score - gameStatusQuery.honba * 100
+        else:
+            if isOyaTsumo == True:
+                score = score - tsumoScoreDic.get('oya')
+                score = score - gameStatusQuery.honba * 100
+            else:
+                score = score - tsumoScoreDic.get('ko').get('ko')
+                score = score - gameStatusQuery.honba * 100
+    elif gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            score = score - 1000
+        score = score + horaScore
+    elif gameResult == str(const.Const.GameConst.放銃):
+        score = score - hojuScore
+    elif (horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "1") or (horaUserId is None and userOpeDic[userQuery[0].user_id].get('huroResult') == const.Const.HuroConst.供託):
+        score = score + tenpairyo
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "0":
+        score = score - bappu
+    else:
+        score = 0
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult, huro_div=huroResult, score=score).save()
 
     userId = request.POST['user3']
     gameResult = request.POST['gameResult3']
+    huroResult = request.POST['huroResult3']
+    tenpaiResult = request.POST['tenpaiResult3']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
     userQuery = UserMst.objects.all().filter(conditionUserId)
-    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
+
+    userOpeDic[userId] = {'userId':userId, 'gameResult':gameResult, 'huroResult':huroResult, 'tenpaiResult':tenpaiResult}
+    # 点数パターン網羅
+    score = 0
+    if isTsumo == True and gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            kyotakuScore = kyotakuScore - 1000
+        if oyaUserId == userQuery[0].user_id:
+            score = tsumoScoreDic.get('oya') * 3
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+        else:
+            score = tsumoScoreDic.get('ko').get('oya')
+            score = score + tsumoScoreDic.get('ko').get('ko') * 2
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+    elif isTsumo == True:
+        if oyaUserId == userQuery[0].user_id:
+            score = score - tsumoScoreDic.get('ko').get('oya')
+            score = score - gameStatusQuery.honba * 100
+        else:
+            if isOyaTsumo == True:
+                score = score - tsumoScoreDic.get('oya')
+                score = score - gameStatusQuery.honba * 100
+            else:
+                score = score - tsumoScoreDic.get('ko').get('ko')
+                score = score - gameStatusQuery.honba * 100
+    elif gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            score = score - 1000
+        score = score + horaScore
+    elif gameResult == str(const.Const.GameConst.放銃):
+        score = score - hojuScore
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "1" or (horaUserId is None and userOpeDic[userQuery[0].user_id].get('huroResult') == const.Const.HuroConst.供託):
+        score = score + tenpairyo
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "0":
+        score = score - bappu
+    else:
+        score = 0
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult, huro_div=huroResult, score=score).save()
 
     userId = request.POST['user4']
     gameResult = request.POST['gameResult4']
+    huroResult = request.POST['huroResult4']
+    tenpaiResult = request.POST['tenpaiResult4']
     # ■userInfo取得
     conditionUserId = Q(user_id = userId)
     userQuery = UserMst.objects.all().filter(conditionUserId)
-    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult).save()
 
+    userOpeDic[userId] = {'userId':userId, 'gameResult':gameResult, 'huroResult':huroResult, 'tenpaiResult':tenpaiResult}
+    # 点数パターン網羅
+    score = 0
+    if isTsumo == True and gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            kyotakuScore = kyotakuScore - 1000
+        if oyaUserId == userQuery[0].user_id:
+            score = tsumoScoreDic.get('oya') * 3
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+        else:
+            score = tsumoScoreDic.get('ko').get('oya')
+            score = score + tsumoScoreDic.get('ko').get('ko') * 2
+            score = score + gameStatusQuery.honba * 300
+            score = score + kyotakuScore
+    elif isTsumo == True:
+        if oyaUserId == userQuery[0].user_id:
+            score = score - tsumoScoreDic.get('ko').get('oya')
+            score = score - gameStatusQuery.honba * 100
+        else:
+            if isOyaTsumo == True:
+                score = score - tsumoScoreDic.get('oya')
+                score = score - gameStatusQuery.honba * 100
+            else:
+                score = score - tsumoScoreDic.get('ko').get('ko')
+                score = score - gameStatusQuery.honba * 100
+    elif gameResult == str(const.Const.GameConst.和了):
+        if userOpeDic[userQuery[0].user_id].get('huroResult') == str(const.Const.HuroConst.供託):
+            score = score - 1000
+        score = score + horaScore
+    elif gameResult == str(const.Const.GameConst.放銃):
+        score = score - hojuScore
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "1" or (horaUserId is None and userOpeDic[userQuery[0].user_id].get('huroResult') == const.Const.HuroConst.供託):
+        score = score + tenpairyo
+    elif horaUserId is None and userOpeDic[userQuery[0].user_id].get('tenpaiResult') == "0":
+        score = score - bappu
+    else:
+        score = 0
+    GameResult(year=year, hanso_id=maxHansoId, user_id=userQuery[0], game_seq=maxGameSeq, result_div=gameResult, huro_div=huroResult, score=score).save()
 
-    # ■レンダリング用オブジェクト取得。TODO そのうち共通化
-    gameUserQuery = GameUser.objects.select_related().all()
-    user1 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[0])
-    user2 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[1])
-    user3 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[2])
-    user4 = showScoreUpdateDto.ShowScoreUpdate(gameUserQuery[3])
+    ########## 対局状況管理 ##########
+    gameUserQuery = GameUser.objects.select_related().all().order_by('seq')
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+    gameUserScoreSortedQuery = sorted(gameUserQuery, key=attrgetter('score'), reverse=True)
+
+    # 次の局に進むかどうか
+    isNextGame = False
+    isHonbaAddRyukyoku = request.POST['checkRyukyoku']
+    # 和了者なし、和了者が親ではない場合は次局へ
+    # ただし、積み棒なしの場合は（親聴牌や九種九牌など）は積み棒のみ加算させるため次局へは進まない
+    if horaUserId is None or horaUserId != oyaUserId or userOpeDic[oyaUserId].get('tenpaiResult') != "1":
+        if isHonbaAddRyukyoku == "0":
+            isNextGame = True
+
+    # 各プレイヤーの点数の更新
+    userIds = userOpeDic.keys()
+    for userId in userIds:
+        userOpe = userOpeDic[userId]
+        score = 0
+        gameResultQery = GameResult.objects.select_related().all().filter(year=year, hanso_id=maxHansoId, user_id=userOpe.get('userId'), game_seq=maxGameSeq).first()
+        score = gameResultQery.score
+        if userOpe.get('gameResult') != str(const.Const.GameConst.和了) and userOpe.get('huroResult') == str(const.Const.HuroConst.供託):
+            score = score - 1000
+        user = GameUser.objects.filter(user_id=userId).first()
+        user.score += score
+        user.save()
+
+    ba = gameStatusQuery.ba
+    kyoku = gameStatusQuery.kyoku
+    kyotaku = gameStatusQuery.kyotaku
+    honba = gameStatusQuery.honba
+
+    # 次局に進む条件網羅
+    isNext = False
+    if horaUserId is not None and oyaUserId != horaUserId: # 親以外の和了
+        isNext = True
+    if (horaUserId is None and userOpeDic[oyaUserId].get('tenpaiResult') != "1"): # 親がノーテン
+        if horaUserId is None and userOpeDic[oyaUserId].get('huroResult') != str(const.Const.HuroConst.供託):
+            if isHonbaAddRyukyoku == "0":
+                isNext = True
+
+    # 供託網羅
+    if horaUserId is None:
+        kyotaku = kyotaku + addKyotaku
+    else:
+        kyotaku = 0
+    # 本場網羅
+    isAddHonba = False
+    if horaUserId == oyaUserId:
+        isAddHonba = True
+    if horaUserId is None:
+        if userOpeDic[oyaUserId].get('tenpaiResult') == "1" or userOpeDic[oyaUserId].get('tenpaiResult') == "0":
+            isAddHonba = True
+    if isHonbaAddRyukyoku == "1":
+        isAddHonba = True
+
+    if isNext == True:
+        if ba == "東" and kyoku == 4:
+            ba = "南"
+            kyoku = 1
+        elif ba == "南" and kyoku == 4:
+            ba = "南" # 終了時はそのままキープする
+            kyoku = 4
+        else:
+            kyoku = kyoku + 1
+    if isAddHonba == True:
+        honba = honba + 1
+    else:
+        honba = 0
+
+    GameStatus.objects.all().delete()
+    GameStatus(ba=ba, kyoku=kyoku, honba=honba, kyotaku=kyotaku).save()
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+
+    # rankとUserIdで紐付け
+    rankDic = {}
+    for gameUser in gameUserQuery:
+        rank = 1
+        for gameUserScoreSorted in gameUserScoreSortedQuery:
+            if  gameUser.user_id == gameUserScoreSorted.user_id:
+                rankDic[gameUser.user_id] = rank
+                break
+            rank = rank + 1
+
+    if 4 <= len(gameUserQuery):
+        # context別だからそれぞれで取る
+        user1 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[0], rankDic[gameUserQuery[0].user_id], gameStatusQuery.kyoku == 1)
+        user2 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[1], rankDic[gameUserQuery[1].user_id], gameStatusQuery.kyoku == 2)
+        user3 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[2], rankDic[gameUserQuery[2].user_id], gameStatusQuery.kyoku == 3)
+        user4 = showScoreUpdateDto.ShowScoreUpdateLabel(gameUserQuery[3], rankDic[gameUserQuery[3].user_id], gameStatusQuery.kyoku == 4)
     settingUsers = getShowScoreUpdateDto()
-    return render(request, 'mahjong/show-score-update.html',
-                 {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
-                  'settingUsers':settingUsers,
-                  'error_message': "対局登録が完了しました"})
+    gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
+    # return render(request, 'mahjong/show-score-update.html',
+    #              {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
+    #               'settingUsers':settingUsers, 'gameStatus':gameStatus, 'isReload':1,
+    #               'error_message': "対局登録が完了しました"})
+    return redirect('/mahjong/showScoreUpdate?messageDiv=1')
 
-# プレイヤー設定
+# 対局設定
 def settingUser(request, **kwargs):
     # バリデーションチェック
     check = userValidation(request)
@@ -371,44 +714,58 @@ def settingUser(request, **kwargs):
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
-        return render(request, 'mahjong/show-score-update.html', {
-        'settingUsers': usersRes,
-        'error_message': "プレイヤーを4人登録してください"})
+        # return render(request, 'mahjong/show-score-update.html', {
+        # 'settingUsers': usersRes,
+        # 'error_message': "プレイヤーを4人登録してください"})
+        return redirect('/mahjong/showScoreUpdate?messageDiv=4')
     if check == USER_DUP:
         # レンダリング
         users_obj = UserMst.objects.select_related().all().order_by('user_id')
         usersRes = []
         for user in users_obj:
             usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
-        return render(request, 'mahjong/show-score-update.html', {
-        'settingUsers': usersRes,
-        'error_message': "プレイヤーが重複しています"})
+        # return render(request, 'mahjong/show-score-update.html', {
+        # 'settingUsers': usersRes,
+        # 'error_message': "プレイヤーが重複しています"})
+        return redirect('/mahjong/showScoreUpdate?messageDiv=5')
 
     # GameUserをdelete-insert。同期遷移しても保持させる
     GameUser.objects.all().delete()
+    GameStatus.objects.all().delete()
+    GameStatus(ba="東", kyoku=1, honba=0, kyotaku=0).save()
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+
     # ■form取得。たぶんもっといい方法ある
     userId = request.POST['user1']
-    user1 = getSettingUser(userId)
+    user1 = getSettingUser(userId, 1)
     userId = request.POST['user2']
-    user2 = getSettingUser(userId)
+    user2 = getSettingUser(userId, 2)
     userId = request.POST['user3']
-    user3 = getSettingUser(userId)
+    user3 = getSettingUser(userId, 3)
     userId = request.POST['user4']
-    user4 = getSettingUser(userId)
+    user4 = getSettingUser(userId, 4)
     settingUsers = getShowScoreUpdateDto()
+    gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
     return render(request, 'mahjong/show-score-update.html',
                  {'user1':user1, 'user2':user2, 'user3':user3, 'user4':user4,
-                  'settingUsers':settingUsers})
+                  'settingUsers':settingUsers,'gameStatus':gameStatus })
 
 # fromでそれぞれで取得するため、別出
-def getSettingUser(userId):
+def getSettingUser(userId, seq):
     conditionUserId = Q(user_id = userId)
     userQuery = UserMst.objects.all().filter(conditionUserId)
     user = None
+    if (seq == 1):
+        isOya = True
+    else:
+        isOya = False
+
     for user in userQuery:
         # GameUserについでに登録する
-        GameUser(user_id = user.user_id, last_name = user.last_name, first_name = user.first_name).save()
-        user = (showScoreUpdateDto.ShowScoreUpdate(user))
+        GameUser(seq = seq, user_id = user.user_id, last_name = user.last_name, first_name = user.first_name, score=25000).save()
+        user = query.Query.getGameUserWhereUserId(userId)
+        # 初回登録なので固定
+        user = (showScoreUpdateDto.ShowScoreUpdateLabel(user[0], seq, isOya))
     return user
 
 def getShowScoreUpdateDto():
@@ -416,6 +773,7 @@ def getShowScoreUpdateDto():
     users_obj = UserMst.objects.select_related().all().order_by('user_id')
     usersRes = []
     for user in users_obj:
+        # 使わないので0固定
         usersRes.append(showScoreUpdateDto.ShowScoreUpdate(user))
     return usersRes
 
@@ -533,15 +891,16 @@ def showDetail(request, userId):
             for hansoResult in hansoResultList:
                 if hansoResult.get('user_id_id') == scoreDetail.get('user_id_id'):
                     totalCnt = totalCnt + 1
-                    if hansoResult.get('result_div') == const.Const.GameConst.和了:
+                    if hansoResult.get('result_div') == int(const.Const.GameConst.和了):
                         horaCnt = horaCnt + 1
-                    elif hansoResult.get('result_div') == const.Const.GameConst.放銃:
+                    elif hansoResult.get('result_div') == int(const.Const.GameConst.放銃):
                         hojuCnt = hojuCnt + 1
 
         isMine = 1 if user.get('user_id_id') == userId else 0
 
         # 同じ半荘ID
         if hansoIdWk == scoreDetail.get('hanso_id'):
+            totalCntWk = totalCnt
             hansoIdWk = scoreDetail.get('hanso_id')
             detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
                                                                             , userMstDictionary[user.get('user_id_id')].get('last_name')
@@ -549,16 +908,16 @@ def showDetail(request, userId):
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , horaCnt
-                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(horaCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , hojuCnt
-                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(hojuCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , scoreDetail.get('score_result')
                                                                             , isMine))
             continue
         else:
             hansoIdWk = scoreDetail.get('hanso_id')
             battleNo = battleNo + 1
-            showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers, totalCnt)
+            showDetailBattleDto = showDetailBattleListDto.ShowDetailBattleListDto(battleNo, detailUsers, totalCntWk)
             detailBattles.append(showDetailBattleDto)
             detailUsers = []
             detailUsers.append(showDetailUserListDto.ShowDetailUserListDto(user.get('user_id_id')
@@ -567,9 +926,9 @@ def showDetail(request, userId):
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , horaCnt
-                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(horaCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , hojuCnt
-                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(hojuCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , scoreDetail.get('score_result')
                                                                             , isMine))
         # 同じ日付内
@@ -593,9 +952,9 @@ def showDetail(request, userId):
                                                                             , scoreDetail.get('rank')
                                                                             , scoreDetail.get('score')
                                                                             , horaCnt
-                                                                            , format(horaCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(horaCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , hojuCnt
-                                                                            , format(hojuCnt / totalCnt * 100, '.1f') if totalCnt != 0 else 0
+                                                                            , format(hojuCnt / totalCnt, '.1f') if totalCnt != 0 else 0
                                                                             , scoreDetail.get('score_result')
                                                                             , isMine))
             dateWk = date

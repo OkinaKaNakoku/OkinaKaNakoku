@@ -6,6 +6,7 @@ from .models import GameUser
 from .models import GameResult
 from .models import IsUpdateMng
 from .models import UserMst
+from .models import GameStatus
 
 class HansoSumInline(admin.TabularInline):
     model = HansoSum
@@ -39,6 +40,8 @@ class GameResultAdmin(admin.ModelAdmin):
         ('GAME_SEQ',     {'fields':['game_seq']}),
         ('USER_ID',  {'fields':['user_id']}),
         ('RESULT_DIV',    {'fields':['result_div']}),
+        ('HURO_DIV',    {'fields':['huro_div']}),
+        ('SCORE',    {'fields':['score']}),
         ('INSERT_DATE',    {'fields':['insert_date']}),
     ]
     ordering = ('-year', '-hanso_id', '-game_seq', 'user_id')
@@ -55,10 +58,22 @@ class UserMstAdmin(admin.ModelAdmin):
     ordering = ('user_id',)
     list_display = ('user_id', 'last_name', 'first_name')
 
+class GameUserAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('SEQ',  {'fields':['seq']}),
+        ('USER_ID',     {'fields':['user_id']}),
+        ('LAST_NAME',     {'fields':['last_name']}),
+        ('FIRST_NAME',    {'fields':['first_name']}),
+        ('SCORE',    {'fields':['score']}),
+    ]
+    ordering = ('seq',)
+    list_display = ('seq', 'user_id', 'last_name', 'first_name')
+
 # Register your models here.
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(HansoSum, HansoSumAdmin)
 admin.site.register(UserMst, UserMstAdmin)
-admin.site.register(GameUser);
+admin.site.register(GameUser, GameUserAdmin);
 admin.site.register(GameResult, GameResultAdmin)
+admin.site.register(GameStatus)
 admin.site.register(IsUpdateMng)

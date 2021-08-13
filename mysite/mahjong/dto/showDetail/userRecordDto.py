@@ -1,6 +1,6 @@
 class UserRecordDto:
     # コンストラクタ：戦績表示
-    def __init__(self, userId, user, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercent, hojuCnt, hojuPercent, days):
+    def __init__(self, userId, user, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercent, hojuCnt, hojuPercent, horaScore, hojuScore, days):
         self.userId = userId
         self.user = user
         self.rank = rank
@@ -14,4 +14,6 @@ class UserRecordDto:
         self.horaPercent = horaPercent
         self.hojuCnt = hojuCnt
         self.hojuPercent = hojuPercent
+        self.horaScore = horaScore
+        self.hojuScore = hojuScore
         self.days = days

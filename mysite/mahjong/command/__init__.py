@@ -1,2 +1,3 @@
 __all__ = ['showDetailCommand'
-         , 'showRankingCommand']
+         , 'showRankingCommand'
+         , 'showScoreUpdateCommand']

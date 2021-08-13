@@ -15,8 +15,6 @@ class UserMst(models.Model):
         #return str(self.user_id + ' ： ' + self.last_name + ' ' + self.first_name)
         return str(self.user_id) + ' ： ' + str(self.last_name) + ' ' + str(self.first_name)
 
-
-
 ## ユーザ情報
 class UserInfo(models.Model):
     year = models.IntegerField(null=False, default=2020)
@@ -56,6 +54,10 @@ class GameResult(models.Model):
     game_seq = models.IntegerField()
     '''結果区分｜「0：なし」・「1：和了」・「2：放銃」'''
     result_div = models.IntegerField(default=0)
+    '''副露区分｜「0：なし」・「1：副露」・「9：計算対象外」'''
+    huro_div = models.IntegerField(null=False, default=9)
+    '''その局でやりとりした点数。出上がりのみ（ツモによる若干の点差は考慮しない）。供託や本場はあり'''
+    score = models.IntegerField(default=0)
     insert_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -72,12 +74,26 @@ class GameResult(models.Model):
 # 対局中のユーザ。tempの役割。点数早見表と同期遷移するし非同期むつかしい…
 # 実質tempTableだし外部keyは設けない。登録のたびにdelete-insert
 class GameUser(models.Model):
+    seq = models.IntegerField(default=0)
     user_id = models.CharField(max_length=4)
     last_name = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
+    score = models.IntegerField(default=25000)
+    # score = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
+
+# 対局状況
+# 本場とか供託とかの管理
+class GameStatus(models.Model):
+    ba = models.CharField(max_length=1)
+    kyoku = models.IntegerField()
+    honba = models.IntegerField()
+    kyotaku = models.IntegerField()
+    #
+    # def __str__(self):
+    #     return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
 
 # 更新管理
 class IsUpdateMng(models.Model):

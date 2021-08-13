@@ -55,3 +55,7 @@ class Query:
 
     def getGameResultWhereUserIdAndYear(userId, year):
         return GameResult.objects.all().filter(user_id=userId, year=year)
+
+    "GameUserをUserId指定で取得"
+    def getGameUserWhereUserId(userId):
+        return GameUser.objects.all().filter(user_id=userId)
