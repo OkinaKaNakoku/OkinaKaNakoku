@@ -178,9 +178,10 @@ class ShowDetailCommand:
         # pythonなんで適当な箇所で改行できないのか
         rankDto = userGetRankDto.UserGetRankDto(rankFirstCnt, rankFirstPercentage, rankSecondCnt, ranksecondPercentage, rankThirdCnt, rankThirdPercentage, rankFourthCnt, rankFourthPercentage, tobiCnt, tobiPercentage)
         name = userMst.last_name + ' ' + userMst.first_name
+        engName = userMst.eng_last_name.upper() + ' ' + userMst.eng_first_name.upper()
         score = userInfo.score_sum
         maxScore = max(userHansoScores)
         minScore = min(userHansoScores)
-        recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, horaScore, hojuScore, dayCnt)
+        recordDto = userRecordDto.UserRecordDto(userId, name, engName, rank, score, perRank, hansoCnt, maxScore, minScore, gameCnt, horaCnt, horaPercentage, hojuCnt, hojuPercentage, horaScore, hojuScore, dayCnt)
         detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
         return detailResDto

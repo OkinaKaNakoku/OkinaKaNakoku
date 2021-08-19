@@ -45,7 +45,7 @@ class GameResultAdmin(admin.ModelAdmin):
         ('INSERT_DATE',    {'fields':['insert_date']}),
     ]
     ordering = ('-year', '-hanso_id', '-game_seq', 'user_id')
-    list_display = ('year', 'hanso_id', 'game_seq', 'user_id', 'result_div')
+    list_display = ('year', 'hanso_id', 'game_seq', 'user_id', 'result_div', 'huro_div', 'score')
 
 class UserMstAdmin(admin.ModelAdmin):
     fieldsets = [

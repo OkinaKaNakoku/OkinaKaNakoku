@@ -157,11 +157,6 @@
                 </div>
                 <div class="subBtnGroup">
                   <input type="hidden" name="huroResult1" value=0 />
-                  <input id="item-3" class="radio-inline__input -huro" type="radio" name="huroResult1" value=1 />
-                  <label class="radio-inline__label -huro subBtn" for="item-3">
-                    副露
-                  </label>
-                  <input type="hidden" name="huroResult1" value=0 />
                   <input id="item-4" class="radio-inline__input -kyotaku" type="radio" name="huroResult1" value=2 />
                   <label class="radio-inline__label -kyotaku subBtn" for="item-4">
                     供託
@@ -359,12 +354,8 @@
                 </div>
                 <div class="subBtnGroup">
                   <input type="hidden" name="huroResult2" value=0 />
-                  <input id="item-7" class="radio-inline__input -huro" type="radio" name="huroResult2" value=1 />
-                  <label class="radio-inline__label -huro subBtn" for="item-7">
-                    副露
-                  </label>
                   <input id="item-8" class="radio-inline__input -kyotaku" type="radio" name="huroResult2" value=2 />
-                  <label class="radio-inline__label -kyotaku　subBtn" for="item-8">
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-8">
                     供託
                   </label>
                   <input type="hidden" name="tenpaiResult2" value=0 />
@@ -559,12 +550,8 @@
                 </div>
                 <div class="subBtnGroup">
                   <input type="hidden" name="huroResult3" value=0 />
-                  <input id="item-11" class="radio-inline__input -huro" type="radio" name="huroResult3" value=1 />
-                  <label class="radio-inline__label -huro" for="item-11">
-                    副露
-                  </label>
                   <input id="item-12" class="radio-inline__input -kyotaku" type="radio" name="huroResult3" value=2 />
-                  <label class="radio-inline__label -kyotaku" for="item-12">
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-12">
                     供託
                   </label>
                   <input type="hidden" name="tenpaiResult3" value=0 />
@@ -759,10 +746,6 @@
                 </div>
                 <div class="subBtnGroup">
                   <input type="hidden" name="huroResult4" value=0 />
-                  <input id="item-15" class="radio-inline__input -huro" type="radio" name="huroResult4" value=1 />
-                  <label class="radio-inline__label -huro subBtn" for="item-15">
-                    副露
-                  </label>
                   <input id="item-16" class="radio-inline__input -kyotaku" type="radio" name="huroResult4" value=2 />
                   <label class="radio-inline__label -kyotaku subBtn" for="item-16">
                     供託
@@ -1131,35 +1114,27 @@
 
     var item1 = document.getElementById("item-1");
     var item2 = document.getElementById("item-2");
-    var item3 = document.getElementById("item-3");
     var item4 = document.getElementById("item-4");
     var item5 = document.getElementById("item-5");
     var item6 = document.getElementById("item-6");
-    var item7 = document.getElementById("item-7");
     var item8 = document.getElementById("item-8");
     var item9 = document.getElementById("item-9");
     var item10 = document.getElementById("item-10");
-    var item11 = document.getElementById("item-11");
     var item12 = document.getElementById("item-12");
     var item13 = document.getElementById("item-13");
     var item14 = document.getElementById("item-14");
-    var item15 = document.getElementById("item-15");
     var item16 = document.getElementById("item-16");
     item1.addEventListener("click", {type: "1", item: item1, handleEvent: clickHora});
     item2.addEventListener("click", {type: "2", item: item2, handleEvent: clickHoju});
-    item3.addEventListener("click", {type: "3", item: item3, handleEvent: removeOther});
     item4.addEventListener("click", {type: "4", item: item4, handleEvent: removeOther});
     item5.addEventListener("click", {type: "5", item: item5, handleEvent: clickHora});
     item6.addEventListener("click", {type: "6", item: item6, handleEvent: clickHoju});
-    item7.addEventListener("click", {type: "7", item: item7, handleEvent: removeOther});
     item8.addEventListener("click", {type: "8", item: item8, handleEvent: removeOther});
     item9.addEventListener("click", {type: "9", item: item9, handleEvent: clickHora});
     item10.addEventListener("click", {type: "10", item: item10, handleEvent: clickHoju});
-    item11.addEventListener("click", {type: "11", item: item11, handleEvent: removeOther});
     item12.addEventListener("click", {type: "12", item: item12, handleEvent: removeOther});
     item13.addEventListener("click", {type: "13", item: item13, handleEvent: clickHora});
     item14.addEventListener("click", {type: "14", item: item14, handleEvent: clickHoju});
-    item15.addEventListener("click", {type: "15", item: item15, handleEvent: removeOther});
     item16.addEventListener("click", {type: "16", item: item16, handleEvent: removeOther});
     var scoreLabel1 = document.getElementById("scoreLabel1");
     var scoreLabel2 = document.getElementById("scoreLabel2");

@@ -336,10 +336,12 @@ table td {
     font-size: 15px;
     font-weight: bold;
     width: 45%;
-    float: left;
+    /* float: left; */
     display: inline-block;
     overflow: hidden;
     display: inline-block;
+    margin: 0 auto;
+    margin-left: 2%;
     /* background: linear-gradient(-270deg, #228b2266 20%, #228b22c4 40%, #228b22d9 60%, #228b22e0 80%, #228b22) */
   }
   .userInfo {
@@ -365,7 +367,7 @@ table td {
   .score {
     font-weight: bold;
     padding-right: 5%;
-    font-size: 22px;
+    font-size: 23px;
     text-align: right;
     float: right;
     box-sizing: border-box;
@@ -397,10 +399,11 @@ table td {
     background: linear-gradient(180deg, #F6496700 20%, #F6496700 40%, #F6496729 60%, #F64967DB 90%, #F64967);
   }
   .operate {
-    width: 55%;
+    width: 50%;
     display: inline-block;
     justify-content: center;
     align-items: center;
+    margin-right: 3%;
   }
   .scoreText {
     width: 95%;

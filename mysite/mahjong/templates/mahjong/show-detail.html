@@ -65,7 +65,17 @@
             </div>
         </div>
         <div class="main">
-
+        <!-- <div class="userLabel">
+          <div class="nameLabel">
+            <div class="title-name -name">{{info.userRecordDto.user}}</div>
+            <div class="title-name -engName">{{info.userRecordDto.engName}}</div>
+          </div>
+          <div class="totalPointLabel">トータルポイント</div>
+          <div class="totalPointLabel value">{{info.userRecordDto.score}}</div>
+          <div class="totalPointRank">{{info.userRecordDto.rank}}位</div>
+          <div class="totalBattle">試合数</div>
+          <div class="totalBattle battleValue">{{info.userRecordDto.hansoCnt}}</div>
+        </div> -->
         <div class="menu-title">
             <div class="title-name -name">{{info.userRecordDto.user}}</div>
             <input type="hidden" id="param" value={{info.userRecordDto.userId}} />
@@ -157,7 +167,7 @@
         </div>
         <div class="menu-label">
             <div class="title-group">
-                <div class="title-name -label">半荘毎のスコア推移</div>
+                <div class="title-name -label">日付毎の戦績</div>
             </div>
         </div>
         <div class="day-label">
@@ -332,30 +342,42 @@
       labels = document.getElementsByClassName("title-group");
       for (i = 0; i < labels.length; i++) {
         if (userId.value == 大野) {
+          addAttribute = "ohno";
           labels[i].classList.add("ohno");
           continue;
         } else if (userId.value == 菅野) {
+          addAttribute = "kanno";
           labels[i].classList.add("kanno");
           continue;
         } else if (userId.value == 北山) {
+          addAttribute = "kitayama";
           labels[i].classList.add("kitayama");
           continue;
         } else if (userId.value == 桑山) {
+          addAttribute = "kuwayama";
           labels[i].classList.add("kuwayama");
           continue;
         } else if (userId.value == 小倉) {
+          addAttribute = "kokura";
           labels[i].classList.add("kokura");
           continue;
         } else if (userId.value == 中垣) {
+          addAttribute = "nakagaki";
           labels[i].classList.add("nakagaki");
           continue;
         } else if (userId.value == 中村) {
+          addAttribute = "nakamura";
           labels[i].classList.add("nakamura");
           continue;
         } else if (userId.value == つぐみ) {
+          addAttribute = "tsugumi";
           labels[i].classList.add("tsugumi");
           continue;
         }
+      }
+      labels = document.getElementsByClassName("userLabel");
+      for (i = 0; i < labels.length; i++) {
+        labels[i].classList.add(addAttribute + "Label");
       }
     }
 

@@ -54,7 +54,7 @@ class GameResult(models.Model):
     game_seq = models.IntegerField()
     '''結果区分｜「0：なし」・「1：和了」・「2：放銃」'''
     result_div = models.IntegerField(default=0)
-    '''副露区分｜「0：なし」・「1：副露」・「9：計算対象外」'''
+    '''副露区分｜「0：なし」・「1：副露」・「2：供託」・「9：計算対象外」'''
     huro_div = models.IntegerField(null=False, default=9)
     '''その局でやりとりした点数。出上がりのみ（ツモによる若干の点差は考慮しない）。供託や本場はあり'''
     score = models.IntegerField(default=0)

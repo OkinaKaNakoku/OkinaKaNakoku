@@ -73,6 +73,30 @@ tr {
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
+    .userLabel {
+      display: block;
+      width: 90%;
+      margin: 0 auto;
+      height: 30%;
+      box-shadow: 0px -6px 24px 8px rgba(10,10,10,0.02), 32px 29px 20px -9px rgba(10,10,10,0.02);
+    }
+    .nameLabel {
+      border-bottom-color: white;
+      border-bottom: 2px;
+    }
+    .-name {
+      margin:5% 3px 0 5%;
+      display: inline-block;
+      box-sizing: border-box;
+      font-size: 26px;
+      color: white;
+    }
+    .-engName {
+      display: inline-block;
+      width: 40%;
+      font-size: 13px;
+      color: white;
+    }
     .menu-title {
         text-align: center;
         clear: both;
@@ -82,10 +106,10 @@ tr {
         width: 90%;
         color: white;
     }
-    .-name {
+    /* .-name {
         font-size: 28px;
         color: white;
-    }
+    } */
     .title-group {
         margin: auto;
         color: aliceblue;
@@ -100,6 +124,9 @@ tr {
     }
     .kitayama {
       background: linear-gradient(290deg, #0064002e, #006400);
+    }
+    .kitayamaLabel {
+      background-color: #0064007a;
     }
     .kuwayama {
       background: linear-gradient(290deg, #ffffff1c, #ffffff85);
