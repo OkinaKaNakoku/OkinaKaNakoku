@@ -401,9 +401,8 @@ table td {
   .operate {
     width: 50%;
     display: inline-block;
-    justify-content: center;
-    align-items: center;
-    margin-right: 3%;
+    margin: 5% 3% 5% 0%;
+    height: 80%;
   }
   .scoreText {
     width: 95%;
