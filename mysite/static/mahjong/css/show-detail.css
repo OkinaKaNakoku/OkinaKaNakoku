@@ -18,8 +18,8 @@ b {
 
 .submenu {
     display: none;
-    padding-left: 0.5em;
     margin:2px;
+    padding: none;
 }
 .score {
     display:block;
@@ -30,7 +30,7 @@ b {
 
 .score-table {
     width:100%;
-    padding:0px;
+    /* padding:0px; */
     margin-bottom:5px;
 }
 
@@ -39,12 +39,11 @@ table {
     border-collapse: collapse;
     border-spacing: 1px;
     margin: 0 auto;
-    padding-top: 100px;
+    /* padding-top: 100px; */
     letter-spacing: 1px;
 }
 
 tbody {
-    position: relative;
     top: 100px;
 }
 thead {
@@ -52,7 +51,7 @@ thead {
     color: white;
 }
 table th, table td {
-    padding: 10px 0;
+    /* padding: 10px 0; */
     text-align: center;
     width: 10%;
     border-bottom: 1px solid #000000;
@@ -74,6 +73,30 @@ tr {
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
+    .userLabel {
+      display: block;
+      width: 90%;
+      margin: 0 auto;
+      height: 30%;
+      box-shadow: 0px -6px 24px 8px rgba(10,10,10,0.02), 32px 29px 20px -9px rgba(10,10,10,0.02);
+    }
+    .nameLabel {
+      border-bottom-color: white;
+      border-bottom: 2px;
+    }
+    .-name {
+      margin:5% 3px 0 5%;
+      display: inline-block;
+      box-sizing: border-box;
+      font-size: 26px;
+      color: white;
+    }
+    .-engName {
+      display: inline-block;
+      width: 40%;
+      font-size: 13px;
+      color: white;
+    }
     .menu-title {
         text-align: center;
         clear: both;
@@ -81,17 +104,44 @@ tr {
     .menu-label {
         margin: 0 auto 10px;
         width: 90%;
+        color: white;
     }
-    .-name {
+    /* .-name {
         font-size: 28px;
-        font-weight:bold;
-    }
+        color: white;
+    } */
     .title-group {
         margin: auto;
         color: aliceblue;
         font-size: 20px;
-        background: linear-gradient(#6b90a2, #316e8c);
         clear: both;
+    }
+    .ohno {
+      background: linear-gradient(290deg, #ffffff1c, #ffffff85);
+    }
+    .kanno {
+      background: linear-gradient(290deg, #ff00ff52, #ff00ffb5);
+    }
+    .kitayama {
+      background: linear-gradient(290deg, #0064002e, #006400);
+    }
+    .kitayamaLabel {
+      background-color: #0064007a;
+    }
+    .kuwayama {
+      background: linear-gradient(290deg, #ffffff1c, #ffffff85);
+    }
+    .kokura {
+      background: linear-gradient(290deg, #00ffff1c, #00ffffab);
+    }
+    .nakagaki {
+      background: linear-gradient(290deg, #ee78002e, #ee7800d6);
+    }
+    .nakamura {
+      background: linear-gradient(290deg, #483d8b5e, #483d8b);
+    }
+    .tsugumi {
+      background: linear-gradient(290deg, #F6496733, #F64967BF);
     }
     .-label {
         margin: 0px 0px 0px 20px;
@@ -126,6 +176,7 @@ tr {
     }
     .score-table {
         table-layout:fixed;
+        margin-bottom: 15px;
     }
     table > thead > tr > th {
         width:30px;
@@ -149,19 +200,26 @@ tr {
         width: 80%;
         display:block;
     }
-
+    ul {
+      padding-left: 0;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    .isMine {
+       background:#0000004f;
+    }
     .menu__item__link {
-      width: 7em;
+      width: 30%;
       display:inline-block;
-      padding-left: 0.5em;
+
       text-decoration: none;
       color: #000000;
-      background-color: #e7eaea;
+      background-color: #fff;
+      margin-left: 5%;
     }
     .day {
       position: relative;
       color: #000000;
-      background: #ffffff;
       margin-bottom: 3px;
       list-style-type: none !important;
       padding: 0.2em;
@@ -176,11 +234,29 @@ tr {
     .submenu__item {
       list-style-type: none !important;
       margin-left: auto;
-      border: dashed 2px #4d88a5;
       padding: 0.5em
+      color: white;
     }
     .sub-title {
       margin:auto;
       font-weight: bold;
+      color: white;
+    }
+    .battle_num {
+      color: white;
+    }
+    tbody tr:nth-child(odd) {
+        background-color: white;
+    }
+    .val-sub {
+        display:inline-block;
+        width: auto;
+        font-size: 10px;
+        text-align: center;
+        margin: auto;
+    }
+    #chartdiv {
+      width : 100%;
+      height  : 300px;
     }
 }

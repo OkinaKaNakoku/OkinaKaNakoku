@@ -8,17 +8,19 @@
 .title {
     font-size: 20px;
     font-weight: 500;
+    color: white;
 }
-
+p {
+  color: white;
+}
 .year-button {
-    width: 90%;
-    padding: 0.5em 1em;
-    margin: 1em 0;
-    margin-left: 0.25em;
+    width: 80%;
+    padding: 1em 1em;
+    margin: 5%;
     background: #FFF;
     border: solid 2px #6091d3; /*ê¸*/
     border-radius: 10px; /*äpÇÃä€Ç›*/
-    text-align: left
+    text-align: center;
 }
 
 .radio-inline__input {
@@ -29,7 +31,8 @@
 .-all-year {
     width: 92%;
     text-align: center;
-    
+    background-color: white;
+
 }
 
 .-year {

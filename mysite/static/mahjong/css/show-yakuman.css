@@ -1,0 +1,74 @@
+.clearfix {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    clear: both;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+}
+.yakuman-all {
+  padding: 0.5em;
+  background-color: #cccccc;
+  margin: 0.1em;
+  margin-bottom: 5%;
+}
+table {
+  margin:0 auto;
+  width: 100%;
+}
+tbody {
+  text-align: center;
+}
+td {
+  width: 33%;
+  background-color: #424242;
+  border: solid 2px #000000;
+}
+.already {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.yakuman-list {
+  width: 100%;
+  display: block;
+  font-size: 12px;
+}
+.yakuman-table {
+  width: 95%;
+  margin: 0 auto;
+  table-layout: fixed;
+  padding: 0px;
+  border-collapse: collapse;
+}
+.yakuman-table-body {
+  width: 100%;
+  font-size: 12px;
+}
+.list {
+  color: #000000;
+  background-color: #ffffff;
+  border: solid 1px #000000;
+}
+th {
+    background-color: #4d88a5;
+    color: white;
+    border: 1px solid #000000;
+    padding: 0;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.yakuman {
+  width: 90%;
+  margin-left:3%;
+  margin-right:3%;
+  object-fit: cover;
+  margin-bottom: 5%;
+  background-color: white;
+  box-shadow: 3px 3px 4px;
+}

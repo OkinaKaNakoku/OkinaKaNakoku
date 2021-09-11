@@ -8,9 +8,8 @@ b {
 .rankTitle {
     clear: both;
     margin: 0 auto;
-    width: 100%;
-    text-align: center;
-    font-size: 25px;
+    margin-top: 15px;
+    font-size: 20px;
 }
 
 .score {
@@ -23,7 +22,6 @@ b {
 .score-table {
     width:100%;
     padding:0px;
-    margin-bottom:15px;
 }
 
 table {
@@ -36,7 +34,6 @@ table {
 }
 
 tbody {
-    position: relative;
     top: 100px;
 }
 thead {
@@ -66,29 +63,155 @@ tr {
 /*（スマホ用） */
 /***************/
 @media screen and (max-width: 730px) {
-    img {
-        width: 960px;
-        margin: 0%;
-    }
     .rankTitle{
         clear: both;
-        margin:0 auto;
-        width:100%;
-        text-align:center;
+        margin: 0 5% 0 5%;
+        color: white;
+        text-align: left;
+        font-weight: bold;
+        padding-left: 5%;
+        width: 80%;
+        background-image: linear-gradient(to right, #3aaaa0 0%, #02574e54 100%);
+        display: inline-block;
+    }
+    .column4 {
+      margin: auto;
+      display: block;
+    }
+    .rankLabelGroup {
+      margin: 0 0 2px 43%;
+      display: inline-block;
+      font-size: 12px;
+      color: white;
+      width: 60%;
+      /* width: ; */
+    }
+    .rankRecord {
+      height: 40px;
+      margin: 0 5% 4px 5%;
+      width: 90%;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .rankLabel2 {
+      width: 48%;
+      text-align: center;
+      display: inline-block;
+    }
+    .top {
+      padding-right: 10%;
+      width: 30%;
+    }
+    .rankGroup {
+      vertical-align: top;
+      display: inline-block;
+      width: 86%;
+      height: 40px;
+      color: white;
+      background-color: #ffffff0d;
+      box-sizing: border-box;
+      box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.6);
+    }
+    .rank4 {
+      font-size: 15px;
+      width: 10%;
+      height: 40px;
+      text-align: center;
+      display: inline-block;
+      color: white;
+      background-color: #00000024;
+      box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.6);
+      align-items: center;
+      line-height: 40px;
+    }
+    .rankFirst {
+      background-color: #fffb0078;
+    }
+    .rankSecond {
+      background-color: #ffffff91;
+    }
+    .rankThird {
+      background-color: #ff000070;
+    }
+    .ohno {
+      background: linear-gradient(105deg, #ffffffb3 0%, #62626233 87%, #fff0 87%, #fff0 100%);
+    }
+    .kanno {
+      background: linear-gradient(105deg, #f0f 0%, #9900993d 87%, #fff0 87%, #fff0 100%);
+    }
+    .kitayama {
+      background: linear-gradient(105deg, #006400 0%, #0039002e 87%, #fff0 87% , #fff0 100%);
+    }
+    .kuwayama {
+      background: linear-gradient(105deg, #ffffffb3 0%, #62626233 87%, #fff0 87%, #fff0 100%);
+    }
+    .kokura {
+      background: linear-gradient(105deg, #00ffffd6 0%, #0080803b 87%, #fff0 87%, #fff0 100%);
+    }
+    .nakagaki {
+      background: linear-gradient(105deg, #ee7800b8 0%, #7b3e0042 87%, #fff0 87%, #fff0 100%);
+    }
+    .nakamura {
+      background: linear-gradient(105deg, #483d8b 0%, #2b245338 87%, #fff0 87%, #fff0 100%);
+    }
+    .tsugumi {
+      background: linear-gradient(105deg, #F64967 0%, #8429396B 87%, #fff0 87%, #fff0 100%);
     }
 
+    .name4 {
+      box-sizing: border-box;
+      vertical-align: top;
+      /* width: 30%; */
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding-left: 10px;
+      width: 36%;
+      height: 100%;
+      line-height: 40px;
+      font-size: 15px;
+    }
+    a {
+      text-decoration: none;
+      color: white;
+    }
+    .scoreValue {
+      width: 33%;
+      display: inline-block;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      height: 100%;
+      line-height: 40px;
+    }
+    .topsa {
+      width: 25%;
+      display: inline-block;
+      text-align: center;
+      height: 100%;
+      vertical-align: top;
+      line-height: 40px;
+    }
     .score {
         display: block;
-        margin: 0 auto;
         width: 100%;
+        margin-bottom: 20px;
     }
-
+    .table-area {
+      margin-left: 2%;
+      margin-right: 2%;
+      margin-bottom: 5%;
+    }
     .score-table {
         table-layout:fixed;
+        width: 95%;
+        background: white;
+        margin: 0 auto;
     }
     table > thead > tr > th {
-        width:20px;
+        width:20%;
         font-weight:100;
+        color: white;
     }
     tr {
         border-top: 1px solid #000000;
@@ -100,10 +223,19 @@ tr {
         padding: 5px 0;
         text-align: center;
         font-size: 12px;
-        width: 10%;
-        border-bottom: 1px solid #000000;
-        border-right: 1px solid #000000;
+        width: 25%;
+        color: white;
+        border-bottom: 1px solid #ffffffa1;
+        border-right: 1px solid #ffffffa1;
+        background-color: #000c;
     }
-
+    tr:nth-child(2n+2){
+        background:#fff;
+    }
+    .rank {
+        width: 15%;
+    }
+    .name {
+      width: 35%;
+    }
 }
-

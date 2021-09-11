@@ -1,0 +1,1312 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/show-score-update.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<script type="text/javascript" src="/static/mahjong/jquery/templates/jquery.acordion.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-スコア更新</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div class="message">
+          <div class="successUpdateGame" style="display: none;">対局登録が完了しました</div>
+          <div class="successUpdateScore" style="display: none;">スコア登録が完了しました</div>
+          <div class="errorUpdate" style="display: none;">更新不可です。更新管理をUPDATEしてください</div>
+          <div class="errorPlayer4" style="display: none;">プレイヤーを4人登録してください</div>
+          <div class="errorPlayerDuplicate" style="display: none;">プレイヤーが重複しています</div>
+        </div>
+        <form action="{% url 'mahjong:settingUser' %}" method="post">
+          <input type="hidden" name="isReload" value={{isReload}}>
+          <div class="setting">
+            {% csrf_token %}
+            <div id="settingUser" class="settingUser js-menu__item__link">
+              <div class="settingUserLabel">対局設定</div>
+            </div>
+            <div class="settingUserGroup submenu">
+              <div class="user">
+                <div class="seki">東家</div>
+                <select name="user1">
+                  <option value="default"></option>
+                  {% for user in settingUsers %}
+                  <option value="{{user.userId}}">{{user.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="user">
+                <div class="seki">南家</div>
+                <select name="user2">
+                  <option value="default"></option>
+                  {% for user in settingUsers %}
+                  <option value="{{user.userId}}">{{user.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="user">
+                <div class="seki">西家</div>
+                <select name="user3">
+                  <option value="default"></option>
+                  {% for user in settingUsers %}
+                  <option value="{{user.userId}}">{{user.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="user">
+                <div class="seki">北家</div>
+                <select name="user4">
+                  <option value="default"></option>
+                  {% for user in settingUsers %}
+                  <option value="{{user.userId}}">{{user.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="settingBtn">
+                <button class="btn">対局設定</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        {% if user1 %}
+        <form action="{% url 'mahjong:updateGame' %}" method="post">
+          <div class="gameUpdate">
+            <div class="settingUser">対局登録</div>
+            {% csrf_token %}
+            <div class="kyoku">
+              <div class="taikyokuGroup">
+                <div class="kyokuLabel">{{gameStatus.ba}} {{gameStatus.kyoku}}</div>
+                <div class="bouGroup">
+                  <div class="bouLabel">
+                    <img class="bou" src="/static/mahjong/images/kyotaku.png" alt="供託">
+                    <div class="bouCnt">{{gameStatus.kyotaku}}</div>
+                  </div>
+                  <div class="bouLabel">
+                    <img class="bou" src="/static/mahjong/images/honba.png" alt="本場">
+                    <div class="bouCnt">{{gameStatus.honba}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="userTable">
+              <div class="userLabel">
+                <div id="user1Rank" class="rank">{{user1.rank}}位</div>
+                <div class="gameUser">{{user1.name}}</div>
+                <div id="user1Score" class="score">{{user1.score}}</div>
+              </div>
+              <div class="operate">
+                <div class="mainBtn">
+                  <input type="hidden" name="user1" value="{{user1.userId}}" />
+                  <input type="hidden" name="gameResult1" value=0 />
+                  <input id="item-1" class="radio-inline__input -hora" type="radio" name="gameResult1" value=1 />
+                  <label class="radio-inline__label -hora" for="item-1">
+                    和了
+                  </label>
+                  <input id="item-2" class="radio-inline__input -hoju" type="radio" name="gameResult1" value=2 />
+                  <label class="radio-inline__label -hoju" for="item-2">
+                    放銃
+                  </label>
+                </div>
+                <div class="subBtnGroup">
+                  <input type="hidden" name="huroResult1" value=0 />
+                  <input id="item-4" class="radio-inline__input -kyotaku" type="radio" name="huroResult1" value=2 />
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-4">
+                    供託
+                  </label>
+                  <input type="hidden" name="tenpaiResult1" value=0 />
+                  <input id="item-17" class="radio-inline__input -tenpai" type="checkbox" name="tenpaiResult1" value=1 />
+                  <label class="radio-inline__label -tenpai subBtn" for="item-17">
+                    聴牌
+                  </label>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="score" value=0 checked/>
+            {% if user1.isOya is True %}
+            <div id="scoreLabel1" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue1" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue1">2000</label>
+                    <input id="scoreValue2" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue2">3900</label>
+                    <input id="scoreValue3" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue3">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue4" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue4">2400</label>
+                    <input id="scoreValue5" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue5">4800</label>
+                    <input id="scoreValue6" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=9600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue6">9600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue7" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue7">1500</label>
+                    <input id="scoreValue8" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue8">2900</label>
+                    <input id="scoreValue9" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue9">5800</label>
+                    <input id="scoreValue10" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=11600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue10">11600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue11" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue11">3400</label>
+                    <input id="scoreValue12" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue12">6800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue13" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue13">4400</label>
+                    <input id="scoreValue14" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue14">8700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue15" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue15">5300</label>
+                    <input id="scoreValue16" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=10600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue16">10600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue65" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue65">12000</label>
+                    <input id="scoreValue66" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue66">18000</label>
+                    <input id="scoreValue67" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue67">24000</label>
+                    <input id="scoreValue68" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=36000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue68">36000</label>
+                    <input id="scoreValue69" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=48000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue69">48000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div id="scoreLabel1" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue1" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue1">1300</label>
+                    <input id="scoreValue2" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue2">2600</label>
+                    <input id="scoreValue3" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue3">5200</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue4" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue4">1600</label>
+                    <input id="scoreValue5" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue5">3200</label>
+                    <input id="scoreValue6" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue6">6400</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue7" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue7">1000</label>
+                    <input id="scoreValue8" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue8">2000</label>
+                    <input id="scoreValue9" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue9">3900</label>
+                    <input id="scoreValue10" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue10">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue11" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue11">2300</label>
+                    <input id="scoreValue12" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue12">4500</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue13" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue13">2900</label>
+                    <input id="scoreValue14" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue14">5800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue15" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue15">3600</label>
+                    <input id="scoreValue16" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7100 />
+                    <label class="radio-inline__label_score -score" for="scoreValue16">7100</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue65" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue65">8000</label>
+                    <input id="scoreValue66" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue66">12000</label>
+                    <input id="scoreValue67" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue67">18000</label>
+                    <input id="scoreValue68" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue68">24000</label>
+                    <input id="scoreValue69" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue69">32000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="userTable">
+              <div class="userLabel">
+                <div id="user2Rank" class="rank">{{user2.rank}}位</div>
+                <div class="gameUser">{{user2.name}}</div>
+                <div id="user2Score" class="score">{{user2.score}}</div>
+              </div>
+              <div class="operate">
+                <div class="mainBtn">
+                  <input type="hidden" name="user2" value="{{user2.userId}}" />
+                  <input type="hidden" name="gameResult2" value=0 />
+                  <input id="item-5" class="radio-inline__input -hora" type="radio" name="gameResult2" value=1 />
+                  <label class="radio-inline__label" for="item-5">
+                    和了
+                  </label>
+                  <input id="item-6" class="radio-inline__input -hoju" type="radio" name="gameResult2" value=2 />
+                  <label class="radio-inline__label -hoju" for="item-6">
+                    放銃
+                  </label>
+                </div>
+                <div class="subBtnGroup">
+                  <input type="hidden" name="huroResult2" value=0 />
+                  <input id="item-8" class="radio-inline__input -kyotaku" type="radio" name="huroResult2" value=2 />
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-8">
+                    供託
+                  </label>
+                  <input type="hidden" name="tenpaiResult2" value=0 />
+                  <input id="item-18" class="radio-inline__input -tenpai" type="checkbox" name="tenpaiResult2" value=1 />
+                  <label class="radio-inline__label -tenpai subBtn" for="item-18">
+                    聴牌
+                  </label>
+                </div>
+              </div>
+            </div>
+            {% if user2.isOya is True %}
+            <div id="scoreLabel2" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue17" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue17">2000</label>
+                    <input id="scoreValue18" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue18">3900</label>
+                    <input id="scoreValue19" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue19">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue20" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue20">2400</label>
+                    <input id="scoreValue21" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue21">4800</label>
+                    <input id="scoreValue22" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=9600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue22">9600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue23" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue23">1500</label>
+                    <input id="scoreValue24" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue24">2900</label>
+                    <input id="scoreValue25" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue25">5800</label>
+                    <input id="scoreValue26" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=11600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue26">11600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue27" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue27">3400</label>
+                    <input id="scoreValue28" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue28">6800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue29" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue29">4400</label>
+                    <input id="scoreValue30" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue30">8700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue31" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue31">5300</label>
+                    <input id="scoreValue32" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=10600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue32">10600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue70" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue70">12000</label>
+                    <input id="scoreValue71" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue71">18000</label>
+                    <input id="scoreValue72" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue72">24000</label>
+                    <input id="scoreValue73" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=36000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue73">36000</label>
+                    <input id="scoreValue74" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=48000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue74">48000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div id="scoreLabel2" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue17" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue17">1300</label>
+                    <input id="scoreValue18" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue18">2600</label>
+                    <input id="scoreValue19" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue19">5200</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue20" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue20">1600</label>
+                    <input id="scoreValue21" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue21">3200</label>
+                    <input id="scoreValue22" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue22">6400</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue23" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue23">1000</label>
+                    <input id="scoreValue24" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue24">2000</label>
+                    <input id="scoreValue25" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue25">3900</label>
+                    <input id="scoreValue26" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue26">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue27" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue27">2300</label>
+                    <input id="scoreValue28" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue28">4500</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue29" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue29">2900</label>
+                    <input id="scoreValue30" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue30">5800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue31" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue31">3600</label>
+                    <input id="scoreValue32" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7100 />
+                    <label class="radio-inline__label_score -score" for="scoreValue32">7100</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue70" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue70">8000</label>
+                    <input id="scoreValue71" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue71">12000</label>
+                    <input id="scoreValue72" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue72">18000</label>
+                    <input id="scoreValue73" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue73">24000</label>
+                    <input id="scoreValue74" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue74">32000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="userTable">
+              <div class="userLabel">
+                <div id="userd3Rank" class="rank">{{user3.rank}}位</div>
+                <div class="gameUser">{{user3.name}}</div>
+                <div id="user3Score" class="score">{{user3.score}}</div>
+              </div>
+              <div class="operate">
+                <div class="mainBtn">
+                  <input type="hidden" name="user3" value="{{user3.userId}}" />
+                  <input type="hidden" name="gameResult3" value=0 />
+                  <input id="item-9" class="radio-inline__input -hora" type="radio" name="gameResult3" value=1 />
+                  <label class="radio-inline__label" for="item-9">
+                    和了
+                  </label>
+                  <input id="item-10" class="radio-inline__input -hoju" type="radio" name="gameResult3" value=2 />
+                  <label class="radio-inline__label -hoju" for="item-10">
+                    放銃
+                  </label>
+                </div>
+                <div class="subBtnGroup">
+                  <input type="hidden" name="huroResult3" value=0 />
+                  <input id="item-12" class="radio-inline__input -kyotaku" type="radio" name="huroResult3" value=2 />
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-12">
+                    供託
+                  </label>
+                  <input type="hidden" name="tenpaiResult3" value=0 />
+                  <input id="item-19" class="radio-inline__input -tenpai" type="checkbox" name="tenpaiResult3" value=1 />
+                  <label class="radio-inline__label -tenpai subBtn" for="item-19">
+                    聴牌
+                  </label>
+                </div>
+              </div>
+            </div>
+            {% if user3.isOya is True %}
+            <div id="scoreLabel3" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue33" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue33">2000</label>
+                    <input id="scoreValue34" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue34">3900</label>
+                    <input id="scoreValue35" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue35">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue36" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue36">2400</label>
+                    <input id="scoreValue37" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue37">4800</label>
+                    <input id="scoreValue38" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=9600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue38">9600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue39" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue39">1500</label>
+                    <input id="scoreValue40" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue40">2900</label>
+                    <input id="scoreValue41" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue41">5800</label>
+                    <input id="scoreValue42" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=11600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue42">11600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue43" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue43">3400</label>
+                    <input id="scoreValue44" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue44">6800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue45" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue45">4400</label>
+                    <input id="scoreValue46" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue46">8700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue47" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue47">5300</label>
+                    <input id="scoreValue48" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=10600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue48">10600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue75" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue75">12000</label>
+                    <input id="scoreValue76" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue76">18000</label>
+                    <input id="scoreValue77" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue77">24000</label>
+                    <input id="scoreValue78" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=36000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue78">36000</label>
+                    <input id="scoreValue79" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=48000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue79">48000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div id="scoreLabel3" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue33" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue33">1300</label>
+                    <input id="scoreValue34" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue34">2600</label>
+                    <input id="scoreValue35" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue35">5200</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue36" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue36">1600</label>
+                    <input id="scoreValue37" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue37">3200</label>
+                    <input id="scoreValue38" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue38">6400</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue39" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue39">1000</label>
+                    <input id="scoreValue40" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue40">2000</label>
+                    <input id="scoreValue41" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue41">3900</label>
+                    <input id="scoreValue42" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue42">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue43" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue43">2300</label>
+                    <input id="scoreValue44" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue44">4500</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue45" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue45">2900</label>
+                    <input id="scoreValue46" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue46">5800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue47" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue47">3600</label>
+                    <input id="scoreValue48" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7100 />
+                    <label class="radio-inline__label_score -score" for="scoreValue48">7100</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue75" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue75">8000</label>
+                    <input id="scoreValue76" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue76">12000</label>
+                    <input id="scoreValue77" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue77">18000</label>
+                    <input id="scoreValue78" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue78">24000</label>
+                    <input id="scoreValue79" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue79">32000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="userTable">
+              <div class="userLabel">
+                <div id="user4Rank" class="rank">{{user4.rank}}位</div>
+                <div class="gameUser">{{user4.name}}</div>
+                <div id="user4Score" class="score">{{user4.score}}</div>
+              </div>
+              <div class="operate">
+                <div class="mainBtn">
+                  <input type="hidden" name="user4" value="{{user4.userId}}" />
+                  <input type="hidden" name="gameResult4" value=0 />
+                  <input id="item-13" class="radio-inline__input -hora" type="radio" name="gameResult4" value=1 />
+                  <label class="radio-inline__label" for="item-13">
+                    和了
+                  </label>
+                  <input id="item-14" class="radio-inline__input -hoju" type="radio" name="gameResult4" value=2 />
+                  <label class="radio-inline__label -hoju" for="item-14">
+                    放銃
+                  </label>
+                </div>
+                <div class="subBtnGroup">
+                  <input type="hidden" name="huroResult4" value=0 />
+                  <input id="item-16" class="radio-inline__input -kyotaku" type="radio" name="huroResult4" value=2 />
+                  <label class="radio-inline__label -kyotaku subBtn" for="item-16">
+                    供託
+                  </label>
+                  <input type="hidden" name="tenpaiResult4" value=0 />
+                  <input id="item-20" class="radio-inline__input -tenpai" type="checkbox" name="tenpaiResult4" value=1 />
+                  <label class="radio-inline__label -tenpai subBtn" for="item-20">
+                    聴牌
+                  </label>
+                </div>
+              </div>
+            </div>
+            {% if user4.isOya is True %}
+            <div id="scoreLabel4" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue49" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue49">2000</label>
+                    <input id="scoreValue50" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue50">3900</label>
+                    <input id="scoreValue51" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue51">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue52" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue52">2400</label>
+                    <input id="scoreValue53" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue53">4800</label>
+                    <input id="scoreValue54" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=9600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue54">9600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue55" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue55">1500</label>
+                    <input id="scoreValue56" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue56">2900</label>
+                    <input id="scoreValue57" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue57">5800</label>
+                    <input id="scoreValue58" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=11600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue58">11600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue59" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue59">3400</label>
+                    <input id="scoreValue60" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue60">6800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue61" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue61">4400</label>
+                    <input id="scoreValue62" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue62">8700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue63" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue63">5300</label>
+                    <input id="scoreValue64" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=10600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue64">10600</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue80" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue80">12000</label>
+                    <input id="scoreValue81" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue81">18000</label>
+                    <input id="scoreValue82" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue82">24000</label>
+                    <input id="scoreValue83" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=36000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue83">36000</label>
+                    <input id="scoreValue84" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=48000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue84">48000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div id="scoreLabel4" class="scoreLabel">
+              <div class="scoreTable">
+                <div class="scoreTableGroup">
+                  <div class="husu">20符(40/80)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue49" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue49">1300</label>
+                    <input id="scoreValue50" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue50">2600</label>
+                    <input id="scoreValue51" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue51">5200</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">25符(50/100)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue52" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue52">1600</label>
+                    <input id="scoreValue53" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3200 />
+                    <label class="radio-inline__label_score -score" for="scoreValue53">3200</label>
+                    <input id="scoreValue54" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=6400 />
+                    <label class="radio-inline__label_score -score" for="scoreValue54">6400</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">30符(60)</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue55" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=1000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue55">1000</label>
+                    <input id="scoreValue56" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2000 />
+                    <label class="radio-inline__label_score -score" for="scoreValue56">2000</label>
+                    <input id="scoreValue57" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue57">3900</label>
+                    <input id="scoreValue58" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7700 />
+                    <label class="radio-inline__label_score -score" for="scoreValue58">7700</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">70符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue59" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2300 />
+                    <label class="radio-inline__label_score -score" for="scoreValue59">2300</label>
+                    <input id="scoreValue60" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=4500 />
+                    <label class="radio-inline__label_score -score" for="scoreValue60">4500</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">90符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue61" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=2900 />
+                    <label class="radio-inline__label_score -score" for="scoreValue61">2900</label>
+                    <input id="scoreValue62" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=5800 />
+                    <label class="radio-inline__label_score -score" for="scoreValue62">5800</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="husu">110符</div>
+                  <div class="scoreValueGroup">
+                    <input id="scoreValue63" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=3600 />
+                    <label class="radio-inline__label_score -score" for="scoreValue63">3600</label>
+                    <input id="scoreValue64" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=7100 />
+                    <label class="radio-inline__label_score -score" for="scoreValue64">7100</label>
+                  </div>
+                </div>
+                <div class="scoreTableGroup">
+                  <div class="scoreValueGroup none-hu">
+                    <input id="scoreValue80" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=8000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue80">8000</label>
+                    <input id="scoreValue81" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue81">12000</label>
+                    <input id="scoreValue82" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue82">18000</label>
+                    <input id="scoreValue83" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue83">24000</label>
+                    <input id="scoreValue84" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue84">32000</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="checkRyukyoku">
+              <input type="hidden" name="checkRyukyoku" value=0 />
+              <input id="checkRyukyoku" class="inputCheckRyukyoku" type="checkbox" name="checkRyukyoku" value="1">
+              <label class="checkRyukyoku" for="checkRyukyoku">積み棒のみを増やす流局<br>（九種九牌・四家立直・四風連打による流局）</label>
+            </div>
+            <div class="settingBtn">
+              <button class="btn">対局登録</button>
+            </div>
+          </div>
+        </form>
+        <form action="{% url 'mahjong:updateScore' %}" method="post">
+          <div class="sucoreUpdate">
+            <span class="settingUser">スコア登録</span>
+            {% csrf_token %}
+            <table class="gameUserTable">
+              <thead>
+                <tr>
+                  <th>{{user1.name}}</th>
+                  <td>
+                    <label>
+                      <input class="userId" type="hidden" name="user1" value="{{user1.userId}}" />
+                      <input id="score1" class="scoreText" type="tel" name="score1" />
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th>{{user2.name}}</th>
+                  <td>
+                    <label>
+                      <input class="userId" type="hidden" name="user2" value="{{user2.userId}}" />
+                      <input id="score2" class="scoreText" type="tel" name="score2" />
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th>{{user3.name}}</th>
+                  <td>
+                    <label>
+                      <input class="userId" type="hidden" name="user3" value="{{user3.userId}}" />
+                      <input id="score3" class="scoreText" type="tel" name="score3" />
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <th>{{user4.name}}</th>
+                  <td>
+                    <label>
+                      <input class="userId" type="hidden" name="user4" value="{{user4.userId}}" />
+                      <input id="score4" class="scoreText" type="tel" name="score4" />
+                    </label>
+                  </td>
+                </tr>
+              </thead>
+            </table>
+            <div class="total">
+              <div class="label">合計</div>
+              <div class="label">：</div>
+              <div class="label" id="total">0</div>
+            </div>
+            <div class="total">
+              <div class="label">過不足</div>
+              <div class="label">：</div>
+              <div class="label" id="deficiency">-100,000</div>
+            </div>
+            <div class="settingBtn">
+              <button class="btn">スコア登録</button>
+            </div>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>
+<script type="text/javascript">
+
+  const 和了 = "1";
+  const 放銃 = "2";
+  const 大野 = "0001";
+  const 菅野 = "0002";
+  const 北山 = "0003";
+  const 桑山 = "0004";
+  const 小倉 = "0005";
+  const 中垣 = "0006";
+  const 中村 = "0007";
+  const つぐみ = "0008";
+  const messageParamGameSuccess = 1;
+  const messageParamScoreSuccess = 2;
+  const messageUpdateError = 3;
+  const messagePlayer4Error = 4;
+  const messagePlayerDuplicate = 5;
+  const messageErrorScoreUpdate = 6;
+
+  window.onload = function() {
+    // cookie
+    var cookies = document.cookie;
+    var keystr = "selectYear=";
+    var matchPos = cookies.indexOf(keystr);
+    var cookieValue = "";
+
+    if (matchPos != -1) {
+        var valueStart = matchPos + keystr.length
+        var valueEnd = cookies.indexOf(";", valueStart);
+        if (valueEnd != -1) {
+            cookieValue = cookies.substring(valueStart, valueEnd);
+        } else {
+            cookieValue = cookies.substring(valueStart);
+        }
+        cookieValue = unescape(cookieValue);
+
+    }
+    if (cookieValue == 'allYear') {
+      cookieValue = '通算'
+    }
+    document.getElementById("select-show").innerHTML = cookieValue;
+
+    var checkOption = document.getElementsByName('selectYear');
+
+    checkOption.forEach(function (e) {
+        e.addEventListener("click", function () {
+            val = document.querySelector("input:checked[name=selectYear]").value;
+            document.cookie = "selectYear=" + val + "; path=/;"
+            if (val == 'allYear') {
+              val = '通算'
+            }
+            document.getElementById("select-show").innerHTML = val;
+        });
+    });
+
+    // スコア差分チェック
+    let score1 = document.getElementById("score1");
+    let score2 = document.getElementById("score2");
+    let score3 = document.getElementById("score3");
+    let score4 = document.getElementById("score4");
+    let userScoreValue1 = document.getElementById('user1Score');
+    let userScoreValue2 = document.getElementById('user2Score');
+    let userScoreValue3 = document.getElementById('user3Score');
+    let userScoreValue4 = document.getElementById('user4Score');
+    score1.value = removeComma(userScoreValue1.innerText);
+    score2.value = removeComma(userScoreValue2.innerText);
+    score3.value = removeComma(userScoreValue3.innerText);
+    score4.value = removeComma(userScoreValue4.innerText);
+    changeTotal();
+    function removeComma(number) {
+      var removed = number.replace(/,/g, '');
+      return parseInt(removed, 10);
+    }
+    function changeTotal() {
+      let score1 = isNaN(parseInt(document.getElementById("score1").value)) ? 0 : parseInt(document.getElementById("score1").value);
+      let score2 = isNaN(parseInt(document.getElementById("score2").value)) ? 0 : parseInt(document.getElementById("score2").value);
+      let score3 = isNaN(parseInt(document.getElementById("score3").value)) ? 0 : parseInt(document.getElementById("score3").value);
+      let score4 = isNaN(parseInt(document.getElementById("score4").value)) ? 0 : parseInt(document.getElementById("score4").value);
+      let total = document.getElementById("total");
+      let deficiency = document.getElementById("deficiency");
+      let totalNum = score1 + score2 + score3 + score4;
+      total.textContent = totalNum.toLocaleString();
+      deficiencyNum = -100000 + score1 + score2 + score3 + score4;
+      deficiency.textContent = deficiencyNum.toLocaleString();
+    }
+    score1.addEventListener("blur", changeTotal);
+    score2.addEventListener("blur", changeTotal);
+    score3.addEventListener("blur", changeTotal);
+    score4.addEventListener("blur", changeTotal);
+
+    let messageDiv = getParam("messageDiv");
+    if (messageParamGameSuccess == messageDiv) {
+      let message = document.getElementsByClassName("successUpdateGame");
+      message[0].style.display = "block";
+    } else if (messageParamScoreSuccess == messageDiv) {
+      let message = document.getElementsByClassName("successUpdateScore");
+      message[0].style.display = "block";
+    } else if (messageUpdateError == messageDiv) {
+      let message = document.getElementsByClassName("errorUpdate");
+      message[0].style.display = "block";
+    } else if (messagePlayer4Error == messageDiv) {
+      let message = document.getElementsByClassName("errorPlayer4");
+      message[0].style.display = "block";
+    } else if (messagePlayerDuplicate == messageDiv) {
+      let message = document.getElementsByClassName("errorPlayerDuplicate");
+      message[0].style.display = "block";
+    } else if (messageErrorScoreUpdate == messageDiv) {
+      let message = document.getElementsByClassName("errorScoreUpdate");
+      message[0].style.display = "block";
+    }
+
+    var item1 = document.getElementById("item-1");
+    var item2 = document.getElementById("item-2");
+    var item4 = document.getElementById("item-4");
+    var item5 = document.getElementById("item-5");
+    var item6 = document.getElementById("item-6");
+    var item8 = document.getElementById("item-8");
+    var item9 = document.getElementById("item-9");
+    var item10 = document.getElementById("item-10");
+    var item12 = document.getElementById("item-12");
+    var item13 = document.getElementById("item-13");
+    var item14 = document.getElementById("item-14");
+    var item16 = document.getElementById("item-16");
+    item1.addEventListener("click", {type: "1", item: item1, handleEvent: clickHora});
+    item2.addEventListener("click", {type: "2", item: item2, handleEvent: clickHoju});
+    item4.addEventListener("click", {type: "4", item: item4, handleEvent: removeOther});
+    item5.addEventListener("click", {type: "5", item: item5, handleEvent: clickHora});
+    item6.addEventListener("click", {type: "6", item: item6, handleEvent: clickHoju});
+    item8.addEventListener("click", {type: "8", item: item8, handleEvent: removeOther});
+    item9.addEventListener("click", {type: "9", item: item9, handleEvent: clickHora});
+    item10.addEventListener("click", {type: "10", item: item10, handleEvent: clickHoju});
+    item12.addEventListener("click", {type: "12", item: item12, handleEvent: removeOther});
+    item13.addEventListener("click", {type: "13", item: item13, handleEvent: clickHora});
+    item14.addEventListener("click", {type: "14", item: item14, handleEvent: clickHoju});
+    item16.addEventListener("click", {type: "16", item: item16, handleEvent: removeOther});
+    var scoreLabel1 = document.getElementById("scoreLabel1");
+    var scoreLabel2 = document.getElementById("scoreLabel2");
+    var scoreLabel3 = document.getElementById("scoreLabel3");
+    var scoreLabel4 = document.getElementById("scoreLabel4");
+
+    var clickHora = "0";
+    var clickHoju = "0";
+    var removeOther = "0"
+
+    var user1Score = document.getElementById("user1Score");
+    var user2Score = document.getElementById("user2Score");
+    var user3Score = document.getElementById("user3Score");
+    var user4Score = document.getElementById("user4Score");
+    var user1 = document.getElementsByName("user1");
+    var user2 = document.getElementsByName("user2");
+    var user3 = document.getElementsByName("user3");
+    var user4 = document.getElementsByName("user4");
+    getUserScore(user1Score, user1);
+    getUserScore(user2Score, user2);
+    getUserScore(user3Score, user3);
+    getUserScore(user4Score, user4);
+
+    function getParam(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    function getUserScore(userScore, user) {
+      for (let i = 0; i < user.length; i++) {
+        if (user[i].value == 大野) {
+          userScore.classList.add("ohno");
+          break;
+        } else if (user[i].value == 菅野) {
+          userScore.classList.add("kanno");
+          break;
+        } else if (user[i].value == 北山) {
+          userScore.classList.add("kitayama");
+          break;
+        } else if (user[i].value == 桑山) {
+          userScore.classList.add("kuwayama");
+          break;
+        } else if (user[i].value == 小倉) {
+          userScore.classList.add("kokura");
+          break;
+        } else if (user[i].value == 中垣) {
+          userScore.classList.add("nakagaki");
+          break;
+        } else if (user[i].value == 中村) {
+          userScore.classList.add("nakamura");
+          break;
+        } else if (user[i].value == つぐみ) {
+          userScore.classList.add("tsugumi");
+          break;
+        }
+      }
+    }
+    function removeOther(e) {
+      if (removeOther == this.type) {
+        this.item.checked = false;
+        removeOther = "0";
+      } else {
+        removeOther = this.type;
+        this.item.checked = true;
+      }
+    }
+    function clickHora(e) {
+      // 同じボタンは消す
+      if (clickHora == this.type) {
+        this.item.checked = false;
+        clickHora = "0";
+        scoreLabel1.style.display = "none";
+        scoreLabel2.style.display = "none";
+        scoreLabel3.style.display = "none";
+        scoreLabel4.style.display = "none";
+      } else {
+        clickHora = this.type;
+        this.item.checked = true;
+        this.item.value = 和了;
+        if (this.type == "1") {
+          scoreLabel1.style.display = "block";
+          scoreLabel2.style.display = "none";
+          scoreLabel3.style.display = "none";
+          scoreLabel4.style.display = "none";
+        } else  if (this.type == "5"){
+          scoreLabel1.style.display = "none";
+          scoreLabel2.style.display = "block";
+          scoreLabel3.style.display = "none";
+          scoreLabel4.style.display = "none";
+        } else  if (this.type == "9"){
+          scoreLabel1.style.display = "none";
+          scoreLabel2.style.display = "none";
+          scoreLabel3.style.display = "block";
+          scoreLabel4.style.display = "none";
+        } else  if (this.type == "13"){
+          scoreLabel1.style.display = "none";
+          scoreLabel2.style.display = "none";
+          scoreLabel3.style.display = "none";
+          scoreLabel4.style.display = "block";
+        }
+        if (Number(clickHoju) == Number(this.type) + 1) {
+          clickHoju = "0";
+        }
+      }
+
+      // 他のラジオボタンをすべて初期値に
+      if (this.type == "1") {
+        item2.checked = false;
+        item5.checked = false;
+        item9.checked = false;
+        item13.checked = false;
+      } else if (this.type == "5") {
+        item1.checked = false;
+        item6.checked = false;
+        item9.checked = false;
+        item13.checked = false;
+      } else if (this.type == "9") {
+        item1.checked = false;
+        item5.checked = false;
+        item10.checked = false;
+        item13.checked = false;
+      } else if (this.type == "13") {
+        item1.checked = false;
+        item5.checked = false;
+        item9.checked = false;
+        item14.checked = false;
+      }
+    }
+    function clickHoju(e) {
+      if (clickHoju == this.type) {
+        this.item.checked = false;
+        clickHoju = "0";
+      } else {
+        clickHoju = this.type;
+        this.item.checked = true;
+        this.item.value = 放銃;
+      }
+
+      // 他の放銃を初期値に
+      if (this.type == "2") {
+        scoreLabel1.style.display = "none";
+        item1.checked = false;
+        item6.checked = false;
+        item10.checked = false;
+        item14.checked = false;
+      } else if (this.type == "6") {
+        scoreLabel2.style.display = "none";
+        item2.checked = false;
+        item5.checked = false;
+        item10.checked = false;
+        item14.checked = false;
+      } else if (this.type == "10") {
+        scoreLabel3.style.display = "none";
+        item2.checked = false;
+        item6.checked = false;
+        item9.checked = false;
+        item14.checked = false;
+      } else if (this.type == "14") {
+        scoreLabel4.style.display = "none";
+        item2.checked = false;
+        item6.checked = false;
+        item10.checked = false;
+        item13.checked = false;
+      }
+      if (clickHora == this.type - 1) {
+        clickHora = "0";
+      }
+    }
+  }
+</script>

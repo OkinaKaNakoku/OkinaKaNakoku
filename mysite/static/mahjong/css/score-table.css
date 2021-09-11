@@ -3,6 +3,7 @@ b{
 }
 .title {
     text-align: center;
+    color: white;
 }
 .childScore {
     position: relative;
@@ -35,7 +36,7 @@ table {
     table td {
         padding: 1em 10px 1em 1em;
         border-right: 2px solid #fff;
-        
+
     }
 
     table th {
@@ -89,7 +90,7 @@ table {
         width: 100%;
         margin: 0 auto;
         clear: both;
-        margin-bottom: 100px;
+        margin-bottom: 10%;
     }
 
     table {
@@ -148,4 +149,3 @@ table {
         background: #fff
     }
 }
-

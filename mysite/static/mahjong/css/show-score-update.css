@@ -1,145 +1,289 @@
 body > div.clearfix {
-    width: 80%;
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 125px;
+  width: 80%;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 125px;
 }
 
 .user {
-    display: inline-block;
-    width: 30%;
+  display: inline-block;
+  width: 30%;
 }
 
 .score {
-    display: inline-block;
-    width: 30%;
+  display: inline-block;
+  width: 30%;
 }
 
 body > div.clearfix > form > div {
-    width: 60%;
-    text-align: center;
-    margin: 0 auto;
-    margin-bottom: 6px;
+  width: 60%;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 6px;
 }
 
 select {
-    float: left;
+  float: left;
 }
 
 body > div.clearfix > form > input {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 .clearfix {
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
-    clear: both;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  clear: both;
 }
 
 .setting {
 }
 
 .settingUser {
-    text-align: center;
-    margin-top: 0 auto;
-    display: inline-block;
-    width: 70%;
-    border-top: 1px solid #908f8f;
-    font-size: 20px;
+  text-align: center;
+  margin-bottom: 10%;
+  display: inline-block;
+  width: 70%;
+  border-top: 1px solid #908f8f;
+  font-size: 20px;
+  color: white;
+}
+.settingUserGroup {
+  display: none;
 }
 
+
 .user {
-    text-align: center;
-    margin: 0 auto;
-    display: block;
-    width: 100px;
-    height: 30px;
-    margin-bottom: 3px;
-    margin-top: 3px;
+  display: block;
+  color: white;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 3px;
+  margin-top: 3px;
 }
 
 select {
-    text-align: center;
-    width: 100px;
-    height: 30px;
-    float: left;
+  text-align: center;
+  width: 100px;
+  height: 30px;
+  float: left;
 }
 
 .settingBtn {
-    display: block;
-    align-items: center;
-    height: 30px;
-    margin-bottom: 10px;
-    margin-top: 10px;
+  display: block;
+  align-items: center;
+  height: 30px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .btn {
-    height: 30px%
+  height: 30px%
 }
 
 .score {
-    display: inline-block;
-    width: 20%;
+  display: inline-block;
+  width: 15%;
 }
 
 body > div.clearfix > form > input {
-    display: block;
-    margin: 0 auto;
-    margin-left: 10px;
+  display: block;
+  margin: 0 auto;
+  margin-left: 10px;
 }
 
 .listMenu {
-    clear: both;
-    width: 80px;
-    height: 30px;
+  clear: both;
+  width: 80px;
+  height: 30px;
 }
 
 .scoreUpdate {
-    text-align: center;
-    clear: both;
-    margin: 0 auto;
-    display: block;
-    width: 200px;
-    margin-bottom: 3px;
-    margin-top: 3px;
+  text-align: center;
+  clear: both;
+  margin: 0 auto;
+  display: block;
+  width: 200px;
+  margin-bottom: 3px;
+  margin-top: 3px;
 }
 
 strong {
-    color: #e40000;
+  color: #e40000;
 }
 
 .gameUserTable {
-    margin: 0 auto;
-    width: 50%
+  margin: 0 auto;
+  width: 50%;
 }
 
 th {
-    background-color: #4d88a5;
-    color: white;
+  background-color: #4d88a5;
+  color: white;
 }
 
 tr {
 }
 
 .radio {
-    margin:0px;
+  margin:0px;
 }
 .result {
-    font-size:12px;
+  font-size:12px;
 }
 
 table th {
-    font-weight: normal;
-    padding: 10px 0;
-    text-align: center;
-    font-size: 12px;
-    width: 10%;
+  font-weight: normal;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 12px;
+  width: 10%;
 }
 
 table td {
+  font-weight: normal;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 10px;
+  width: 10%;
+  border-top: .1px solid #000000;
+  border-bottom: .1px solid #000000;
+  border-right: .1px solid #000000;
+  border-left: .1px solid #000000;
+  background-color: white;
+}
+
+.scoreText {
+  width: 95%;
+  height: 100%;
+}
+
+/***************/
+/*（スマホ用） */
+/***************/
+@media screen and (max-width: 730px) {
+  .clearfix {
+    width: 100%;
+    text-align: center;
+    margin:0 auto;
+    clear:both;
+  }
+  .message {
+    color: white;
+  }
+  .setting {
+    margin-bottom:5%;
+  }
+  .seki {
+    color: white;
+    display: inline-block;
+    text-align: center;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .settingUser {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 2%;
+    display: block;
+    width: 50%;
+    font-size:20px;
+    border-top: 1px solid #908f8f;
+    background: #ffffff3d;
+    box-shadow: 2px 5px 5px 0px rgba(0,0,0,0.6);
+  }
+  .settingUserLabel {
+  }
+  .user {
+    width: 50%;
+    text-align: center;
+    height: 30px;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    display: flex;
+  }
+  select {
+    text-align:center;
+    width:120px;
+    height:30px;
+    float: left;
+  }
+  .settingBtn {
+    display: block;
+    align-items: center;
+    height:30px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+  }
+  .btn {
+    height:30px%
+  }
+  body > div.clearfix > form > input {
+    display: block;
+    margin: 0 auto;
+    margin-left:10px;
+  }
+  .listMenu {
+    clear:both;
+    width: 80px;
+    height: 30px;
+  }
+  .scoreUpdate {
+    text-align: center;
+    clear:both;
+    margin: 0 auto;
+    display: block;
+    width: 200px;
+    margin-bottom: 3px;
+    margin-top: 3px;
+  }
+  strong {
+    color: #e40000;
+  }
+  .gameUpdate {
+    display: block;
+  }
+  .userTable {
+    width: 85%;
+    height: 5rem;
+    display: block;
+    color:white;
+    margin: 8px auto;
+    margin-bottom: 0;
+    padding: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff3d;
+    box-shadow: 5px 10px 10px 0px rgba(0,0,0,0.6)
+  }
+  .gameUserTable{
+    margin:0 auto;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    width:90%
+    color: white;
+  }
+  th {
+    color: white;
+    width: 20%;
+  }
+
+  table th {
+    background: #ffffff3d;
+    font-weight:normal;
+    text-align: center;
+    font-size: 10px;
+    width: 5%;
+    padding: 5px;
+  }
+  table td {
     font-weight: normal;
-    padding: 10px 0;
+    padding: 5px 0;
     text-align: center;
     font-size: 10px;
     width: 10%;
@@ -147,195 +291,319 @@ table td {
     border-bottom: .1px solid #000000;
     border-right: .1px solid #000000;
     border-left: .1px solid #000000;
-}
-
-.scoreText {
+  }
+  .kyoku {
+    margin:auto;
+    margin-top: 3px;
+    display: inline-block;
+    color: white;
+    width: 60%;
+  }
+  .taikyokuGroup {
+    margin:0 auto;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .kyokuLabel {
+    color: white;
+    display: inline-block;
+    align-items: center;
+    font-size: 20px;
+    padding: 0.2em 0.2em;
+    font-weight: bold;
+    border: solid 3px #fff;
+    border-radius: 10px;/*角の丸み*/
+    margin: 2px;
+    margin-left: 8%;
+  }
+  .bouGroup {
+    display: inline-block;
+    align-items: center;
+    margin:auto;
+  }
+  .bouLabel {
+  }
+  .bou {
+    width: 50px;
+  }
+  .bouCnt {
+    display: inline-block;
+    font-size: 14px;
+  }
+  .userLabel {
+    font-size: 15px;
+    font-weight: bold;
+    width: 45%;
+    /* float: left; */
+    display: inline-block;
+    overflow: hidden;
+    display: inline-block;
+    margin: 0 auto;
+    margin-left: 2%;
+    /* background: linear-gradient(-270deg, #228b2266 20%, #228b22c4 40%, #228b22d9 60%, #228b22e0 80%, #228b22) */
+  }
+  .userInfo {
+    width: 70%;
+  }
+  .rank {
+    width: 30%;
+    display: inline-block;
+    font-size: 15px;
+  }
+  .gameUser {
+    font-size: 15px;
+    text-align: right;
+    font-weight: lighter;
+    margin-right: 5%;
+    float: right;
+    width: 60%;
+  }
+  .userScore {
+    display: block;
+    clear: both;
+  }
+  .score {
+    font-weight: bold;
+    padding-right: 5%;
+    font-size: 23px;
+    text-align: right;
+    float: right;
+    box-sizing: border-box;
+    width: 80%;
+    position: relative;
+  }
+  .ohno {
+    background: linear-gradient(180deg, #fff0 20%, #fff0 40%, #ffffff2b 60%, #ffffffc4 90%, #fff);
+  }
+  .kanno {
+    background: linear-gradient(180deg, #f0f0 20%, #f0f0 40%, #ff00ff2b 60%, #ff00ffc2 90%, #f0f );
+  }
+  .kitayama {
+    background: linear-gradient(180deg, #00640000 20%, #00640000 40%, #0064002e 60%, #006400d4 90%, #006400);
+  }
+  .kuwayama {
+    background: linear-gradient(180deg, #f5f5f500 20%, #f5f5f500 40%, #f5f5f530 60%, #f5f5f5cf 90%, #f5f5f5);
+  }
+  .kokura {
+    background: linear-gradient(180deg, #0ff0 20%, #0ff0 40%, #00ffff26 60%, #00ffffbd 90%, #0ff);
+  }
+  .nakagaki {
+    background: linear-gradient(180deg, #ee780000 20%, #ee780000 40%, #ee780021 60%, #ee7800d6 90%, #ee7800);
+  }
+  .nakamura {
+    background: linear-gradient(180deg, #483d8b00 20%, #483d8b00 40%, #483d8b2e 60%, #483d8ba6 90%, #483d8b);
+  }
+  .tsugumi {
+    background: linear-gradient(180deg, #F6496700 20%, #F6496700 40%, #F6496729 60%, #F64967DB 90%, #F64967);
+  }
+  .operate {
+    width: 50%;
+    display: inline-block;
+    margin: 5% 3% 5% 0%;
+    height: 80%;
+  }
+  .scoreText {
     width: 95%;
     height: 100%;
+  }
+
+  .radio-inline__input {
+    display: inline-block;
+    margin:auto;
+  }
+  .mainBtn {
+    box-sizing: border-box;
+    height: 50%;
+    width: 100%;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin: 2px;
+  }
+  .radio-inline__label {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    margin: 0 auto;
+    border-radius: 3px;
+    transition: all .2s;
+    font-size: 13px;
+    font-weight: 100;
+    width: 20%;
+  }
+
+  .-hora:checked + .radio-inline__label {
+    background: #2e74ca;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  }
+  .radio-inline__input {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+  }
+
+  .-hoju:checked + .radio-inline__label {
+    background: #dc2c2c;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  }
+/*
+  .-hoju:focus + .radio-inline__label {
+    outline-color: #ccbb37;
+    outline-offset: -2px;
+    outline-style: auto;
+    outline-width: 5px;
+  } */
+  .-huro:checked + .radio-inline__label {
+    background: #00a629;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  }
+/*
+  .-huro:focus + .radio-inline__label {
+    outline-offset: -2px;
+    outline-style: auto;
+    outline-width: 5px;
+  } */
+  .-kyotaku:checked + .radio-inline__label {
+    background: #00a629;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  }
+  .-tenpai:checked + .radio-inline__label {
+    background: #00a629;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+  }
+  .subBtnGroup {
+    margin: 2px;
+  }
+  .subBtn {
+    padding: 0.25rem 0.45rem;
+    width: 20%;
+    margin:0 auto;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-block;
+    padding: 0.25rem 0.25rem;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+  }
+
+  .btn {
+    max-width: 160px;
+    margin: 0 auto ;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  .btn {
+    width: 49.5%;
+    border-radius: 100vh;
+  }
+
+  .btn {
+    color: #fff;
+    background: #326b88;
+  }
+  .total {
+    color: white;
+    position: relative;
+  }
+  .label {
+    display: inline-block;
+  }
+  .scoreLabel {
+    clear: both;
+    display: block;
+    width: 85%;
+    margin: auto;
+    display: none;
+  }
+  .scoreTable {
+    display: block;
+    color: white;
+    margin: auto;
+    width: 95%;
+    margin: 0 0 0 auto;
+    background-color: #00000030;
+  }
+  .scoreTableGroup {
+    display: block;
+    margin:3px;
+    margin-top: 0;
+  }
+  .husu {
+    display: inline-block;
+    margin:1px;
+    font-size: 12px;
+    width:30%;
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+  }
+  .scoreValue {
+    display: inline-block;
+    font-size: 12px;
+  }
+  .scoreValueGroup {
+    width: 65%;
+    display: inline-block;
+    margin:auto;
+  }
+  .radio-inline__input_score {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+  }
+  .radio-inline__input_score {
+    display: inline-block;
+    margin:auto;
+  }
+  .radio-inline__label_score {
+    color: #ffffff8f;
+    display: inline-block;
+    text-align: center;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-radius: 3px;
+    transition: all .2s;
+    width: 20%;
+    font-size: 11px;
+    font-weight: 100;
+    margin: 2px;
+    background-color: #0000006e;
+  }
+  .-scoreValue:checked + .radio-inline__label_score {
+    background: #fff;
+    color: #000;
+  }
+  .none-hu {
+    width: 100%;
+  }
+  .none-huvalue {
+    width: 16%;
+  }
+  .checkRyukyoku {
+    margin: auto;
+    width: 72%;
+    margin-top: 5px;
+    color: white;
+    font-size: 10px;
+    background-color: red;
+    text-align: center;
+    padding: 1px;
+  }
+  .inputCheckRyukyoku {
+    height: 12px;
+    margin: 0 auto;
+  }
+  .checkRyukyokuLabel {
+    display: table-cell;
+  }
+
 }
-
-
-
-/***************/
-/*（スマホ用） */
-/***************/
-@media screen and (max-width: 730px) {
-    .clearfix {
-        width: 100%;
-        text-align: center;
-        margin:0 auto;
-        clear:both;
-    }
-    .setting {
-    }
-    .settingUser {
-        text-align: center;
-        margin-top: 0 auto;
-        display: inline-block;
-        width: 70%;
-        font-size:20px;
-        border-top: 1px solid #908f8f;
-    }
-    .user {
-        text-align: center;
-        margin: 0 auto;
-        display: block;
-        width: 100px;
-        height: 30px;
-        margin-bottom: 3px;
-        margin-top: 3px;
-    }
-    select {
-        text-align:center;
-        width:100px;
-        height:30px;
-        float:left;
-    }
-    .settingBtn {
-        display: block;
-        align-items: center;
-        height:30px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
-    .btn {
-        height:30px%
-    }
-
-    .score {
-        display: inline-block;
-        width: 20%;
-    }
-
-    body > div.clearfix > form > input {
-        display: block;
-        margin: 0 auto;
-        margin-left:10px;
-    }
-    .listMenu {
-        clear:both;
-        width: 80px;
-        height: 30px;
-    }
-    .scoreUpdate {
-        text-align: center;
-        clear:both;
-        margin: 0 auto;
-        display: block;
-        width: 200px;
-        margin-bottom: 3px;
-        margin-top: 3px;
-    }
-    strong {
-        color: #e40000;
-    }
-    .gameUserTable{
-        margin:0 auto;
-        width:70%
-
-    }
-    th {
-        background-color: #4d88a5;
-        color: white;
-    }
-    tr {
-    }
-
-    table th {
-        font-weight:normal;
-        padding: 10px 0;
-        text-align: center;
-        font-size: 12px;
-        width: 10%;
-    }
-    table td {
-        font-weight: normal;
-        padding: 10px 0;
-        text-align: center;
-        font-size: 10px;
-        width: 10%;
-        border-top: .1px solid #000000;
-        border-bottom: .1px solid #000000;
-        border-right: .1px solid #000000;
-        border-left: .1px solid #000000;
-    }
-
-    .scoreText {
-        width: 95%;
-        height: 100%;
-    }
-
-    .radio-inline__input {
-        display: inline-block;
-    }
-
-    .radio-inline__label {
-        display: inline-block;
-        padding: 0.25rem 1rem;
-        border-radius: 3px;
-        transition: all .2s;
-        width: 20%;
-        font-size: 12px;
-        font-weight: 100;
-    }
-
-    .radio-inline__input:checked + .radio-inline__label {
-        background: #2e74ca;
-        color: #fff;
-        text-shadow: 0 0 1px rgba(0,0,0,.7);
-    }
-
-    .radio-inline__input:focus + .radio-inline__label {
-        outline-color: #4D90FE;
-        outline-offset: -2px;
-        outline-style: auto;
-        outline-width: 5px;
-    }
-
-    .radio-inline__input {
-        clip: rect(1px, 1px, 1px, 1px);
-        position: absolute !important;
-    }
-
-    .-hoju:checked + .radio-inline__label {
-        background: #dc2c2c;
-        color: #fff;
-        text-shadow: 0 0 1px rgba(0,0,0,.7);
-    }
-
-    .-hoju:focus + .radio-inline__label {
-        outline-color: #ccbb37;
-        outline-offset: -2px;
-        outline-style: auto;
-        outline-width: 5px;
-    }
-
-    .btn {
-        position: relative;
-        display: inline-block;
-        padding: 0.25rem 0.25rem;
-        text-decoration: none;
-        letter-spacing: 0.1em;
-    }
-
-    .btn {
-        max-width: 160px;
-        margin: 0 auto ;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-        text-align: center;
-    }
-
-    .btn {
-        width: 49.5%;
-        border-radius: 100vh;
-    }
-
-    .btn {
-        color: #fff;
-        background: #326b88;
-    }
-
-
-}
-

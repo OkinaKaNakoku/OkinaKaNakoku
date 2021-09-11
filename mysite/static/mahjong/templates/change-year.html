@@ -1,0 +1,101 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/change-year.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-年変更</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div class="title">
+          <b>表示する記録の変更</b>
+        </div>
+        <p>
+          表示方法を選択してください<br />
+          現在の表示方法はヘッダーに表示されます
+        </p>
+        <div class="year-button">
+          {% if yearsInfo.isAllYear == True %}
+          <input id="item-1" class="radio-inline__input" type="radio" name="selectYear" value="allYear" checked="checked" />
+          {% endif %}
+          {% if yearsInfo.isAllYear == False %}
+          <input id="item-1" class="radio-inline__input" type="radio" name="selectYear" value="allYear" />
+          {% endif %}
+          <label class="radio-inline__label -all-year" for="item-1">
+            通算
+          </label>
+          {% for year in yearsInfo.years %}
+          <div class="year">
+            {% if year.isSelected == True %}
+            <input id={{year.year}} class="radio-inline__input" type="radio" name="selectYear" value={{year.year}} checked="checked" />
+            {% endif %}
+            {% if year.isSelected == False %}
+            <input id={{year.year}} class="radio-inline__input" type="radio" name="selectYear" value={{year.year}} />
+            {% endif %}
+            <label class="radio-inline__label -year" for="{{year.year}}">
+              {{year.year}}年
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>
