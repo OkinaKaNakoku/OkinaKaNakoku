@@ -39,7 +39,7 @@ def getTsumoScore(score):
     koTsumoScoreDic[7100] = {'ko':1800, 'oya':3600}
     koTsumoScoreDic[8000] = {'ko':2000, 'oya':4000}
     koTsumoScoreDic[12000] = {'ko':3000, 'oya':6000}
-    koTsumoScoreDic[18000] = {'ko':4000, 'oya':8000}
+    koTsumoScoreDic[16000] = {'ko':4000, 'oya':8000}
     koTsumoScoreDic[24000] = {'ko':6000, 'oya':12000}
     koTsumoScoreDic[32000] = {'ko':8000, 'oya':16000}
     oyaTsumoScoreDic = {}
