@@ -1057,6 +1057,21 @@ def getGraph(request, userId):
     dict = {"data":list}
     return JsonResponse(dict)
 
+# スコア更新の点数状況を取得、反映させる
+def getReView(request):
+    gameUsers = GameUser.objects.values()
+    list = []
+    for gameUser in gameUsers:
+        userId = gameUser.get('user_id')
+        score = gameUser.get('score')
+        obj = {"userId":userId, "score":score}
+        list.append(obj)
+
+    gameStatuses = GameStatus.objects.values()
+    gameStatus = gameStatuses[0]
+    dict = {"users":list, "ba":gameStatus.get('ba'), "kyoku":gameStatus.get('kyoku'), "honba":gameStatus.get('honba'), "kyotaku":gameStatus.get('kyotaku')}
+    return JsonResponse(dict)
+
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")
     return render(request, 'mahjong/test.html')

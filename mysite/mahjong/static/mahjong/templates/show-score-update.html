@@ -942,7 +942,7 @@
                   <td>
                     <label>
                       <input class="userId" type="hidden" name="user1" value="{{user1.userId}}" />
-                      <input id="score1" class="scoreText" type="tel" name="score1" />
+                      <input id="score1" class="scoreText" type="text" name="score1" />
                     </label>
                   </td>
                 </tr>
@@ -951,7 +951,7 @@
                   <td>
                     <label>
                       <input class="userId" type="hidden" name="user2" value="{{user2.userId}}" />
-                      <input id="score2" class="scoreText" type="tel" name="score2" />
+                      <input id="score2" class="scoreText" type="text" name="score2" />
                     </label>
                   </td>
                 </tr>
@@ -960,7 +960,7 @@
                   <td>
                     <label>
                       <input class="userId" type="hidden" name="user3" value="{{user3.userId}}" />
-                      <input id="score3" class="scoreText" type="tel" name="score3" />
+                      <input id="score3" class="scoreText" type="text" name="score3" />
                     </label>
                   </td>
                 </tr>
@@ -969,7 +969,7 @@
                   <td>
                     <label>
                       <input class="userId" type="hidden" name="user4" value="{{user4.userId}}" />
-                      <input id="score4" class="scoreText" type="tel" name="score4" />
+                      <input id="score4" class="scoreText" type="text" name="score4" />
                     </label>
                   </td>
                 </tr>
@@ -1055,6 +1055,10 @@
             document.getElementById("select-show").innerHTML = val;
         });
     });
+
+    // 再描画登録
+    let reView = document.getElementsByClassName("kyokuLabel");
+    review.addEventListener("click", reView);
 
     // スコア差分チェック
     let score1 = document.getElementById("score1");
@@ -1309,4 +1313,15 @@
       }
     }
   }
+
+  function reView() {
+    let data = await getReView();
+
+  }
+
+  async function getReView() {
+    let res = await fetch("/getReView/");
+    return await res.json();
+  }
+
 </script>

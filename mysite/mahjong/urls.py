@@ -15,5 +15,6 @@ urlpatterns = [
     path('changeYear', views.changeYear, name='changeYear'),
     path('showYakuman', views.showYakuman, name='showYakuman'),
     path('test', views.test, name='test'),
-    path('getGraph/<str:userId>', views.getGraph, name='getGraph')
+    path('getGraph/<str:userId>', views.getGraph, name='getGraph'),
+    path('getReView', views.getReView, name='getReView')
 ]
