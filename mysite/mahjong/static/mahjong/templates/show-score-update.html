@@ -322,8 +322,8 @@
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue65">8000</label>
                     <input id="scoreValue66" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue66">12000</label>
-                    <input id="scoreValue67" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
-                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue67">18000</label>
+                    <input id="scoreValue67" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=16000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue67">16000</label>
                     <input id="scoreValue68" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue68">24000</label>
                     <input id="scoreValue69" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
@@ -518,8 +518,8 @@
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue70">8000</label>
                     <input id="scoreValue71" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue71">12000</label>
-                    <input id="scoreValue72" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
-                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue72">18000</label>
+                    <input id="scoreValue72" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=16000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue72">16000</label>
                     <input id="scoreValue73" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue73">24000</label>
                     <input id="scoreValue74" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
@@ -714,8 +714,8 @@
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue75">8000</label>
                     <input id="scoreValue76" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue76">12000</label>
-                    <input id="scoreValue77" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
-                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue77">18000</label>
+                    <input id="scoreValue77" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=16000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue77">16000</label>
                     <input id="scoreValue78" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue78">24000</label>
                     <input id="scoreValue79" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
@@ -910,8 +910,8 @@
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue80">8000</label>
                     <input id="scoreValue81" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=12000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue81">12000</label>
-                    <input id="scoreValue82" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=18000 />
-                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue82">18000</label>
+                    <input id="scoreValue82" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=16000 />
+                    <label class="radio-inline__label_score -score none-huvalue" for="scoreValue82">16000</label>
                     <input id="scoreValue83" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=24000 />
                     <label class="radio-inline__label_score -score none-huvalue" for="scoreValue83">24000</label>
                     <input id="scoreValue84" class="radio-inline__input_score -scoreValue" type="radio" name="score" value=32000 />
@@ -1057,8 +1057,9 @@
     });
 
     // 再描画登録
-    let reView = document.getElementsByClassName("kyokuLabel");
-    review.addEventListener("click", reView);
+    let reViewClass = document.getElementsByClassName("kyokuLabel");
+    let reViewElement = reViewClass[0]
+    reViewElement.addEventListener("click", reView);
 
     // スコア差分チェック
     let score1 = document.getElementById("score1");
@@ -1314,13 +1315,28 @@
     }
   }
 
-  function reView() {
+  async function reView() {
     let data = await getReView();
-
+    users = data.users;
+    cnt = 1
+    for (let i = 0; i < users.length; i++) {
+      targetScore = "user" + String(cnt) + "Score";
+      score = document.getElementById(targetScore);
+      score.textContent = users[i].score.toLocaleString();
+      targetScore = "score" + String(cnt);
+      score = document.getElementById(targetScore);
+      score.value = users[i].score;
+      cnt++;
+    }
+    kyoku = document.getElementsByClassName("kyokuLabel");
+    kyoku[0].textContent = data.ba + " " + data.kyoku + " 局"
+    bouCnts = document.getElementsByClassName("bouCnt");
+    bouCnts[0].textContent = data.kyotaku;
+    bouCnts[1].textContent = data.honba;
   }
 
   async function getReView() {
-    let res = await fetch("/getReView/");
+    let res = await fetch("/getReView");
     return await res.json();
   }
 
