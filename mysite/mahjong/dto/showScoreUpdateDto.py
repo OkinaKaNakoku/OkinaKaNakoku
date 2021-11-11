@@ -14,6 +14,7 @@ class ShowScoreUpdate:
 
 class GameStatus:
     def __init__(self, gameStatus):
+        self.ba = gameStatus.ba
         self.kyoku = gameStatus.ba + " " + str(gameStatus.kyoku) + " " + "局"
         self.kyotaku = gameStatus.kyotaku
         self.honba = gameStatus.honba

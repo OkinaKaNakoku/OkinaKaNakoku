@@ -6,7 +6,7 @@ $(function () {
         });
     });
 });
-// 
+//
 // $(function () {
 //     $('.-hora').each(function () {
 //         $(this).addEventListener('click', function () {

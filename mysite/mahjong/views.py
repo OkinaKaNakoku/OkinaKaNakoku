@@ -1072,6 +1072,46 @@ def getReView(request):
     dict = {"users":list, "ba":gameStatus.get('ba'), "kyoku":gameStatus.get('kyoku'), "honba":gameStatus.get('honba'), "kyotaku":gameStatus.get('kyotaku')}
     return JsonResponse(dict)
 
+# スコア修正
+def fixScore(request, **kwargs):
+    ba = request.POST['ba']
+    kyoku = request.POST['kyoku']
+    if type(kyoku) is str and 1 < len(kyoku):
+        kyoku = kyoku[2]
+        kyoku.translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
+    kyotaku = request.POST['kyotaku']
+    honba = request.POST['tsumibo']
+
+    #delete - insert
+    GameStatus.objects.all().delete()
+    GameStatus(ba=ba, kyoku=kyoku, honba=honba, kyotaku=kyotaku).save()
+    gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
+
+    # ■form取得。たぶんもっといい方法ある
+    userId1 = request.POST['user1']
+    score1 = request.POST['score1']
+    userId2 = request.POST['user2']
+    score2 = request.POST['score2']
+    userId3 = request.POST['user3']
+    score3 = request.POST['score3']
+    userId4 = request.POST['user4']
+    score4 = request.POST['score4']
+    # 更新。最高に頭悪い。俺しか見ないからいい
+    user = GameUser.objects.filter(user_id=userId1).first()
+    user.score = score1
+    user.save()
+    user = GameUser.objects.filter(user_id=userId2).first()
+    user.score = score2
+    user.save()
+    user = GameUser.objects.filter(user_id=userId3).first()
+    user.score = score3
+    user.save()
+    user = GameUser.objects.filter(user_id=userId4).first()
+    user.score = score4
+    user.save()
+
+    return redirect('/mahjong/showScoreUpdate?messageDiv=7')
+
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")
     return render(request, 'mahjong/test.html')

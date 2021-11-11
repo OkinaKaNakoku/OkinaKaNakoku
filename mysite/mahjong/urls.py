@@ -16,5 +16,6 @@ urlpatterns = [
     path('showYakuman', views.showYakuman, name='showYakuman'),
     path('test', views.test, name='test'),
     path('getGraph/<str:userId>', views.getGraph, name='getGraph'),
-    path('getReView', views.getReView, name='getReView')
+    path('getReView', views.getReView, name='getReView'),
+    path('fixScore', views.fixScore, name='fixScore'),
 ]

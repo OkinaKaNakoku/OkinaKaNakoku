@@ -65,6 +65,8 @@
           <div class="errorUpdate" style="display: none;">更新不可です。更新管理をUPDATEしてください</div>
           <div class="errorPlayer4" style="display: none;">プレイヤーを4人登録してください</div>
           <div class="errorPlayerDuplicate" style="display: none;">プレイヤーが重複しています</div>
+          <div class="errorScoreUpdate" style="display: none;">スコアをすべて登録してください</div>
+          <div class="errorFixScore" style="display: none;">対局・スコアを修正しました</div>
         </div>
         <form action="{% url 'mahjong:settingUser' %}" method="post">
           <input type="hidden" name="isReload" value={{isReload}}>
@@ -113,9 +115,113 @@
               <div class="settingBtn">
                 <button class="btn">対局設定</button>
               </div>
+              </form>
+              <form action="{% url 'mahjong:fixScore' %}" method="post">
+                {% csrf_token %}
+              <div id="settingUser" class="settingUser js-menu__item__link">
+                <div class="settingUserLabel">対局・スコア修正</div>
+              </div>
+              <div class="settingUserGrou">
+                <div class="kyokusetting">
+                  <div class="kyokusetting subkyokusetting2">
+                    <input class="userId" type="hidden" name="ba" value="{{gameStatus.ba}}" />
+                    <input id="tonba" class="radio-inline__input -hora" type="radio" name="ba" value=東 />
+                    <label class="radio-inline__label -hora" for="tonba">
+                      東
+                    </label>
+                    <input id="nanba" class="radio-inline__input -hora" type="radio" name="ba" value=南 />
+                    <label class="radio-inline__label -hora" for="nanba">
+                      南
+                    </label>
+                  </div>
+                  <input class="userId" type="hidden" name="kyoku" value="{{gameStatus.kyoku}}" />
+                  <input id="1kyoku" class="radio-inline__input -hora" type="radio" name="kyoku" value=1 />
+                  <label class="radio-inline__label -hora" for="1kyoku">
+                    1局
+                  </label>
+                  <input id="2kyoku" class="radio-inline__input -hora" type="radio" name="kyoku" value=2 />
+                  <label class="radio-inline__label -hora" for="2kyoku">
+                    2局
+                  </label>
+                  <input id="3kyoku" class="radio-inline__input -hora" type="radio" name="kyoku" value=3 />
+                  <label class="radio-inline__label -hora" for="3kyoku">
+                    3局
+                  </label>
+                  <input id="4kyoku" class="radio-inline__input -hora" type="radio" name="kyoku" value=4 />
+                  <label class="radio-inline__label -hora" for="4kyoku">
+                    4局
+                  </label>
+                </div>
+                <div class="kyokusetting">
+                  <table class="gameUserTable">
+                    <thead>
+                      <tr>
+                        <th>供託</th>
+                        <td>
+                          <label>
+                            <input class="userId" type="hidden" name="kyotaku" value="{{gameStatus.kyotaku}}" />
+                            <input id="kyotaku" class="scoreText" type="tel" name="kyotaku" value="{{gameStatus.kyotaku}}" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>積棒</th>
+                        <td>
+                          <label>
+                            <input class="userId" type="hidden" name="tsumibo" value="{{gameStatus.honba}}" />
+                            <input id="tsumibo" class="scoreText" type="tel" name="tsumibo" value="{{gameStatus.honba}}" />
+                          </label>
+                        </td>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+                <table class="gameUserTable">
+                  <thead>
+                    <tr>
+                      <th>{{user1.name}}</th>
+                      <td>
+                        <label>
+                          <input class="userId" type="hidden" name="user1" value="{{user1.userId}}" />
+                          <input id="rescore1" class="scoreText" type="text" name="score1" />
+                        </label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>{{user2.name}}</th>
+                      <td>
+                        <label>
+                          <input class="userId" type="hidden" name="user2" value="{{user2.userId}}" />
+                          <input id="rescore2" class="scoreText" type="text" name="score2" />
+                        </label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>{{user3.name}}</th>
+                      <td>
+                        <label>
+                          <input class="userId" type="hidden" name="user3" value="{{user3.userId}}" />
+                          <input id="rescore3" class="scoreText" type="text" name="score3" />
+                        </label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>{{user4.name}}</th>
+                      <td>
+                        <label>
+                          <input class="userId" type="hidden" name="user4" value="{{user4.userId}}" />
+                          <input id="rescore4" class="scoreText" type="text" name="score4" />
+                        </label>
+                      </td>
+                    </tr>
+                  </thead>
+                </table>
+                <div class="settingBtn">
+                  <button class="btn">対局・スコア設定</button>
+                </div>
+              </form>
             </div>
           </div>
-        </form>
         {% if user1 %}
         <form action="{% url 'mahjong:updateGame' %}" method="post">
           <div class="gameUpdate">
@@ -123,7 +229,7 @@
             {% csrf_token %}
             <div class="kyoku">
               <div class="taikyokuGroup">
-                <div class="kyokuLabel">{{gameStatus.ba}} {{gameStatus.kyoku}}</div>
+                <div class="kyokuLabel">{{gameStatus.kyoku}}</div>
                 <div class="bouGroup">
                   <div class="bouLabel">
                     <img class="bou" src="/static/mahjong/images/kyotaku.png" alt="供託">
@@ -992,13 +1098,11 @@
         </form>
         {% endif %}
       </div>
-    </div>
     <div id="footer">
       <li class="navi">
         <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a>
       </li>
     </div>
-  </div>
 </body>
 </html>
 <script type="text/javascript">
@@ -1019,6 +1123,7 @@
   const messagePlayer4Error = 4;
   const messagePlayerDuplicate = 5;
   const messageErrorScoreUpdate = 6;
+  const messageFixScore = 7;
 
   window.onload = function() {
     // cookie
@@ -1066,6 +1171,10 @@
     let score2 = document.getElementById("score2");
     let score3 = document.getElementById("score3");
     let score4 = document.getElementById("score4");
+    let rescore1 = document.getElementById("rescore1");
+    let rescore2 = document.getElementById("rescore2");
+    let rescore3 = document.getElementById("rescore3");
+    let rescore4 = document.getElementById("rescore4");
     let userScoreValue1 = document.getElementById('user1Score');
     let userScoreValue2 = document.getElementById('user2Score');
     let userScoreValue3 = document.getElementById('user3Score');
@@ -1074,6 +1183,10 @@
     score2.value = removeComma(userScoreValue2.innerText);
     score3.value = removeComma(userScoreValue3.innerText);
     score4.value = removeComma(userScoreValue4.innerText);
+    rescore1.value = removeComma(userScoreValue1.innerText);
+    rescore2.value = removeComma(userScoreValue2.innerText);
+    rescore3.value = removeComma(userScoreValue3.innerText);
+    rescore4.value = removeComma(userScoreValue4.innerText);
     changeTotal();
     function removeComma(number) {
       var removed = number.replace(/,/g, '');
@@ -1114,6 +1227,9 @@
       message[0].style.display = "block";
     } else if (messageErrorScoreUpdate == messageDiv) {
       let message = document.getElementsByClassName("errorScoreUpdate");
+      message[0].style.display = "block";
+    } else if (messageFixScore == messageDiv) {
+      let message = document.getElementsByClassName("errorFixScore");
       message[0].style.display = "block";
     }
 

@@ -605,5 +605,14 @@ table td {
   .checkRyukyokuLabel {
     display: table-cell;
   }
-
+  .kyokusetting {
+    color: white;
+    display: inline-block;
+    width: 90%;
+    margin: 2%;
+  }
+  .subkyokusetting2 {
+    width: 100%;
+    display: block;
+  }
 }
