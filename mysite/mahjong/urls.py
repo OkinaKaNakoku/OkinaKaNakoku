@@ -18,4 +18,10 @@ urlpatterns = [
     path('getGraph/<str:userId>', views.getGraph, name='getGraph'),
     path('getReView', views.getReView, name='getReView'),
     path('fixScore', views.fixScore, name='fixScore'),
+    path('manage', views.manage, name='manage'),
+    path('manageDB', views.manageDB, name='manageDB'),
+    path('manageDBUpdate', views.manageDBUpdate, name='manageDBUpdate'),
+    path('manageGit', views.manageGit, name='manageGit'),
+    path('managePythonAnywhere', views.managePythonAnywhere, name='managePythonAnywhere'),
+    path('manageYakuman', views.manageYakuman, name='manageYakuman'),
 ]

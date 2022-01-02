@@ -1,0 +1,98 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/manage.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-サイト管理</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div>
+          <div class="title">サイト管理</div>
+          <div>
+            <img src="/static/mahjong/img/manage/shikumi.png" alt="仕組み" class="mainimg">
+          </div>
+        <ul class="todos">
+          <div class="menus">
+            <div class="list">
+              <a href="/mahjong/manageDBUpdate"><li class="todo">DBの修正</li></a>
+            </div>
+            <div class="list">
+              <a href="/mahjong/manageDB"><li class="todo">DBのgit反映</li></a>
+            </div>
+            <div class="list">
+              <a href="/mahjong/manageGit"><li class="todo">Personal access tokensの作成</li></a>
+            </div>
+            <div class="list">
+              <a href="/mahjong/managePythonAnywhere"><li class="todo">PythonAnywhereの利用期間の延長</li></a>
+            </div>
+            <div class="list">
+              <a href="/mahjong/manageYakuman"><li class="todo">役満一覧の反映</li></a>
+            </div>
+          </div>
+        </ul>
+      </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a><br>
+      </li>
+      <li class="navi">
+        <a href="/mahjong/manage" class="footer-link">サイト管理</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>

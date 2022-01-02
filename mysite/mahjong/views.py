@@ -1112,6 +1112,19 @@ def fixScore(request, **kwargs):
 
     return redirect('/mahjong/showScoreUpdate?messageDiv=7')
 
+def manage(request, **kwargs):
+    return render(request, 'mahjong/manage.html')
+def manageDBUpdate(request, **kwargs):
+    return render(request, 'mahjong/manageDBUpdate.html')
+def manageDB(request, **kwargs):
+    return render(request, 'mahjong/manageDB.html')
+def manageGit(request, **kwargs):
+    return render(request, 'mahjong/manageGit.html')
+def managePythonAnywhere(request, **kwargs):
+    return render(request, 'mahjong/managePythonAnywhere.html')
+def manageYakuman(request, **kwargs):
+    return render(request, 'mahjong/manageYakuman.html')
+
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")
     return render(request, 'mahjong/test.html')

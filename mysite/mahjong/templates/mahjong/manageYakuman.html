@@ -1,0 +1,131 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/manage.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-役満一覧の反映</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div>
+          <div class="title">役満一覧の反映</div>
+        </div>
+        <div class="text">
+          <h3>目的</h3>
+            <p class="mainText">役満の一覧を静的ファイルに反映する</p>
+          <h3>手順</h3>
+          <h4>画像の反映</h4>
+          <p class="mainText"><a href="https://www.pythonanywhere.com/user/OkinaKaNakoku/" target="_blank">PythonAnywhere</a>へアクセス</p>
+          <p class="mainText">認証が通っていない場合はログインする</p>
+          <p class="mainText">[FILE]をクリックする</p>
+          <img src="/static/mahjong/img/manage/manageYakuman01.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「Directories」から画像の階層まで遷移する</p>
+          <p class="mainText">[Upload a file]をクリックして対象の画像をアップロードする</p>
+          <img src="/static/mahjong/img/manage/manageYakuman04.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">[Consoles]をクリック</p>
+          <img src="/static/mahjong/img/manage/manageYakuman05.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">[Bash console]をクリック</p>
+          <img src="/static/mahjong/img/manage/manageYakuman06.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「cd」でルートディレクトリに戻る</p>
+          <img src="/static/mahjong/img/manage/manageYakuman07.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「cd OkinaKaNakoku/mysite/」でカレントディレクトリを移動する</p>
+          <img src="/static/mahjong/img/manage/manageYakuman08.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「python3 manage.py collectstatic」で静的ファイルの最新化</p>
+          <p class="mainText">処理を継続するかどうか聞かれるので続けて「yes」を入力</p>
+          <p class="mainText">～ static files copied to ～～～～と表示されれば成功</p>
+          <p class="mainText">最新化されたファイル数が先頭に表示される</p>
+          <img src="/static/mahjong/img/manage/manageYakuman09.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <h4>htmlの反映</h4>
+          <p class="mainText"><a href="https://www.pythonanywhere.com/user/OkinaKaNakoku/" target="_blank">PythonAnywhere</a>へアクセス</p>
+          <p class="mainText">認証が通っていない場合はログインする</p>
+          <p class="mainText">[FILE]をクリックする</p>
+          <img src="/static/mahjong/img/manage/manageYakuman01.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「Directories」から画像の階層まで遷移する</p>
+          <p class="mainText">「show-yakuman.html」をクリック</p>
+          <img src="/static/mahjong/img/manage/manageYakuman02.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">tableタグからimgタグまでがセット</p>
+          <p class="mainText">日付や和了者、ファイル名など必要に応じて修正し、[Save]で保存</p>
+          <img src="/static/mahjong/img/manage/manageYakuman03.png" alt="login" class="mainImg">
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a><br>
+      </li>
+      <li class="navi">
+        <a href="/mahjong/manage" class="footer-link">サイト管理</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>

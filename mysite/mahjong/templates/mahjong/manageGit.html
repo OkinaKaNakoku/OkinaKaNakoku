@@ -1,0 +1,113 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/manage.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-Personal access tokensの作成</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div>
+          <div class="title">Personal access tokensの作成</div>
+        </div>
+        <div class="text">
+          <h3>目的</h3>
+            <p class="mainText">PythonAnywhereからgit反映するため</p>
+            <p class="mainText">期限が切れた場合は都度発行し直す</p>
+          <h3>手順</h3>
+          <p class="mainText">・<a href="https://github.com/login" target="_blank">github</a>へアクセス</p>
+          <p class="mainText">・Username/Passwordを入力し[Sign in]をクリック</p>
+          <p class="mainText">　email:OkinaKaNakoku / Password:oknknkk0831</p>
+          <img src="/static/mahjong/img/manage/manageGit01.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">右上アイコンから[Settings]をクリック</p>
+          <img src="/static/mahjong/img/manage/manageGit02.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「Developer settings」をクリック</p>
+          <img src="/static/mahjong/img/manage/manageGit03.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「Personal access tokens」をクリック</p>
+          <img src="/static/mahjong/img/manage/manageGit04.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「Generate new token」をクリック</p>
+          <img src="/static/mahjong/img/manage/manageGit05.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">Noteに任意の値を入力（画像では日付を入力）</p>
+          <p class="mainText">スコープの「repo」にチェックを付ける</p>
+          <img src="/static/mahjong/img/manage/manageGit06.png" alt="login" class="mainImg">
+          <p class="mainText">[Generate token]をクリック</p>
+          <img src="/static/mahjong/img/manage/manageGit07.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">枠内のアイコンをクリックしクリップボードにコピーして利用する</p>
+          <img src="/static/mahjong/img/manage/manageGit08.png" alt="login" class="mainImg">
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a><br>
+      </li>
+      <li class="navi">
+        <a href="/mahjong/manage" class="footer-link">サイト管理</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>

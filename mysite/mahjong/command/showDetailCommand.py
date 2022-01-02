@@ -98,7 +98,7 @@ class ShowDetailCommand:
             name = userMst.last_name + ' ' + userMst.first_name
             score = userInfo.score_sum
             hansoCnt = len(userHansoScores)
-            recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            recordDto = userRecordDto.UserRecordDto(userId, name, rank, score, 0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
             detailResDto = showDetailResDto.ShowDetailResDto(rankDto, recordDto)
             return detailResDto
 

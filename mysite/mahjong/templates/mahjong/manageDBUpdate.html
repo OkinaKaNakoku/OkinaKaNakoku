@@ -1,0 +1,95 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/mahjong/css/manage.css' %}">
+<script type="text/javascript" src="/static/mahjong/jquery/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/static/mahjong/js/selectYear.js"></script>
+<!-- <script type="text/javascript" src="/static/mahjong/js/template.js"></script> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes">
+  <title>翁カ奴国-DBの修正</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="header">
+      <div class="head">
+        <div class="header-left">
+          <div id="header-txt" class="title">
+            <p>okina-ka-nakoku</p>
+          </div>
+          <a href="/mahjong/showRanking" class="title-img"></a>
+        </div>
+        <div class="header-select-show">
+          <div id="select-show"></div>
+        </div>
+        <div class="header-topic">
+          <div class="topic">
+            <a href="/admin">>to admin</a>
+          </div>
+          <div class="topic">
+            <a href="/mahjong/changeYear">>change year</a>
+          </div>
+        </div>
+        <div class="header-right">
+          <ul class="menulist">
+            <li class="menu">
+              <a href="/mahjong/showRanking" class="title-link">
+                <span class="menu-text">
+                  ランキング
+                </span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/showScoreUpdate" class="title-link">
+                <span class="menu-text">スコア更新</span>
+              </a>
+            </li>
+            <li class="menu">
+              <a href="/mahjong/scoreTable" class="title-link">
+                <span class="menu-text">点数早見表</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix">
+      <div class="main">
+        <div>
+          <div class="title">DBの修正</div>
+        </div>
+        <div class="text">
+          <h3>目的</h3>
+            <p class="mainText">点数登録などのミスを直接手入力で修正する</p>
+            <p class="mainText">使用していない時の不正な更新の防止</p>
+          <h3>手順</h3>
+          <p class="mainText">・<a href="/admin" target="_blank">to admin</a>へアクセス</p>
+          <p class="mainText">・Username/Passwordを入力し[Log in]をクリック</p>
+          <p class="mainText">　Username:okinakanakoku / Password:okinakanakoku</p>
+          <img src="/static/mahjong/img/manage/manageDBUpdate01.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">「User infos」に年ごとにデータ管理されているので良しなに</p>
+          <img src="/static/mahjong/img/manage/manageDBUpdate02.png" alt="login" class="mainImg">
+          <br>
+          <br>
+          <p class="mainText">データ登録の更新可否は「Is update mngs」で管理</p>
+          <p class="mainText">「0」が更新不可、「1」で更新可になる</p>
+          <img src="/static/mahjong/img/manage/manageDBUpdate03.png" alt="login" class="mainImg">
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <li class="navi">
+        <a href="/mahjong/showYakuman" class="footer-link">役満一覧</a><br>
+      </li>
+      <li class="navi">
+        <a href="/mahjong/manage" class="footer-link">サイト管理</a>
+      </li>
+    </div>
+  </div>
+</body>
+</html>
