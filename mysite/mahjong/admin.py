@@ -7,6 +7,7 @@ from .models import GameResult
 from .models import IsUpdateMng
 from .models import UserMst
 from .models import GameStatus
+from .models import DoLogin
 
 class HansoSumInline(admin.TabularInline):
     model = HansoSum
@@ -69,6 +70,13 @@ class GameUserAdmin(admin.ModelAdmin):
     ordering = ('seq',)
     list_display = ('seq', 'user_id', 'last_name', 'first_name')
 
+class DoLoginAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('LOGIN_ID',  {'fields':['loginid']}),
+        ('PASSWORD',  {'fields':['password']})
+    ]
+
+
 # Register your models here.
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(HansoSum, HansoSumAdmin)
@@ -77,3 +85,4 @@ admin.site.register(GameUser, GameUserAdmin);
 admin.site.register(GameResult, GameResultAdmin)
 admin.site.register(GameStatus)
 admin.site.register(IsUpdateMng)
+admin.site.register(DoLogin)
