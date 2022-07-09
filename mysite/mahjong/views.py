@@ -28,7 +28,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import urllib.parse
 from django.shortcuts import redirect
 
-from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst, GameStatus
+from .models import UserInfo, HansoSum, GameUser, GameResult, IsUpdateMng, UserMst, GameStatus, DoLogin
 
 # 定数
 USER_UNREG = 'userUnreg'
@@ -38,6 +38,9 @@ USER_DUP = 'userDup'
 
 # ランキング
 def showRanking(request):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     command = showRankingCommand.ShowRankingCommand()
     showRankingInfo = command.getShowRankingInfo(request)
     response = render(request, 'mahjong/score.html',
@@ -53,6 +56,9 @@ def showRanking(request):
 
 # スコア更新表示
 def showScoreUpdate(request):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     # ■UserInfoをuser_idの昇順で取得
     settingUsers = getShowScoreUpdateDto()
     # ■GameUserを全取得
@@ -95,6 +101,9 @@ def showScoreUpdate(request):
 
 # スコア登録
 def updateScore(request):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     if isUpdatePossible() == False: # 更新不可
         # レンダリング
         gameUserQuery = GameUser.objects.select_related().all()
@@ -245,6 +254,9 @@ def updateScore(request):
 
 # 点数表表示
 def scoreTable(request):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     response = render(request, 'mahjong/score-table.html')
     # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
     cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
@@ -256,6 +268,9 @@ def scoreTable(request):
 
 # 対局登録
 def updateGame(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     settingUsers = getShowScoreUpdateDto()
     gameStatusQuery = GameStatus.objects.select_related().all()[0] # 戦闘固定。1件しかない
     gameStatus = showScoreUpdateDto.GameStatus(gameStatusQuery)
@@ -706,6 +721,9 @@ def updateGame(request, **kwargs):
 
 # 対局設定
 def settingUser(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     # バリデーションチェック
     check = userValidation(request)
     if check == USER_UNREG:
@@ -811,6 +829,9 @@ def isUpdatePossible():
 
 # 個人詳細表示
 def showDetail(request, userId):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     command = showDetailCommand.ShowDetailCommand(userId)
     showDetailInfo = command.getShowDetailInfo(request)
 
@@ -981,6 +1002,9 @@ def showDetail(request, userId):
 
 # 年変更
 def changeYear(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     # 登録済みの年の取得
     yearQuery = UserInfo.objects.all().values('year').annotate().order_by('-year')
     years = []
@@ -1010,6 +1034,9 @@ def getUser(users, userId):
 
 # 役満一覧
 def showYakuman(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     # 登録済みの年の取得
     yearQuery = UserInfo.objects.all().values('year').annotate().order_by('-year')
     years = []
@@ -1033,6 +1060,9 @@ def showYakuman(request, **kwargs):
     return render(request, 'mahjong/show-yakuman.html', {'yearsInfo':yearsInfo})
 
 def getGraph(request, userId):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
 
     # 表示する年を確定させる
     # cookieに保存されていない場合はシステム日付の年をデフォルトにする
@@ -1059,6 +1089,9 @@ def getGraph(request, userId):
 
 # スコア更新の点数状況を取得、反映させる
 def getReView(request):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     gameUsers = GameUser.objects.values()
     list = []
     for gameUser in gameUsers:
@@ -1074,6 +1107,9 @@ def getReView(request):
 
 # スコア修正
 def fixScore(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     ba = request.POST['ba']
     kyoku = request.POST['kyoku']
     if type(kyoku) is str and 1 < len(kyoku):
@@ -1113,17 +1149,70 @@ def fixScore(request, **kwargs):
     return redirect('/mahjong/showScoreUpdate?messageDiv=7')
 
 def manage(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/manage.html')
 def manageDBUpdate(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/manageDBUpdate.html')
 def manageDB(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/manageDB.html')
 def manageGit(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/manageGit.html')
 def managePythonAnywhere(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/managePythonAnywhere.html')
 def manageYakuman(request, **kwargs):
+    if isOkinaMem(request) == False:
+        response = redirect('/login')
+        return response
     return render(request, 'mahjong/manageYakuman.html')
+def login(request, **kwargs):
+    if isOkinaMem(request):
+        command = showRankingCommand.ShowRankingCommand()
+        showRankingInfo = command.getShowRankingInfo(request)
+        response = render(request, 'mahjong/score.html',
+            {'users':showRankingInfo.users, 'usersHanso':showRankingInfo.usersHanso, 'usersHora':showRankingInfo.usersHora,
+             'userHoju':showRankingInfo.userHoju})
+        response.set_cookie(const.Const.Cookie.IS_OKINA_MEM, 'success')
+        # cookieに保存されていない場合はシステム日付の年をデフォルトで設定
+        cookie = request.COOKIES.get(const.Const.Cookie.SELECT_YEAR)
+        # ここのifホンマに謎。NoneなのにTrueにならない
+        if cookie is None or len(cookie) == 0:
+            cookie = datetime.datetime.now()
+            response.set_cookie(const.Const.Cookie.SELECT_YEAR, str(cookie.year))
+        return response
+    else:
+        return render(request, 'mahjong/login.html')
+
+def doLogin(request, **kwargs):
+    loginId = request.POST['loginIdvalue']
+    password = request.POST['passwordvalue']
+    # 1件しかない
+    doLoginQuery = DoLogin.objects.values()[0]
+    if loginId == doLoginQuery.get('loginid') and password == doLoginQuery.get('password'):
+        response = redirect('/showRanking')
+        response.set_cookie(const.Const.Cookie.IS_OKINA_MEM, 'success')
+        return response
+    else:
+        response = render(request, 'mahjong/login.html', {'message':'ログインID、またはパスワードが異なります'})
+    return response
+
+def isOkinaMem(request):
+    return request.COOKIES.get(const.Const.Cookie.IS_OKINA_MEM) == 'success'
+
+
 
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")

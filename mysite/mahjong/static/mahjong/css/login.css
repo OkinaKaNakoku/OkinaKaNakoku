@@ -1,0 +1,114 @@
+body {
+  background: url(../images/bg.JPG);
+}
+th {
+  width: 50%;
+}
+input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.text {
+  width: 40%;
+}
+.settingBtn {
+  text-align: center;
+  display: block;
+  align-items: center;
+  height: 30px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+.btn {
+  position: relative;
+display: inline-block;
+padding: 0.25rem 0.25rem;
+text-decoration: none;
+letter-spacing: 0.1em;
+max-width: 160px;
+margin: 0 auto;
+justify-content: space-between;
+text-align: center;
+width: 49.5%;
+border-radius: 100vh;
+color: #fff;
+background: #5a8273;
+}
+.error {
+  width: 100%;
+}
+.clearfix {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    clear: both;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+}
+p {
+  color: white;
+}
+.year-button {
+    width: 80%;
+    padding: 1em 1em;
+    margin: 5%;
+    background: #FFF;
+    border: solid 2px #6091d3; /*ê¸*/
+    border-radius: 10px; /*äpÇÃä€Ç›*/
+    text-align: center;
+}
+
+.radio-inline__input {
+    clip: rect(1px, 1px, 1px, 1px);
+    position: absolute !important;
+}
+
+.-all-year {
+    width: 92%;
+    text-align: center;
+    background-color: white;
+
+}
+
+.-year {
+    width: 85%;
+    text-align: center;
+    box-sizing:content-box;
+    margin:0%;
+}
+
+.radio-inline__input {
+    display: inline-block;
+}
+
+.radio-inline__label {
+    display: inline-block;
+    padding: 0.25rem 0.25rem;
+    border-radius: 3px;
+    transition: all .2s;
+    border: dashed 2px #c3dbfb;
+    margin: 5px;
+}
+
+.radio-inline__input:checked + .radio-inline__label {
+    background: #2e74ca;
+    color: #fff;
+    text-shadow: 0 0 1px rgba(0,0,0,.7);
+}
+
+.radio-inline__input:focus + .radio-inline__label {
+    outline-color: #4D90FE;
+    outline-offset: -2px;
+    outline-style: auto;
+    outline-width: 5px;
+}
+
+.year {
+    display: inline-block;
+    width: 49%;
+    margin: 0px;
+}

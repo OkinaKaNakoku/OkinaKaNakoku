@@ -5,6 +5,7 @@ class Const:
 
     class Cookie:
         SELECT_YEAR = 'selectYear'
+        IS_OKINA_MEM = 'isOkinaMem'
 
     class ScreenConst:
         ALL_YEAR = 'allYear'

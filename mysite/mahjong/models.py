@@ -95,6 +95,10 @@ class GameStatus(models.Model):
     # def __str__(self):
     #     return self.user_id + ' ： ' + self.last_name + ' ' + self.first_name
 
+class DoLogin(models.Model):
+    loginid = models.CharField(max_length=16)
+    password = models.CharField(max_length=16)
+
 # 更新管理
 class IsUpdateMng(models.Model):
     is_update = models.CharField( max_length=1)
