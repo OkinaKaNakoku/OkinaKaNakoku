@@ -1202,8 +1202,9 @@ def doLogin(request, **kwargs):
     # 1件しかない
     doLoginQuery = DoLogin.objects.values()[0]
     if loginId == doLoginQuery.get('loginid') and password == doLoginQuery.get('password'):
+        max_age = 60 * 60 * 24 * 365
         response = redirect('/showRanking')
-        response.set_cookie(const.Const.Cookie.IS_OKINA_MEM, 'success')
+        response.set_cookie(const.Const.Cookie.IS_OKINA_MEM, 'success', max_age = max_age)
         return response
     else:
         response = render(request, 'mahjong/login.html', {'message':'ログインID、またはパスワードが異なります'})
@@ -1211,8 +1212,6 @@ def doLogin(request, **kwargs):
 
 def isOkinaMem(request):
     return request.COOKIES.get(const.Const.Cookie.IS_OKINA_MEM) == 'success'
-
-
 
 def test(request, **kwargs):
     lineBotCommand.LineBotCommand.pushTest("Hi, OkinaKaNakoku")
